@@ -91,6 +91,8 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
 .copy { font:inherit; font-size:.8rem; font-weight:600; color:var(--pink-hover); background:#fff; border:1px solid var(--line); border-radius:999px; padding:.15rem .6rem; cursor:pointer; }
 .copy:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
 .done h2 { color:var(--ok); }
+.kl { margin:1.1rem 0 0; padding-top:1rem; border-top:1px solid var(--line); } .kl b { display:block; font-size:.95rem; margin-bottom:.3rem; } .kl .small { margin:.3rem 0 0; }
+.signed #kl-fee { display:none; } #kl-pay { border-top:0; padding-top:0; margin:0 0 1rem; }
 .due { background:var(--tint); border:1.5px solid var(--pink); border-radius:16px; padding:1.1rem 1.2rem 1rem; margin:0 0 1.2rem; }
 .due .fee { margin:.7rem 0 0; }
 .due.paid { background:#E7F6EF; border-color:var(--ok); } .due.paid .badge { background:var(--ok); } .due.paid .now, .due.paid .save { color:var(--ok); }
@@ -149,6 +151,7 @@ details.alt .bank { margin-top:.9rem; }
         <li>Council, Building Control and Thames Water application fees are paid by you directly and are not included.</li>
         <li>This quote is valid for 30 days.</li>
       </ul>
+      <div class="kl noprint" id="kl-fee"><b>Klarna available</b><div id="kl-fee-box"></div><p class="small">Shown for your deposit of <span id="kl-fee-amt"></span>.</p></div>
     </div>
 
     <div class="card" id="inccard">
@@ -195,6 +198,7 @@ details.alt .bank { margin-top:.9rem; }
         <h2 class="payhead">Pay your deposit</h2>
         <p class="paysub">Your deposit secures your start date. Pay securely by card below.</p>
         <div class="due" id="due"><span class="badge" id="due-badge">Deposit due today</span><div class="fee"><span class="now pink" id="pay-amt"></span><span class="save" id="due-sub">50% of your agreed fee</span></div></div>
+        <div class="kl noprint" id="kl-pay" hidden><b>Klarna available</b><div id="kl-pay-box"></div></div>
         <div id="stripe-wrap" class="noprint" hidden><p class="small" id="stripe-load">Loading secure card payment…</p><div id="stripe-box"></div></div>
         <a class="btn noprint" id="card" target="_blank" rel="noopener" hidden>Pay deposit by card</a>
         <p class="small" id="card-note" hidden></p>
@@ -220,8 +224,8 @@ details.alt .bank { margin-top:.9rem; }
 </div>
 
 
-<script src="pay.js?v=30"></script>
-<script src="q.js?v=30"></script>
+<script src="pay.js?v=31"></script>
+<script src="q.js?v=31"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
@@ -242,6 +246,7 @@ details.alt .bank { margin-top:.9rem; }
   $("m-date").textContent = RA.day(q.s); $("m-valid").textContent = RA.day(q.s + 30 * RA.DAY);
   (q.i || []).forEach(function (ix) { if (RA.ITEMS[ix]) { var li = document.createElement("li"); li.textContent = RA.ITEMS[ix][0]; $("inc").appendChild(li); } });
 
+  var klEl = null, klAmt = 0, klAsked = false;
   function paint() {
     var now = Date.now(), ends = RA.offerEnds(q, now), agreed = ends ? Math.round(q.f * (100 - q.d)) / 100 : q.f;
     price = { ends: ends, agreed: agreed };
@@ -256,7 +261,9 @@ details.alt .bank { margin-top:.9rem; }
       $("offer-pct").textContent = q.d; $("offer-kind").textContent = (RA.offer(q, now) || {}).short ? "24-hour offer" : "Limited offer"; $("offer-save").textContent = RA.money(q.f - agreed);
       $("offer-after").textContent = "After that the fee returns to the standard " + RA.money(q.f) + ".";
     }
-    $("dep").textContent = RA.money(Math.round(agreed * 50) / 100);
+    var depNow = Math.round(agreed * 50) / 100;
+    $("dep").textContent = RA.money(depNow); $("kl-fee-amt").textContent = RA.money(depNow);
+    if (klAmt !== depNow) { klAmt = depNow; if (klEl) { try { klEl.update({ amount: Math.round(depNow * 100) }); } catch (e) {} } else if (!klAsked) { klAsked = true; RA.klarna("#kl-fee-box", depNow).then(function (e) { klEl = e; if (e && klAmt !== depNow) { try { e.update({ amount: Math.round(klAmt * 100) }); } catch (x) {} } }); } }
     $("agree-text").textContent = "I, the person named above, accept this quotation for " + q.p.toLowerCase() + " at " + A + " at a fixed fee of " + RA.money(agreed) + ", and instruct Residential Architecture to proceed on the terms shown on this page.";
   }
   paint(); var timer = setInterval(paint, 30000);
@@ -280,7 +287,7 @@ details.alt .bank { margin-top:.9rem; }
     function paidUI() {
       try { localStorage.setItem(paidKey, "1"); } catch (e) {}
       $("due").classList.add("paid"); $("due-badge").textContent = "Deposit paid"; $("due-sub").textContent = "Received with thanks";
-      $("stripe-wrap").hidden = true; $("card").hidden = true; $("card-note").hidden = true; $("bankd").hidden = true; $("card-ask").hidden = true;
+      $("stripe-wrap").hidden = true; $("kl-pay").hidden = true; $("card").hidden = true; $("card-note").hidden = true; $("bankd").hidden = true; $("card-ask").hidden = true;
       document.querySelector(".payhead").textContent = "Deposit paid"; document.querySelector(".paysub").textContent = "Thank you. Your payment has gone through.";
       $("next-text").textContent = "I will be in touch shortly to book the measured survey of your home.";
     }
@@ -296,7 +303,7 @@ details.alt .bank { margin-top:.9rem; }
       });
     }
     function embedCard() {
-      $("stripe-wrap").hidden = false;
+      $("stripe-wrap").hidden = false; $("kl-pay").hidden = false; RA.klarna("#kl-pay-box", Math.round(agreed * 50) / 100);
       var back = null; try { back = new URLSearchParams(location.search).get("paid"); } catch (e) {}
       (back ? RA.api({ action: "paid", session: back }).catch(function () { return {}; }) : Promise.resolve({})).then(function (p) {
         if (p && p.paid) return paidUI();

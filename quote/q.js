@@ -21,7 +21,7 @@ var RA = (function () {
     ["Liaison with the Party Wall Surveyor", 1],
     ["A quotation for structural calculations following the approved design", 1],
     ["Introductions to local building companies", 1],
-    ["Credit card payments accepted at no extra cost", 1],
+    ["Credit card payments accepted at no extra cost. Klarna available", 1],
     ["Planning guarantee: if planning is refused, I redraft and resubmit at no extra fee, or refund 50% of my fee", 1]
   ];
   var HOUR = 3600000, DAY = 24 * HOUR;
@@ -93,6 +93,23 @@ var RA = (function () {
     if (!API) return Promise.reject(new Error("no-api"));
     return fetch(API, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload), redirect: "follow" }).then(function (r) { return r.json(); });
   }
+  /* Stripe publishable key (public by design). Used to show Klarna's own approved instalment message. */
+  var PK = "pk_live_51UPQVHE9nTIfeUjZNHQADpusEadG8BFKLI6sBxgsvy3dKeMJmtFLtC2pICG0Rk4AUyJW9YlpyHdz3ucdS7ESg6Un0002acZCrr";
+  function stripeJs() {
+    return new Promise(function (ok, no) {
+      if (window.Stripe) return ok();
+      var s = document.createElement("script"); s.src = "https://js.stripe.com/v3/"; s.onload = function () { ok(); }; s.onerror = no; document.head.appendChild(s);
+    });
+  }
+  /* Mounts Klarna's message for an amount in pounds. The wording comes from Klarna through Stripe and must not be rewritten here. */
+  function klarna(el, pounds) {
+    if (!PK || location.protocol !== "https:" || !el) return Promise.resolve(null);
+    return stripeJs().then(function () {
+      var e = window.Stripe(PK).elements({ appearance: { variables: { colorText: "#1F1E26", fontSizeBase: "15px" } } })
+        .create("paymentMethodMessaging", { amount: Math.round(pounds * 100), currency: "GBP", countryCode: "GB", paymentMethodTypes: ["klarna"] });
+      e.mount(el); return e;
+    }).catch(function () { return null; });
+  }
   function pass() { try { return localStorage.getItem("ra-pass") || ""; } catch (e) { return ""; } }
-  return { api: api, pass: pass, hasApi: !!API, ITEMS: ITEMS, encode: encode, decode: decode, offer: offer, windowCode: windowCode, money: money, offerEnds: offerEnds, expired: expired, when: when, day: day, DAY: DAY };
+  return { klarna: klarna, stripeJs: stripeJs, api: api, pass: pass, hasApi: !!API, ITEMS: ITEMS, encode: encode, decode: decode, offer: offer, windowCode: windowCode, money: money, offerEnds: offerEnds, expired: expired, when: when, day: day, DAY: DAY };
 })();
