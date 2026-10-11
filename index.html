@@ -197,7 +197,7 @@ p { margin: 0; max-width: 60ch; }
 .card { border: 1px solid var(--line); border-radius: 20px; padding: 1.5rem; display: flex; flex-direction: column; gap: .5rem; min-width: 0; background: var(--card); transition: transform .15s, box-shadow .15s, border-color .15s; }
 .card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--pink); }
 .card p { color: var(--grey); }
-.card.feature { background: var(--pink); border-color: var(--pink); color: var(--on-pink); }
+.card.feature { grid-column: 1 / -1; background: var(--pink); border-color: var(--pink); color: var(--on-pink); }
 .card.feature p { color: var(--on-pink); }
 
 .tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 20px; background: var(--card); }
