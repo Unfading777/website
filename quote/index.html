@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Your quote | Residential Architecture</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='4' transform='rotate(45 16 16)' fill='%23E6007A'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap">
+<style>
+:root { --pink:#E6007A; --pink-hover:#C40068; --ink:#1F1E26; --grey:#6A6875; --line:#E4E3EA; --tint:#FFE3F1; --bg:#F6F5F9; --card:#FFFFFF; --ok:#12805C;
+  --display:'Outfit',system-ui,sans-serif; --body:'DM Sans',system-ui,sans-serif; }
+* { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--body); font-size:1.02rem; line-height:1.6; }
+a { color:var(--pink); }
+.wrap { max-width:46rem; margin:0 auto; padding:0 1rem 3rem; }
+.top { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1.1rem 0; }
+.brand { font-family:var(--display); font-weight:700; font-size:1.15rem; color:var(--ink); text-decoration:none; display:inline-flex; align-items:center; gap:.55rem; letter-spacing:-.01em; }
+.brand i { width:.8rem; height:.8rem; background:var(--pink); border-radius:3px; transform:rotate(45deg); display:inline-block; }
+.ref { color:var(--grey); font-size:.86rem; text-align:right; }
+.card { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:1.5rem; margin-bottom:1rem; }
+@media (min-width:40rem){ .card { padding:2rem 2.2rem; } }
+h1 { font-family:var(--display); font-weight:700; font-size:clamp(1.6rem,5vw,2.2rem); line-height:1.15; letter-spacing:-.02em; margin:.2rem 0 .6rem; text-wrap:balance; }
+h2 { font-family:var(--display); font-weight:600; font-size:1.2rem; margin:0 0 .8rem; letter-spacing:-.01em; }
+.eyebrow { font-size:.78rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--pink); }
+.meta { display:grid; gap:.5rem 1.5rem; grid-template-columns:1fr; margin:1.1rem 0 0; }
+@media (min-width:34rem){ .meta { grid-template-columns:1fr 1fr; } }
+.meta div span { display:block; font-size:.78rem; color:var(--grey); text-transform:uppercase; letter-spacing:.08em; }
+.meta div b { font-weight:600; }
+.meta .addr b { white-space:pre-line; display:block; line-height:1.45; }
+.meta .dates { display:grid; gap:.6rem; align-content:start; }
+.meta { border-top:1px solid var(--line); padding-top:1.1rem; }
+ul.inc { list-style:none; margin:0; padding:0; display:grid; gap:.55rem; }
+ul.inc li { position:relative; padding-left:1.7rem; }
+ul.inc li::before { content:""; position:absolute; left:0; top:.32em; width:1.05rem; height:1.05rem; border-radius:50%; background:var(--tint); }
+ul.inc li::after { content:""; position:absolute; left:.33rem; top:.56em; width:.36rem; height:.2rem; border-left:2px solid var(--pink); border-bottom:2px solid var(--pink); transform:rotate(-45deg); }
+.fee { display:flex; flex-wrap:wrap; align-items:baseline; gap:.4rem 1rem; }
+.fee .now { font-family:var(--display); font-weight:700; font-size:clamp(2.2rem,8vw,3rem); line-height:1; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
+.fee .was { color:var(--grey); text-decoration:line-through; font-size:1.2rem; font-variant-numeric:tabular-nums; }
+.lbl { font-weight:600; font-size:.95rem; margin:0 0 .25rem; }
+.offer { background:var(--tint); border:1.5px solid var(--pink); border-radius:16px; padding:1.1rem 1.2rem 1rem; margin:1.1rem 0 0; position:relative; }
+.offer .lbl { padding-right:0; margin-top:.7rem; }
+.badge { display:inline-block; background:var(--pink); color:#fff; font-weight:600; font-size:.82rem; letter-spacing:.04em; text-transform:uppercase; padding:.3rem .7rem; border-radius:999px; }
+.now.pink { color:var(--pink-hover); }
+.save { font-weight:600; color:var(--pink-hover); }
+.fee .now.struck { text-decoration:line-through; text-decoration-thickness:3px; text-decoration-color:var(--pink); }
+.offer .count { font-variant-numeric:tabular-nums; font-weight:600; }
+.terms { margin:1rem 0 0; padding:0; list-style:none; display:grid; gap:.4rem; color:var(--ink); }
+.terms li { padding-left:1rem; position:relative; }
+.terms li::before { content:""; position:absolute; left:0; top:.68em; width:.35rem; height:.35rem; border-radius:50%; background:var(--pink); }
+.small { color:var(--grey); font-size:.9rem; }
+ol.steps { margin:0; padding-left:1.2rem; display:grid; gap:.35rem; }
+label { display:block; font-weight:600; font-size:.94rem; margin:0 0 .3rem; }
+input[type=text], input[type=email] { width:100%; font:inherit; color:var(--ink); padding:.8rem .9rem; border:1.5px solid var(--line); border-radius:12px; background:#fff; }
+input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(--tint); }
+.sig { font-family:'Outfit',cursive; font-size:1.25rem; font-weight:500; }
+.row { display:grid; gap:1rem; grid-template-columns:1fr; margin-bottom:1rem; }
+@media (min-width:34rem){ .row { grid-template-columns:1fr 1fr; } }
+.tick { display:flex; gap:.7rem; align-items:flex-start; font-weight:400; margin:1rem 0 1.2rem; cursor:pointer; }
+.tick input { width:1.3rem; height:1.3rem; margin-top:.15rem; accent-color:var(--pink); flex:none; }
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; font:inherit; font-weight:600; font-size:1.05rem; padding:1rem 1.6rem; border-radius:999px; border:0; background:var(--pink); color:#fff; cursor:pointer; text-decoration:none; transition:background .15s, transform .15s; width:100%; }
+.btn:hover { background:var(--pink-hover); }
+.btn:active { transform:translateY(1px); }
+.btn:focus-visible, .ghost:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
+.btn[disabled] { opacity:.6; cursor:progress; }
+.ghost { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; font:inherit; font-weight:600; padding:.8rem 1.3rem; border-radius:999px; border:1.5px solid var(--line); background:#fff; color:var(--ink); text-decoration:none; cursor:pointer; }
+.actions { display:flex; flex-wrap:wrap; gap:.7rem; margin-top:1.1rem; }
+.err { color:#B3261E; font-size:.92rem; margin:.6rem 0 0; }
+.done { border-color:var(--ok); }
+.pay { border-top:1px solid var(--line); margin-top:1.1rem; padding-top:1.1rem; }
+.pay .fee { margin-bottom:1rem; }
+.done h2.payhead { color:var(--ink); margin:0 0 .2rem; }
+.signed .card h2 { font-size:1.55rem; font-weight:700; letter-spacing:-.02em; color:var(--ink); }
+.signed .meta { display:none; }
+.signed .done { border-color:var(--line); }
+.signed .pay { border-top:0; margin-top:0; padding-top:0; }
+.signed #eyebrow { color:var(--ok); }
+.tickmark { display:inline-flex; width:2.6rem; height:2.6rem; border-radius:50%; background:var(--ok); align-items:center; justify-content:center; margin-bottom:.7rem; }
+.tickmark::after { content:""; width:1rem; height:.5rem; border-left:3px solid #fff; border-bottom:3px solid #fff; transform:rotate(-45deg) translate(1px,-2px); }
+@media print { .signed .meta { display:grid; } }
+.paysub { margin:0 0 .9rem; color:var(--grey); }
+#card { width:auto; padding:.85rem 1.6rem; font-size:1rem; }
+.bank { margin:0 0 1rem; background:var(--bg); border-radius:14px; padding:1rem 1.1rem; display:grid; gap:.7rem 1.5rem; grid-template-columns:1fr; }
+@media (min-width:34rem){ .bank { grid-template-columns:1fr 1fr; } .bank .full { grid-column:1 / -1; } }
+.bank dt { font-size:.78rem; color:var(--grey); text-transform:uppercase; letter-spacing:.08em; }
+.bank .full dt { font-size:.95rem; color:var(--ink); text-transform:none; letter-spacing:0; font-weight:600; }
+.bank dd { margin:0; font-weight:600; font-variant-numeric:tabular-nums; display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; }
+.copy { font:inherit; font-size:.8rem; font-weight:600; color:var(--pink-hover); background:#fff; border:1px solid var(--line); border-radius:999px; padding:.15rem .6rem; cursor:pointer; }
+.copy:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
+.done h2 { color:var(--ok); }
+[hidden] { display:none !important; }
+.signed #inccard, .signed #feecard .terms, .signed #nextcard { display:none; }
+@media (prefers-reduced-motion:reduce){ * { transition:none !important; } html { scroll-behavior:auto; } }
+@media print { .signed #inccard { display:block; } .signed #feecard .terms { display:grid; } body { background:#fff; } </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="/"><i></i>Residential Architecture</a>
+    <div class="ref" id="ref"></div>
+  </div>
+
+  <div class="card" id="bad" hidden>
+    <h1>This quote link is not complete</h1>
+    <p>The link may have been cut short when it was copied. Please open it again from my email, or message me and I will send it again.</p>
+    <div class="actions"><a class="ghost" href="https://wa.me/447515334455">WhatsApp</a><a class="ghost" href="mailto:carl@residential-architecture.co.uk">Email Carl</a></div>
+  </div>
+
+  <main id="quote" hidden>
+    <div class="card">
+      <div class="eyebrow" id="eyebrow">Quotation for architectural services</div>
+      <h1 id="title"></h1>
+      <p id="intro"></p>
+      <div class="meta">
+        <div class="addr"><span>Prepared for</span><b id="m-addr"></b><b id="m-name" hidden></b></div>
+        <div class="dates">
+          <div><span>Quote date</span><b id="m-date"></b></div>
+          <div><span>Valid until</span><b id="m-valid"></b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" id="feecard">
+      <h2 id="fee-head">Your fixed fee</h2>
+      <div class="lbl" id="fee-lbl">Fixed fee for your project</div>
+      <div class="fee"><span class="now" id="fee-std"></span></div>
+      <div class="offer" id="offer" hidden>
+        <span class="badge"><span id="offer-kind"></span>: <span id="offer-pct"></span>% off</span>
+        <div class="lbl" id="offer-lbl">Your price if you sign by <span id="offer-end"></span></div>
+        <div class="fee"><span class="now pink" id="fee-now"></span><span class="save"><span id="offer-verb">You save</span> <span id="offer-save"></span></span></div>
+        <div class="small" id="offer-small"><span class="count" id="count"></span><span id="offer-after"></span></div>
+      </div>
+      <ul class="terms">
+        <li id="lump">One lump sum fee for everything listed below. No hourly rates.</li>
+        <li>50% deposit payable on instruction: <b id="dep"></b>.</li>
+        <li>Remaining 50% invoiced with your first draft and payable within 7 days.</li>
+        <li>Council, Building Control and Thames Water application fees are paid by you directly and are not included.</li>
+        <li>This quote is valid for 30 days.</li>
+      </ul>
+    </div>
+
+    <div class="card" id="inccard">
+      <h2>What is included</h2>
+      <ul class="inc" id="inc"></ul>
+    </div>
+
+    <div class="card" id="nextcard">
+      <h2>What happens after you sign</h2>
+      <ol class="steps">
+        <li>I send your deposit invoice and book the measured survey of your home.</li>
+        <li>I prepare your first draft within one week of the survey, with the design modelled in 3D.</li>
+        <li>We revise it together until you are happy, on site, by phone or by email.</li>
+        <li>I submit the application and deal with the council for you.</li>
+        <li>After approval, I prepare the Building Regulations drawings and introduce you to local builders.</li>
+      </ol>
+    </div>
+
+    <div class="card" id="old" hidden>
+      <h2>This quote is more than 30 days old</h2>
+      <p>Prices and plans can change, so I would rather send you an up-to-date quote than hold you to an old one. Message me and I will refresh it for you.</p>
+      <div class="actions"><a class="btn" id="old-wa" href="#">Ask for an updated quote on WhatsApp</a><a class="ghost" id="old-mail" href="#">Email Carl</a></div>
+    </div>
+
+    <div class="card" id="signcard">
+      <h2>Accept and sign</h2>
+      <p class="small">Signing here is your instruction for me to start. It takes about two minutes.</p>
+      <form id="sign" novalidate>
+        <div class="row">
+          <div><label for="sname">Your full name</label><input class="sig" type="text" id="sname" autocomplete="name" required></div>
+          <div><label for="semail">Your email</label><input type="email" id="semail" autocomplete="email" inputmode="email" required></div>
+        </div>
+        <label class="tick"><input type="checkbox" id="agree" required><span id="agree-text"></span></label>
+        <button class="btn" type="submit" id="go">Sign and accept this quote</button>
+        <p class="err" id="err" role="alert" hidden></p>
+        <p class="small">Typing your name and pressing the button is your electronic signature. I receive your acceptance by email, with the date and time.</p>
+      </form>
+    </div>
+
+    <div class="card done" id="done" hidden>
+      <h2 id="done-head">Signed. Thank you.</h2>
+      <p id="done-text"></p>
+      <div class="pay" id="pay" hidden>
+        <h2 class="payhead">Pay your deposit</h2>
+        <p class="paysub">Your deposit secures your start date. Pay by bank transfer or by card.</p>
+        <div class="fee"><span class="now" id="pay-amt"></span><span class="small">50% of your agreed fee</span></div>
+        <dl class="bank" id="bank" hidden>
+          <div class="full"><dt>Pay by bank transfer</dt></div>
+          <div id="b-name-row"><dt>Account name</dt><dd><span id="b-name"></span></dd></div>
+          <div id="b-bank-row"><dt>Bank</dt><dd><span id="b-bank"></span></dd></div>
+          <div><dt>Sort code</dt><dd><span id="b-sort"></span><button type="button" class="copy" data-copy="b-sort">Copy</button></dd></div>
+          <div><dt>Account number</dt><dd><span id="b-acc"></span><button type="button" class="copy" data-copy="b-acc">Copy</button></dd></div>
+          <div><dt>Payment reference</dt><dd><span id="b-ref"></span><button type="button" class="copy" data-copy="b-ref">Copy</button></dd></div>
+          <div><dt>Amount</dt><dd><span id="b-amt"></span></dd></div>
+        </dl>
+        <a class="btn noprint" id="card" target="_blank" rel="noopener" hidden>Pay deposit by card</a>
+        <p id="card-ask" hidden>Prefer to pay by card? <a id="card-wa" target="_blank" rel="noopener">Message me on WhatsApp</a> or reply to my email and I will send you a secure card payment link for your deposit, at no extra cost.</p>
+        <p class="small" id="card-note" hidden>Card payments are taken securely through Tide, at no extra cost to you.</p>
+      </div>
+      <p id="next-text">I will be in touch shortly with your deposit invoice and a date for the measured survey.</p>
+      <div class="actions"><button class="ghost" type="button" onclick="window.print()">Print or save a copy</button><a class="ghost" href="https://wa.me/447515334455">WhatsApp Carl</a></div>
+    </div>
+
+    <p class="small noprint">Carl Collins BSc (Hons), Residential Architecture · <a href="mailto:carl@residential-architecture.co.uk">carl@residential-architecture.co.uk</a> · <a href="https://wa.me/447515334455">WhatsApp</a></p>
+  </main>
+</div>
+
+
+<script src="pay.js?v=29"></script>
+<script src="q.js?v=29"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  /* One reusable Stripe link where the client enters the deposit amount. Leave "" to switch card payments off. */
+  var STRIPE_DEPOSIT_LINK = "https://buy.stripe.com/eVq5kD4sQ6hS2vb2h3grS00";
+  var q = RA.decode((location.hash || "").replace(/^#/, ""));
+  if (!q) { $("bad").hidden = false; return; }
+  var A = q.a.split(/\n+/).join(", ");
+  var key = "ra-signed-" + q.r, price = { ends: 0, agreed: q.f };
+
+  $("quote").hidden = false;
+  $("ref").textContent = "Quote " + q.r;
+  document.title = "Your quote for " + A + " | Residential Architecture";
+  $("title").textContent = q.p;
+  $("intro").textContent = "Following my visit to your home, I have pleasure in presenting my fee quotation for architectural services. Below is everything the fee covers, the price, and a button to accept it.";
+  $("m-name").textContent = q.n; $("m-addr").textContent = q.n + "\n" + q.a;
+  $("m-date").textContent = RA.day(q.s); $("m-valid").textContent = RA.day(q.s + 30 * RA.DAY);
+  (q.i || []).forEach(function (ix) { if (RA.ITEMS[ix]) { var li = document.createElement("li"); li.textContent = RA.ITEMS[ix][0]; $("inc").appendChild(li); } });
+
+  function paint() {
+    var now = Date.now(), ends = RA.offerEnds(q, now), agreed = ends ? Math.round(q.f * (100 - q.d)) / 100 : q.f;
+    price = { ends: ends, agreed: agreed };
+    $("fee-std").textContent = RA.money(q.f); $("fee-now").textContent = RA.money(agreed);
+    $("fee-std").classList.toggle("struck", !!ends);
+    $("fee-lbl").textContent = ends ? "Standard fixed fee for your project" : "Fixed fee for your project";
+    $("offer").hidden = !ends;
+    if (ends) {
+      $("offer-end").textContent = RA.when(ends);
+      var left = Math.max(0, ends - now), h = Math.floor(left / 3600000), m = Math.floor(left % 3600000 / 60000);
+      $("count").textContent = left < 3 * 3600000 ? " " + (h ? h + (h === 1 ? " hour " : " hours ") : "") + m + (m === 1 ? " minute left." : " minutes left.") : "";
+      $("offer-pct").textContent = q.d; $("offer-kind").textContent = (RA.offer(q, now) || {}).short ? "24-hour offer" : "Limited offer"; $("offer-save").textContent = RA.money(q.f - agreed);
+      $("offer-after").textContent = "After that the fee returns to the standard " + RA.money(q.f) + ".";
+    }
+    $("dep").textContent = RA.money(Math.round(agreed * 50) / 100);
+    $("agree-text").textContent = "I, the person named above, accept this quotation for " + q.p.toLowerCase() + " at " + A + " at a fixed fee of " + RA.money(agreed) + ", and instruct Residential Architecture to proceed on the terms shown on this page.";
+  }
+  paint(); var timer = setInterval(paint, 30000);
+
+  function showDone(name, at, agreed) {
+    clearInterval(timer);
+    document.body.classList.add("signed"); $("feecard").parentNode.insertBefore($("done"), $("feecard").nextSibling); $("lump").textContent = "One lump sum fee for everything in your quote. No hourly rates.";
+    $("signcard").hidden = true; $("old").hidden = true; $("done").hidden = false;
+    if (agreed < q.f) {
+      var pct = Math.round((1 - agreed / q.f) * 100);
+      $("fee-std").textContent = RA.money(q.f); $("fee-std").classList.add("struck"); $("fee-lbl").textContent = "Standard fixed fee for your project";
+      $("offer").hidden = false; $("offer-kind").textContent = "Offer secured"; $("offer-pct").textContent = pct;
+      $("offer-lbl").textContent = "Your agreed fixed fee, with " + pct + "% off included"; $("fee-now").textContent = RA.money(agreed);
+      $("offer-verb").textContent = "You saved"; $("offer-save").textContent = RA.money(q.f - agreed); $("offer-small").hidden = true;
+    } else {
+      $("offer").hidden = true; $("fee-std").textContent = RA.money(agreed); $("fee-std").classList.remove("struck"); $("fee-lbl").textContent = "Agreed fixed fee";
+    }
+    $("dep").textContent = RA.money(Math.round(agreed * 50) / 100);
+    var P = q.b ? { accountName: q.b[0], bankName: q.b[1], sortCode: q.b[2], accountNumber: q.b[3], cardLink: "" } : (window.RA_PAY || {}), dep = RA.money(Math.round(agreed * 50) / 100), hasBank = !!(P.sortCode && P.accountNumber), fixedUrl = (agreed < q.f ? q.c2 : q.c1) || "", openUrl = P.cardLink || STRIPE_DEPOSIT_LINK, cardUrl = fixedUrl || (openUrl ? openUrl + (openUrl.indexOf("?") < 0 ? "?" : "&") + "client_reference_id=" + encodeURIComponent(String(q.r).replace(/[^A-Za-z0-9_-]/g, "-")) : ""), hasCard = /^https:\/\//.test(cardUrl);
+    if (hasBank || hasCard) {
+      $("pay").hidden = false; $("pay-amt").textContent = dep;
+      document.querySelector(".paysub").textContent = "Your deposit secures your start date. " + (hasBank && hasCard ? "Pay by bank transfer or by card." : hasBank ? "Pay by bank transfer using the details below." : "Pay securely by card.");
+      if (hasBank) {
+        $("bank").hidden = false; $("b-sort").textContent = P.sortCode; $("b-acc").textContent = P.accountNumber; $("b-ref").textContent = q.r; $("b-amt").textContent = dep;
+        $("b-name").textContent = P.accountName || ""; $("b-name-row").hidden = !P.accountName;
+        $("b-bank").textContent = P.bankName || ""; $("b-bank-row").hidden = !P.bankName;
+      }
+      if (hasCard) { $("card").hidden = false; $("card").href = cardUrl; $("card-note").hidden = false; if (!fixedUrl) $("card-note").innerHTML = "On the next screen, enter your deposit of <b>" + dep + "</b> and pay securely by card through Stripe. There is no extra cost to you."; if (hasBank) { $("card").textContent = "Or pay by card"; } }
+      if (!hasCard) { $("card-ask").hidden = false; $("card-wa").href = "https://wa.me/447515334455?text=" + encodeURIComponent("Hi Carl, I have signed quote " + q.r + " and would like to pay my " + dep + " deposit by card."); }
+      $("next-text").textContent = "Once your deposit arrives I will send your receipt and book the measured survey of your home.";
+    }
+    var discounted = agreed < q.f, when = RA.when(at);
+    if (!$("tickmark")) { var t = document.createElement("div"); t.className = "tickmark"; t.id = "tickmark"; $("eyebrow").parentNode.insertBefore(t, $("eyebrow")); }
+    $("eyebrow").textContent = "Quote " + q.r; $("title").textContent = "Contract signed and confirmed";
+    $("intro").textContent = "Thank you. Your quote for " + q.p.charAt(0).toLowerCase() + q.p.slice(1) + " at " + A + " was signed by " + name + " on " + when + ".";
+    $("fee-head").textContent = discounted ? "Discount secured" : "Your agreed fee";
+    document.title = "Contract signed | Residential Architecture";
+    $("done-head").hidden = true;
+    $("done-text").textContent = "Signed by " + name + " on " + RA.when(at) + ". Agreed fixed fee: " + RA.money(agreed) + (agreed < q.f ? ", which includes your " + Math.round((1 - agreed / q.f) * 100) + "% discount (" + RA.money(q.f - agreed) + " off the standard " + RA.money(q.f) + ")." : ".");
+    $("done-text").hidden = !$("pay").hidden; if ($("pay").hidden) { $("done-head").hidden = false; $("done-head").textContent = "What happens next"; $("done-text").hidden = true; }
+    window.scrollTo(0, 0);
+  }
+  document.addEventListener("click", function (e) {
+    var b = e.target.closest ? e.target.closest(".copy") : null; if (!b) return;
+    var t = $(b.getAttribute("data-copy")).textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { b.textContent = "Copied"; }, function () {});
+  });
+  var prev = null; try { prev = JSON.parse(localStorage.getItem(key) || "null"); } catch (e) {}
+  if (prev) { showDone(prev.name, prev.at, prev.agreed); return; }
+
+  var msg = "Hi Carl, please could you send me an updated quote for " + A + " (" + q.r + ").";
+  $("old-wa").href = "https://wa.me/447515334455?text=" + encodeURIComponent(msg);
+  $("old-mail").href = "mailto:carl@residential-architecture.co.uk?subject=" + encodeURIComponent("Updated quote please: " + A) + "&body=" + encodeURIComponent(msg);
+  function gate() { var ex = RA.expired(q, Date.now()); $("signcard").hidden = ex; $("old").hidden = !ex; }
+  gate();
+  /* Promotion words on the link (for example .SPRING25) are looked up in the Google Sheet. */
+  (q._words || []).forEach(function (w) {
+    var ck = "ra-promo-" + w, use = function (p) { if (p && p.ok) { q._w.push([p.a, p.b]); if (!q.d) q.d = 25; paint(); gate(); } };
+    var c = null; try { c = JSON.parse(sessionStorage.getItem(ck) || "null"); } catch (e) {}
+    if (c) return use(c);
+    var tries = 0, go = function () { RA.api({ action: "promo", word: w }).then(function (p) { try { sessionStorage.setItem(ck, JSON.stringify(p)); } catch (e) {} use(p); }).catch(function () { if (++tries < 3) setTimeout(go, 1500); }); };
+    go();
+  });
+
+  $("sign").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    var name = $("sname").value.trim(), email = $("semail").value.trim(), err = $("err");
+    function fail(t, el) { err.textContent = t; err.hidden = false; if (el) el.focus(); }
+    if (name.split(/\s+/).length < 2) return fail("Please type your full name, first and last.", $("sname"));
+    if (!/^\S+@\S+\.\S+$/.test(email)) return fail("Please enter your email address so I can send your confirmation.", $("semail"));
+    if (!$("agree").checked) return fail("Please tick the box to confirm you accept the quote.", $("agree"));
+    err.hidden = true; paint();
+    var at = Date.now(), agreed = price.agreed, applied = price.ends ? q.d + "% (" + RA.money(q.f - agreed) + " off)" : "None";
+    var data = {
+      action: "signed", r: q.r, s: q.s, client: q.n, address: A, project: q.p, fee: q.f, discount: applied, agreed: agreed, deposit: Math.round(agreed * 50) / 100,
+      name: name, email: email, at: at, link: location.href,
+      inclusions: (q.i || []).map(function (ix) { return RA.ITEMS[ix] ? RA.ITEMS[ix][0] : ""; }).join("\n"), device: navigator.userAgent
+    };
+    var btn = $("go"); btn.disabled = true; btn.textContent = "Signing…";
+    RA.api(data)
+      .then(function (r) { if (!r || !r.ok) throw new Error("not-saved"); })
+      .then(function () { try { localStorage.setItem(key, JSON.stringify({ name: name, at: at, agreed: agreed })); } catch (e) {} showDone(name, at, agreed); })
+      .catch(function () {
+        btn.disabled = false; btn.textContent = "Sign and accept this quote";
+        var m = "I accept quote " + q.r + " for " + q.p.toLowerCase() + " at " + A + " at a fixed fee of " + RA.money(agreed) + ". " + name;
+        err.innerHTML = 'Sorry, that did not go through. Please try again, or <a href="mailto:carl@residential-architecture.co.uk?subject=' + encodeURIComponent("Quote accepted: " + q.a) + "&body=" + encodeURIComponent(m) + '">email your acceptance</a> instead.';
+        err.hidden = false;
+      });
+  });
+})();
+</script>
+</body>
+</html>

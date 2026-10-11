@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Sent quotes | Residential Architecture</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='4' transform='rotate(45 16 16)' fill='%23E6007A'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap">
+<style>
+:root { --pink:#E6007A; --pink-hover:#C40068; --ink:#1F1E26; --grey:#6A6875; --line:#E4E3EA; --tint:#FFE3F1; --bg:#F6F5F9; --ok:#12805C; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:'DM Sans',system-ui,sans-serif; line-height:1.5; }
+.wrap { max-width:50rem; margin:0 auto; padding:1rem 1rem 4rem; }
+.brand { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.15rem; display:inline-flex; align-items:center; gap:.55rem; margin:.4rem 0 .6rem; }
+.brand i { width:.8rem; height:.8rem; background:var(--pink); border-radius:3px; transform:rotate(45deg); display:inline-block; }
+h1 { font-family:'Outfit',sans-serif; font-size:1.8rem; margin:.2rem 0 .2rem; letter-spacing:-.02em; }
+a { color:var(--pink); font-weight:600; }
+.card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:1.1rem 1.2rem; margin-bottom:.8rem; }
+input[type=text], input[type=search] { width:100%; font:inherit; padding:.75rem .9rem; border:1.5px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); }
+input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(--tint); }
+.top { display:flex; flex-wrap:wrap; gap:.4rem 1.5rem; justify-content:space-between; align-items:baseline; }
+.name { font-family:'Outfit',sans-serif; font-weight:600; font-size:1.15rem; }
+.fee { font-weight:600; font-variant-numeric:tabular-nums; }
+.small { color:var(--grey); font-size:.9rem; }
+.tag { display:inline-block; font-size:.76rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; padding:.15rem .55rem; border-radius:999px; background:var(--tint); color:var(--pink-hover); margin-left:.4rem; vertical-align:middle; }
+.tag.ok { background:#DDF3EA; color:var(--ok); }
+.tag.off { background:var(--bg); color:var(--grey); }
+.actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.8rem; }
+.btn, .ghost { font:inherit; font-weight:600; font-size:.92rem; padding:.55rem 1rem; border-radius:999px; cursor:pointer; text-decoration:none; display:inline-flex; }
+.btn { border:0; background:var(--pink); color:#fff; } .btn:hover { background:var(--pink-hover); }
+.ghost { border:1.5px solid var(--line); background:#fff; color:var(--ink); }
+.btn:focus-visible, .ghost:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
+.out { margin-top:.8rem; background:var(--tint); border-radius:12px; padding:.8rem .9rem; }
+.out textarea { width:100%; font:.8rem ui-monospace,Menlo,Consolas,monospace; border:1px solid var(--line); border-radius:8px; padding:.5rem; min-height:4rem; word-break:break-all; margin-top:.4rem; }
+.err { color:#B3261E; font-size:.92rem; }
+[hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><i></i>Residential Architecture</div>
+  <h1>Sent quotes</h1>
+  <p class="small" style="margin:0 0 1rem"><span id="src">Quotes created on this device, newest first.</span> <a href="../new/">Create a new quote</a> <a id="sheet" target="_blank" rel="noopener" hidden style="margin-left:.6rem">Open the Google Sheet</a></p>
+  <div class="card" id="connect" hidden>
+    <label for="pw" style="font-weight:600;display:block;margin-bottom:.3rem" id="pwlabel">Connect to your Google Sheet</label>
+    <p class="small" style="margin:0 0 .5rem" id="pwhelp">Enter your passphrase to load every quote you have sent, from any device. The first time, whatever you type here becomes your passphrase (at least 6 characters), so choose something you will remember.</p>
+    <input type="password" id="pw" autocomplete="current-password">
+    <div class="actions"><button class="btn" type="button" id="pwgo">Connect</button></div>
+    <p class="err" id="pwerr" hidden></p>
+  </div>
+  <div class="card">
+    <input type="search" id="find" placeholder="Search by name, address, postcode or reference" autocomplete="off">
+  </div>
+  <div id="list"></div>
+  <p class="small" id="empty" hidden>No quotes match. Quotes appear here when you create them in this browser. If one was made on another device, add it below.</p>
+  <div class="card" style="margin-top:1.5rem">
+    <label for="add" style="font-weight:600;display:block;margin-bottom:.3rem">Add a quote made on another device</label>
+    <p class="small" style="margin:0 0 .5rem">Paste its link.</p>
+    <input type="text" id="add" placeholder="https://residential-architecture.co.uk/quote/#..." autocomplete="off">
+    <div class="actions"><button class="btn" type="button" id="addgo">Add to list</button></div>
+    <p class="err" id="adderr" hidden></p>
+  </div>
+</div>
+<script src="../q.js?v=29"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var remote = null; /* quotes loaded from the Google Sheet, once connected */
+  function local() { try { return JSON.parse(localStorage.getItem("ra-quotes") || "[]"); } catch (e) { return []; } }
+  function load() { return remote || local(); }
+  function save(a) { if (remote) remote = a; else try { localStorage.setItem("ra-quotes", JSON.stringify(a)); } catch (e) {} }
+  function push(payload) { if (!remote) return; payload.pass = RA.pass(); RA.api(payload).catch(function () {}); }
+  function fromSheet(rows) {
+    return rows.map(function (x) { return { r: x.r, n: x.n, a: String(x.a), p: x.p, f: Number(x.f), s: Number(x.s), d: Number(x.d) || 0, u: x.u, signed: x.status === "Signed", signedAt: x.signedAt, agreed: x.agreed, o: x.ou && x.oe ? { u: x.ou, e: x.oe } : null }; });
+  }
+  function connect(pw, first) {
+    var err = $("pwerr"); err.hidden = true;
+    return RA.api({ action: "list", pass: pw }).then(function (r) {
+      if (!r.ok && r.error === "no-pass") {
+        if (String(pw).length < 6) { err.textContent = "Choose a passphrase of at least 6 characters."; err.hidden = false; return; }
+        return RA.api({ action: "setup", pass: pw }).then(function (r2) { if (r2.ok) return connect(pw, true); err.textContent = "Could not set the passphrase. Please try again."; err.hidden = false; });
+      }
+      if (!r.ok) { try { localStorage.removeItem("ra-pass"); } catch (e) {} $("connect").hidden = false; err.textContent = r.error === "bad-pass" ? "That passphrase is not right." : "Could not load your quotes. Please try again."; err.hidden = false; return; }
+      try { localStorage.setItem("ra-pass", pw); } catch (e) {}
+      var have = {}; r.quotes.forEach(function (x) { have[x.r + "|" + x.s] = 1; });
+      var missing = local().filter(function (x) { return !have[x.r + "|" + x.s]; });
+      remote = fromSheet(r.quotes);
+      if (missing.length) { RA.api({ action: "create", pass: pw, quotes: missing }).catch(function () {}); remote = remote.concat(missing); remote.sort(function (a, b) { return b.s - a.s; }); }
+      $("connect").hidden = true; $("src").textContent = "Every quote you have sent, from your Google Sheet, newest first.";
+      if (r.sheet) { $("sheet").href = r.sheet; $("sheet").hidden = false; }
+      render();
+    }).catch(function () { $("src").textContent = "Could not reach your Google Sheet, so this shows quotes created on this device only."; if (!RA.pass()) $("connect").hidden = false; });
+  }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function base(u) { return u.split("#")[0] + "#" + (u.split("#")[1] || "").split(".")[0]; }
+  function status(x, now) {
+    if (x.signed) return ["Signed", "ok"];
+    var q = RA.decode((x.o && x.o.e > now ? x.o.u : x.u).split("#")[1] || ""); if (!q) return ["", ""];
+    var o = RA.offer(q, now); if (o) return ["25% open until " + RA.when(o.ends), ""];
+    return [now - x.s > 30 * RA.DAY ? "Over 30 days old" : "Full price", "off"];
+  }
+  function render() {
+    var all = load(), term = $("find").value.trim().toLowerCase(), now = Date.now(), list = $("list"), shown = 0; list.innerHTML = "";
+    all.forEach(function (x, ix) {
+      if (term && (x.n + " " + x.a + " " + x.r + " " + x.p).toLowerCase().indexOf(term) < 0) return; shown++;
+      var c = el("div", "card"), top = el("div", "top"), left = el("div"), st = status(x, now);
+      var nm = el("span", "name", x.n); left.appendChild(nm); if (st[0]) left.appendChild(el("span", "tag " + st[1], st[0]));
+      top.appendChild(left); top.appendChild(el("span", "fee", RA.money(x.f))); c.appendChild(top);
+      c.appendChild(el("div", null, x.a.split("\n").join(", ")));
+      c.appendChild(el("div", "small", x.p + " · sent " + RA.day(x.s) + " · " + x.r + (x.signed && x.signedAt ? " · signed " + RA.day(x.signedAt) + (x.agreed ? " at " + RA.money(Number(x.agreed)) : "") : "")));
+      var act = el("div", "actions"), out = el("div", "out"); out.hidden = true;
+      var b1 = el("button", "btn", "Reopen 25% for 24 hours"); b1.type = "button";
+      b1.onclick = function () {
+        var t = Date.now(), end = t + 24 * 3600000, u = base(x.u) + RA.windowCode(t, end), a2 = load(); a2[ix].o = { u: u, e: end }; save(a2);
+        push({ action: "reopen", r: x.r, s: x.s, u: u, e: end });
+        out.innerHTML = ""; out.appendChild(el("div", null, "Send this link to " + x.n + ". The 25% is open until " + RA.when(end) + "."));
+        var ta = el("textarea"); ta.readOnly = true; ta.value = u; out.appendChild(ta);
+        var cp = el("button", "btn", "Copy link"); cp.type = "button"; cp.style.marginTop = ".5rem";
+        cp.onclick = function () { ta.select(); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).catch(function () { document.execCommand("copy"); }); cp.textContent = "Copied"; };
+        out.appendChild(cp); out.hidden = false; left.querySelector(".tag") && (left.querySelector(".tag").textContent = "25% open until " + RA.when(end), left.querySelector(".tag").className = "tag");
+      };
+      var b2 = el("a", "ghost", "Open quote"); b2.href = x.o && x.o.e > now ? x.o.u : x.u; b2.target = "_blank"; b2.rel = "noopener";
+      var b3 = el("button", "ghost", "Copy link"); b3.type = "button";
+      b3.onclick = function () { var u = x.o && x.o.e > Date.now() ? x.o.u : x.u; (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function () { b3.textContent = "Copied"; }, function () {}); };
+      var b4 = el("button", "ghost", x.signed ? "Mark as not signed" : "Mark as signed"); b4.type = "button";
+      b4.onclick = function () { var a2 = load(); a2[ix].signed = !a2[ix].signed; save(a2); push({ action: "status", r: x.r, s: x.s, status: a2[ix].signed ? "Signed" : "Sent" }); render(); };
+      var b5 = el("button", "ghost", "Remove"); b5.type = "button";
+      b5.onclick = function () { if (b5.textContent !== "Confirm remove") { b5.textContent = "Confirm remove"; return; } var a2 = load(); push({ action: "status", r: x.r, s: x.s, status: "Removed" }); a2.splice(ix, 1); save(a2); render(); };
+      if (!x.signed) act.appendChild(b1); act.appendChild(b2); act.appendChild(b3); act.appendChild(b4); act.appendChild(b5);
+      c.appendChild(act); c.appendChild(out); list.appendChild(c);
+    });
+    $("empty").hidden = shown > 0;
+  }
+  $("find").addEventListener("input", render);
+  $("addgo").addEventListener("click", function () {
+    var raw = $("add").value.trim(), frag = (raw.split("#")[1] || "").split(".")[0], q = frag && RA.decode(frag), err = $("adderr");
+    if (!q) { err.textContent = "That does not look like one of your quote links."; err.hidden = false; return; }
+    var all = load(); if (all.some(function (x) { return x.r === q.r && x.s === q.s; })) { err.textContent = "That quote is already in the list."; err.hidden = false; return; }
+    err.hidden = true; all.push({ r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q._own ? q.d : 0, u: location.origin + "/quote/#" + frag });
+    all.sort(function (a, b) { return b.s - a.s; }); save(all); push({ action: "create", quotes: [all.filter(function (x) { return x.r === q.r && x.s === q.s; })[0]] }); $("add").value = ""; render();
+  });
+  $("pwgo").addEventListener("click", function () { var pw = $("pw").value; if (pw) connect(pw); });
+  $("pw").addEventListener("keydown", function (e) { if (e.key === "Enter") $("pwgo").click(); });
+  render();
+  if (RA.hasApi) { if (RA.pass()) connect(RA.pass()); else $("connect").hidden = false; }
+})();
+</script>
+</body>
+</html>

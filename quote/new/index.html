@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>New quote | Residential Architecture</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='4' transform='rotate(45 16 16)' fill='%23E6007A'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap">
+<style>
+:root { --pink:#E6007A; --pink-hover:#C40068; --ink:#1F1E26; --grey:#6A6875; --line:#E4E3EA; --tint:#FFE3F1; --bg:#F6F5F9; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:'DM Sans',system-ui,sans-serif; line-height:1.55; }
+.wrap { max-width:44rem; margin:0 auto; padding:1rem 1rem 4rem; }
+.brand { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.15rem; display:inline-flex; align-items:center; gap:.55rem; margin:.4rem 0 1rem; }
+.brand i { width:.8rem; height:.8rem; background:var(--pink); border-radius:3px; transform:rotate(45deg); display:inline-block; }
+.card { background:#fff; border:1px solid var(--line); border-radius:20px; padding:1.4rem; margin-bottom:1rem; }
+h1 { font-family:'Outfit',sans-serif; font-size:1.7rem; margin:0 0 .3rem; letter-spacing:-.02em; }
+h2 { font-family:'Outfit',sans-serif; font-size:1.1rem; margin:0 0 .8rem; }
+label { display:block; font-weight:600; font-size:.92rem; margin:0 0 .3rem; }
+input[type=text], input[type=number], select, textarea { width:100%; font:inherit; padding:.75rem .85rem; border:1.5px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); }
+input:focus, select:focus, textarea:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(--tint); }
+.grid { display:grid; gap:1rem; grid-template-columns:1fr; }
+@media (min-width:34rem){ .grid.two { grid-template-columns:1fr 1fr; } }
+.checks { display:grid; gap:.45rem; }
+textarea { resize:vertical; line-height:1.45; }
+.grp { font-size:.78rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--grey); margin:1rem 0 .5rem; }
+.grp:first-child { margin-top:0; }
+@media (min-width:34rem){ .checks.cols { grid-template-columns:1fr 1fr; } }
+.checks label { display:flex; gap:.6rem; font-weight:400; margin:0; cursor:pointer; }
+.checks input { width:1.15rem; height:1.15rem; margin-top:.2rem; accent-color:var(--pink); flex:none; }
+.btn { font:inherit; font-weight:600; padding:.85rem 1.4rem; border-radius:999px; border:0; background:var(--pink); color:#fff; cursor:pointer; text-decoration:none; display:inline-flex; }
+.btn:hover { background:var(--pink-hover); }
+.ghost { font:inherit; font-weight:600; padding:.8rem 1.3rem; border-radius:999px; border:1.5px solid var(--line); background:#fff; color:var(--ink); cursor:pointer; text-decoration:none; display:inline-flex; }
+.actions { display:flex; flex-wrap:wrap; gap:.7rem; margin-top:1rem; }
+.link { width:100%; font:.85rem ui-monospace,Menlo,Consolas,monospace; padding:.8rem; border:1.5px solid var(--line); border-radius:12px; background:var(--bg); min-height:5.5rem; resize:vertical; word-break:break-all; }
+.small { color:var(--grey); font-size:.9rem; }
+ol { padding-left:1.2rem; margin:.4rem 0 0; }
+.err { color:#B3261E; font-size:.92rem; }
+[hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><i></i>Residential Architecture</div>
+  <p style="margin:-.4rem 0 1rem"><a href="../sent/" style="color:var(--pink);font-weight:600">Sent quotes</a></p>
+  <div class="card">
+    <h1>New quote</h1>
+    <p class="small">Fill this in after the visit. It creates the client's own quote page with a sign button. Nothing is stored here; the details live in the link.</p>
+    <div class="grid two">
+      <div><label for="n">Client name</label><input type="text" id="n" placeholder="Mr and Mrs Smith" autocomplete="off"></div>
+      <div><label for="f">Lump sum fee (&pound;)</label><input type="number" id="f" value="2495" min="1" step="1" inputmode="decimal"></div>
+    </div>
+    <div class="grid" style="margin-top:1rem">
+      <div><label for="a">Property address (one line per row)</label><textarea id="a" rows="4" placeholder="13 Hayfield Road&#10;Oxford&#10;OX2 6TX" autocomplete="off"></textarea></div>
+    </div>
+    <div class="grid two" style="margin-top:1rem">
+      <div><label for="d">Quick-decision discount</label><select id="d"><option value="25">25% in first 24 hours, again a week later</option><option value="0">No discount</option></select></div>
+      <div><label for="r">Quote reference</label><input type="text" id="r" autocomplete="off"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Deposit payments</h2>
+    <div id="bank-saved" hidden><p style="margin:0">Your bank details are saved on this device and go on every quote. <button type="button" class="ghost" id="bank-edit" style="padding:.35rem .9rem;margin-left:.4rem">Change</button></p></div>
+    <div id="bank-form">
+      <p class="small" style="margin-top:-.4rem">Enter these once. They are remembered on this device and shown to the client only after they sign.</p>
+      <div class="grid two">
+        <div><label for="b-name">Account name</label><input type="text" id="b-name" autocomplete="off"></div>
+        <div><label for="b-bank">Bank</label><input type="text" id="b-bank" value="Tide" autocomplete="off"></div>
+        <div><label for="b-sort">Sort code</label><input type="text" id="b-sort" inputmode="numeric" placeholder="00-00-00" autocomplete="off"></div>
+        <div><label for="b-acc">Account number</label><input type="text" id="b-acc" inputmode="numeric" placeholder="8 digits" autocomplete="off"></div>
+      </div>
+    </div>
+    <p class="small" style="margin-bottom:0">Card payments are already set up: after signing, the client also gets a button to pay the deposit by card through Stripe.</p>
+  </div>
+  <div class="card">
+    <h2>What is the project?</h2>
+    <p class="small" style="margin-top:-.4rem">Tick everything that applies. The ticks become the title of the quote.</p>
+    <div id="proj"></div>
+    <div style="margin-top:1rem"><label for="po">Anything else (optional)</label><input type="text" id="po" placeholder="e.g. new front porch canopy" autocomplete="off"></div>
+    <div style="margin-top:1rem"><label for="p">Quote title</label><input type="text" id="p" autocomplete="off"><p class="small" style="margin:.3rem 0 0">Fills in from the ticks. You can edit the wording.</p></div>
+  </div>
+  <div class="card">
+    <h2>Included in this quote</h2>
+    <div class="checks" id="checks"></div>
+  </div>
+  <div class="card">
+    <button class="btn" type="button" id="make">Create quote link</button>
+    <p class="err" id="err" hidden></p>
+    <div id="out" hidden>
+      <p class="small" style="margin:1rem 0 .4rem">The 24-hour discount clock started when you pressed the button, so send it now.</p>
+      <textarea class="link" id="link" readonly></textarea>
+      <div class="actions"><button class="btn" type="button" id="copy">Copy link</button><a class="ghost" id="open" target="_blank" rel="noopener">Preview the quote</a></div>
+      <ol class="small">
+        <li>In MailerLite, open the client (or add them) and paste the link into the <b>Quote link</b> field.</li>
+        <li>Add them to the <b>Quote sent</b> group and take them out of <b>Local Surveyors Direct</b>.</li>
+        <li>The quote is saved to your <a href="../sent/">Sent quotes</a> list and your Google Sheet.</li>
+        <li>The first email goes straight away with the Open and sign button. When they sign, you get an email.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Reopen the 25% discount</h2>
+    <p class="small" style="margin-top:-.4rem">For when a client asks for the discount after it has ended, or when you send a promotion to everyone. Nothing about the quote itself changes.</p>
+    <div class="grp">One client, for 24 hours from now</div>
+    <label for="ro-in">Paste the client's quote link</label>
+    <input type="text" id="ro-in" placeholder="https://residential-architecture.co.uk/quote/#..." autocomplete="off">
+    <div class="actions"><button class="btn" type="button" id="ro-go">Create 24-hour link</button></div>
+    <p class="err" id="ro-err" hidden></p>
+    <div id="ro-out" hidden>
+      <p class="small" style="margin:1rem 0 .4rem">Send this link to the client. The 25% is open until <b id="ro-until"></b>. Put it in their Quote link field in MailerLite too, so later emails use it.</p>
+      <textarea class="link" id="ro-link" readonly></textarea>
+      <div class="actions"><button class="btn" type="button" id="ro-copy">Copy link</button><a class="ghost" id="ro-open" target="_blank" rel="noopener">Preview</a></div>
+    </div>
+    <div class="grp" style="margin-top:1.6rem">A mailshot to everyone</div>
+    <div style="margin-bottom:1rem"><label for="pm-w">Promotion word</label><input type="text" id="pm-w" placeholder="CHRISTMAS25" autocomplete="off" maxlength="24" style="text-transform:uppercase"><p class="small" style="margin:.3rem 0 0">Your choice: letters and numbers only, no spaces.</p></div>
+    <div class="grid two">
+      <div><label for="pm-a">Offer opens</label><input type="text" id="pm-a" placeholder="2026-12-24" autocomplete="off"></div>
+      <div><label for="pm-b">Last day of the offer</label><input type="text" id="pm-b" placeholder="2026-12-28" autocomplete="off"></div>
+    </div>
+    <p class="small" style="margin:.4rem 0 0">Dates as year-month-day. The offer runs from the start of the first day to midnight on the last.</p>
+    <div class="actions"><button class="btn" type="button" id="pm-go">Save promotion</button></div>
+    <p class="err" id="pm-err" hidden></p>
+    <div id="pm-out" hidden>
+      <p class="small" style="margin:1rem 0 .4rem">In the MailerLite campaign, set the button link to <b>{$quote_link}</b> followed straight away by this, with no space:</p>
+      <textarea class="link" id="pm-code" readonly style="min-height:3rem"></textarea>
+      <div class="actions"><button class="btn" type="button" id="pm-copy">Copy</button></div>
+    </div>
+  </div>
+</div>
+<script src="../q.js?v=29"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  RA.ITEMS.forEach(function (it, ix) {
+    var l = document.createElement("label"), c = document.createElement("input"), s = document.createElement("span");
+    c.type = "checkbox"; c.checked = !!it[1]; c.value = ix; s.textContent = it[0]; l.appendChild(c); l.appendChild(s); $("checks").appendChild(l);
+  });
+  var PROJ = [
+    ["Extensions", ["Single storey rear extension", "Two storey rear extension", "Single storey side extension", "Two storey side extension", "Single storey wraparound extension", "Part single, part two storey extension", "First floor extension", "Front extension", "Porch"]],
+    ["Loft conversions", ["Rear dormer loft conversion", "L-shaped dormer loft conversion", "Hip to gable loft conversion", "Hip to gable and rear dormer loft conversion", "Rooflight loft conversion", "Mansard loft conversion"]],
+    ["Conversions and alterations", ["Internal alterations", "Garage conversion", "Basement conversion", "Roof alterations", "New windows and doors", "External remodelling"]],
+    ["Outside and new build", ["Garden room", "Outbuilding", "Detached garage", "Annexe", "New house", "Replacement house"]]
+  ];
+  PROJ.forEach(function (g) {
+    var h = document.createElement("div"); h.className = "grp"; h.textContent = g[0]; $("proj").appendChild(h);
+    var box = document.createElement("div"); box.className = "checks cols"; $("proj").appendChild(box);
+    g[1].forEach(function (t) {
+      var l = document.createElement("label"), c = document.createElement("input"), s = document.createElement("span");
+      c.type = "checkbox"; c.value = t; s.textContent = t; l.appendChild(c); l.appendChild(s); box.appendChild(l);
+    });
+  });
+  function title() {
+    var t = [].slice.call(document.querySelectorAll("#proj input:checked")).map(function (c) { return c.value; });
+    var o = $("po").value.trim(); if (o) t.push(o);
+    t = t.map(function (x, i) { return i ? x.charAt(0).toLowerCase() + x.slice(1) : x; });
+    $("p").value = t.length > 1 ? t.slice(0, -1).join(", ") + " and " + t[t.length - 1] : (t[0] || "");
+  }
+  $("proj").addEventListener("change", title); $("po").addEventListener("input", title);
+  function autoRef() {
+    var t = new Date(), p = function (v) { return ("0" + v).slice(-2); };
+    var ini = ($("n").value.match(/[A-Za-z]+/g) || []).filter(function (w) { return !/^(mr|mrs|ms|miss|dr|and)$/i.test(w); }).map(function (w) { return w[0].toUpperCase(); }).join("").slice(0, 3);
+    return "RA-" + String(t.getFullYear()).slice(2) + p(t.getMonth() + 1) + p(t.getDate()) + (ini ? "-" + ini : "");
+  }
+  $("n").addEventListener("input", function () { if (!$("r").dataset.touched) $("r").value = autoRef(); });
+  $("r").addEventListener("input", function () { this.dataset.touched = 1; });
+  $("r").value = autoRef();
+  function bank() {
+    var sort = $("b-sort").value.replace(/\D/g, ""), acc = $("b-acc").value.replace(/\D/g, "");
+    if (sort.length !== 6 || acc.length !== 8) return null;
+    var B = [$("b-name").value.trim(), $("b-bank").value.trim(), sort.replace(/(\d\d)(\d\d)(\d\d)/, "$1-$2-$3"), acc];
+    try { localStorage.setItem("ra-bank", JSON.stringify(B)); } catch (e) {}
+    return B;
+  }
+  (function () {
+    var B = null; try { B = JSON.parse(localStorage.getItem("ra-bank") || "null"); } catch (e) {}
+    if (B) { $("b-name").value = B[0]; $("b-bank").value = B[1]; $("b-sort").value = B[2]; $("b-acc").value = B[3]; $("bank-saved").hidden = false; $("bank-form").hidden = true; }
+    $("bank-edit").addEventListener("click", function () { $("bank-saved").hidden = true; $("bank-form").hidden = false; });
+  })();
+  function lib() { try { return JSON.parse(localStorage.getItem("ra-card-links") || "{}"); } catch (e) { return {}; } }
+  function deposits() { return;
+    var f = parseFloat($("f").value) || 0, d = +$("d").value, full = Math.round(f * 50) / 100, off = Math.round(Math.round(f * (100 - d)) / 100 * 50) / 100;
+    $("d1").textContent = f ? RA.money(full) : ""; $("d2").textContent = f ? RA.money(off) : ""; $("c2row").hidden = !d;
+    var L = lib()[String(f)] || {};
+    if (!$("c1").dataset.touched) $("c1").value = L.c1 || "";
+    if (!$("c2").dataset.touched) $("c2").value = L.c2 || "";
+  }
+
+  $("make").addEventListener("click", function () {
+    var n = $("n").value.trim(), a = $("a").value.split(/\n+/).map(function (x) { return x.trim().replace(/,+$/, ""); }).filter(Boolean).join("\n"), p = $("p").value.trim(), f = parseFloat($("f").value), err = $("err");
+    if (!n || !a || !p || !(f > 0)) { err.textContent = "Please fill in the client name, address and fee, and tick at least one project type."; err.hidden = false; $("out").hidden = true; return; }
+    err.hidden = true;
+    var i = [].slice.call(document.querySelectorAll("#checks input:checked")).map(function (c) { return +c.value; });
+    var q = { n: n, a: a, p: p, f: f, s: Date.now(), i: i, d: +$("d").value, r: $("r").value.trim() || autoRef() };
+    var B = bank();
+    if (B) q.b = B; else if ($("b-sort").value.trim() || $("b-acc").value.trim()) { err.textContent = "Bank details need both a 6-digit sort code and an 8-digit account number."; err.hidden = false; $("out").hidden = true; return; }
+    var url = location.origin + "/quote/#" + RA.encode(q);
+    try {
+      var all = JSON.parse(localStorage.getItem("ra-quotes") || "[]"); all.unshift({ r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q.d, u: url });
+      localStorage.setItem("ra-quotes", JSON.stringify(all.slice(0, 500)));
+    } catch (e) {}
+    if (RA.pass()) RA.api({ action: "create", pass: RA.pass(), quote: { r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q.d, u: url } }).catch(function () {});
+    $("link").value = url; $("open").href = url; $("out").hidden = false; $("copy").textContent = "Copy link";
+  });
+  function copyFrom(btn, box) { box.select(); (navigator.clipboard ? navigator.clipboard.writeText(box.value) : Promise.reject()).catch(function () { document.execCommand("copy"); }); btn.textContent = "Copied"; }
+  $("ro-go").addEventListener("click", function () {
+    var raw = $("ro-in").value.trim(), i = raw.indexOf("#"), frag = (i >= 0 ? raw.slice(i + 1) : raw).split(".")[0], err = $("ro-err");
+    if (!frag || !RA.decode(frag)) { err.textContent = "That does not look like one of your quote links. Paste the whole link, starting https://"; err.hidden = false; $("ro-out").hidden = true; return; }
+    err.hidden = true;
+    var now = Date.now(), end = now + 24 * 3600000, url = location.origin + "/quote/#" + frag + RA.windowCode(now, end);
+    $("ro-link").value = url; $("ro-open").href = url; $("ro-until").textContent = RA.when(end); $("ro-out").hidden = false; $("ro-copy").textContent = "Copy link";
+  });
+  $("ro-copy").addEventListener("click", function () { copyFrom(this, $("ro-link")); });
+  $("pm-go").addEventListener("click", function () {
+    var a = new Date($("pm-a").value.trim() + "T00:00:00").getTime(), b = new Date($("pm-b").value.trim() + "T23:59:59").getTime(), err = $("pm-err");
+    if (!/^\d{4}-\d\d-\d\d$/.test($("pm-a").value.trim()) || !/^\d{4}-\d\d-\d\d$/.test($("pm-b").value.trim()) || isNaN(a) || isNaN(b) || b < a) { err.textContent = "Enter both dates as year-month-day, for example 2026-12-24, with the last day on or after the first."; err.hidden = false; $("pm-out").hidden = true; return; }
+    var w = $("pm-w").value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    if (!/^[A-Z][A-Z0-9]{2,23}$/.test(w)) { err.textContent = "Choose a promotion word of 3 to 24 letters and numbers, starting with a letter."; err.hidden = false; $("pm-out").hidden = true; return; }
+    if (!RA.pass()) { err.innerHTML = 'Open <a href="../sent/">Sent quotes</a> once on this device and enter your passphrase, then come back. Promotions are saved in your Google Sheet.'; err.hidden = false; $("pm-out").hidden = true; return; }
+    err.hidden = true; var btn = this; btn.disabled = true; btn.textContent = "Saving\u2026";
+    RA.api({ action: "promo-set", pass: RA.pass(), word: w, a: a, b: b }).then(function (r) {
+      btn.disabled = false; btn.textContent = "Save promotion";
+      if (!r.ok) { err.textContent = r.error === "bad-pass" ? "Your passphrase was not accepted. Open Sent quotes and enter it again." : "That could not be saved. Please try again."; err.hidden = false; return; }
+      $("pm-code").value = "." + r.word; $("pm-out").hidden = false; $("pm-copy").textContent = "Copy";
+    }).catch(function () { btn.disabled = false; btn.textContent = "Save promotion"; err.textContent = "Could not reach your Google Sheet. Check your connection and try again."; err.hidden = false; });
+  });
+  $("pm-copy").addEventListener("click", function () { copyFrom(this, $("pm-code")); });
+  $("copy").addEventListener("click", function () {
+    var l = $("link"); l.select();
+    (navigator.clipboard ? navigator.clipboard.writeText(l.value) : Promise.reject()).catch(function () { document.execCommand("copy"); });
+    this.textContent = "Copied";
+  });
+})();
+</script>
+</body>
+</html>

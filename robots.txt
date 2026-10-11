@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /quote/
+Sitemap: https://residential-architecture.co.uk/sitemap.xml
