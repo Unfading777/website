@@ -91,6 +91,15 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
 .copy { font:inherit; font-size:.8rem; font-weight:600; color:var(--pink-hover); background:#fff; border:1px solid var(--line); border-radius:999px; padding:.15rem .6rem; cursor:pointer; }
 .copy:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
 .done h2 { color:var(--ok); }
+.due { background:var(--tint); border:1.5px solid var(--pink); border-radius:16px; padding:1.1rem 1.2rem 1rem; margin:0 0 1.2rem; }
+.due .fee { margin:.7rem 0 0; }
+.due.paid { background:#E7F6EF; border-color:var(--ok); } .due.paid .badge { background:var(--ok); } .due.paid .now, .due.paid .save { color:var(--ok); }
+#stripe-wrap { margin:0 0 1rem; min-height:4rem; } #stripe-box { margin:0 -.4rem; }
+details.alt { border-top:1px solid var(--line); padding-top:1rem; margin:1rem 0; }
+details.alt summary { cursor:pointer; font-weight:600; color:var(--pink-hover); }
+details.alt summary:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
+details.alt .bank { margin-top:.9rem; }
+@media print { .noprint { display:none !important; } }
 [hidden] { display:none !important; }
 .signed #inccard, .signed #feecard .terms, .signed #nextcard { display:none; }
 @media (prefers-reduced-motion:reduce){ * { transition:none !important; } html { scroll-behavior:auto; } }
@@ -184,20 +193,23 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
       <p id="done-text"></p>
       <div class="pay" id="pay" hidden>
         <h2 class="payhead">Pay your deposit</h2>
-        <p class="paysub">Your deposit secures your start date. Pay by bank transfer or by card.</p>
-        <div class="fee"><span class="now" id="pay-amt"></span><span class="small">50% of your agreed fee</span></div>
-        <dl class="bank" id="bank" hidden>
-          <div class="full"><dt>Pay by bank transfer</dt></div>
-          <div id="b-name-row"><dt>Account name</dt><dd><span id="b-name"></span></dd></div>
-          <div id="b-bank-row"><dt>Bank</dt><dd><span id="b-bank"></span></dd></div>
-          <div><dt>Sort code</dt><dd><span id="b-sort"></span><button type="button" class="copy" data-copy="b-sort">Copy</button></dd></div>
-          <div><dt>Account number</dt><dd><span id="b-acc"></span><button type="button" class="copy" data-copy="b-acc">Copy</button></dd></div>
-          <div><dt>Payment reference</dt><dd><span id="b-ref"></span><button type="button" class="copy" data-copy="b-ref">Copy</button></dd></div>
-          <div><dt>Amount</dt><dd><span id="b-amt"></span></dd></div>
-        </dl>
+        <p class="paysub">Your deposit secures your start date. Pay securely by card below.</p>
+        <div class="due" id="due"><span class="badge" id="due-badge">Deposit due today</span><div class="fee"><span class="now pink" id="pay-amt"></span><span class="save" id="due-sub">50% of your agreed fee</span></div></div>
+        <div id="stripe-wrap" class="noprint" hidden><p class="small" id="stripe-load">Loading secure card payment…</p><div id="stripe-box"></div></div>
         <a class="btn noprint" id="card" target="_blank" rel="noopener" hidden>Pay deposit by card</a>
+        <p class="small" id="card-note" hidden></p>
+        <details class="alt" id="bankd" hidden>
+          <summary>Prefer to pay by bank transfer?</summary>
+          <dl class="bank" id="bank">
+            <div id="b-name-row"><dt>Account name</dt><dd><span id="b-name"></span></dd></div>
+            <div id="b-bank-row"><dt>Bank</dt><dd><span id="b-bank"></span></dd></div>
+            <div><dt>Sort code</dt><dd><span id="b-sort"></span><button type="button" class="copy" data-copy="b-sort">Copy</button></dd></div>
+            <div><dt>Account number</dt><dd><span id="b-acc"></span><button type="button" class="copy" data-copy="b-acc">Copy</button></dd></div>
+            <div><dt>Payment reference</dt><dd><span id="b-ref"></span><button type="button" class="copy" data-copy="b-ref">Copy</button></dd></div>
+            <div><dt>Amount</dt><dd><span id="b-amt"></span></dd></div>
+          </dl>
+        </details>
         <p id="card-ask" hidden>Prefer to pay by card? <a id="card-wa" target="_blank" rel="noopener">Message me on WhatsApp</a> or reply to my email and I will send you a secure card payment link for your deposit, at no extra cost.</p>
-        <p class="small" id="card-note" hidden>Card payments are taken securely through Tide, at no extra cost to you.</p>
       </div>
       <p id="next-text">I will be in touch shortly with your deposit invoice and a date for the measured survey.</p>
       <div class="actions"><button class="ghost" type="button" onclick="window.print()">Print or save a copy</button><a class="ghost" href="https://wa.me/447515334455">WhatsApp Carl</a></div>
@@ -208,13 +220,14 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
 </div>
 
 
-<script src="pay.js?v=29"></script>
-<script src="q.js?v=29"></script>
+<script src="pay.js?v=30"></script>
+<script src="q.js?v=30"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
   /* One reusable Stripe link where the client enters the deposit amount. Leave "" to switch card payments off. */
   var STRIPE_DEPOSIT_LINK = "https://buy.stripe.com/eVq5kD4sQ6hS2vb2h3grS00";
+  /* The card form on this page is set up by the Google script (which holds the Stripe keys). If that is not available, the link above is used instead. */
   var q = RA.decode((location.hash || "").replace(/^#/, ""));
   if (!q) { $("bad").hidden = false; return; }
   var A = q.a.split(/\n+/).join(", ");
@@ -248,7 +261,7 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
   }
   paint(); var timer = setInterval(paint, 30000);
 
-  function showDone(name, at, agreed) {
+  function showDone(name, at, agreed, email) {
     clearInterval(timer);
     document.body.classList.add("signed"); $("feecard").parentNode.insertBefore($("done"), $("feecard").nextSibling); $("lump").textContent = "One lump sum fee for everything in your quote. No hourly rates.";
     $("signcard").hidden = true; $("old").hidden = true; $("done").hidden = false;
@@ -263,17 +276,55 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
     }
     $("dep").textContent = RA.money(Math.round(agreed * 50) / 100);
     var P = q.b ? { accountName: q.b[0], bankName: q.b[1], sortCode: q.b[2], accountNumber: q.b[3], cardLink: "" } : (window.RA_PAY || {}), dep = RA.money(Math.round(agreed * 50) / 100), hasBank = !!(P.sortCode && P.accountNumber), fixedUrl = (agreed < q.f ? q.c2 : q.c1) || "", openUrl = P.cardLink || STRIPE_DEPOSIT_LINK, cardUrl = fixedUrl || (openUrl ? openUrl + (openUrl.indexOf("?") < 0 ? "?" : "&") + "client_reference_id=" + encodeURIComponent(String(q.r).replace(/[^A-Za-z0-9_-]/g, "-")) : ""), hasCard = /^https:\/\//.test(cardUrl);
-    if (hasBank || hasCard) {
+    var paidKey = "ra-paid-" + q.r, embed = !!(RA.hasApi && location.protocol === "https:");
+    function paidUI() {
+      try { localStorage.setItem(paidKey, "1"); } catch (e) {}
+      $("due").classList.add("paid"); $("due-badge").textContent = "Deposit paid"; $("due-sub").textContent = "Received with thanks";
+      $("stripe-wrap").hidden = true; $("card").hidden = true; $("card-note").hidden = true; $("bankd").hidden = true; $("card-ask").hidden = true;
+      document.querySelector(".payhead").textContent = "Deposit paid"; document.querySelector(".paysub").textContent = "Thank you. Your payment has gone through.";
+      $("next-text").textContent = "I will be in touch shortly to book the measured survey of your home.";
+    }
+    function linkCard() { /* fallback: the Stripe page in a new tab */
+      $("stripe-wrap").hidden = true;
+      if (hasCard) { $("card").hidden = false; $("card").href = cardUrl; $("card-note").hidden = false; if (!fixedUrl) $("card-note").innerHTML = "On the next screen, enter your deposit of <b>" + dep + "</b> and pay securely by card through Stripe. There is no extra cost to you."; }
+      else { $("card-ask").hidden = false; $("card-wa").href = "https://wa.me/447515334455?text=" + encodeURIComponent("Hi Carl, I have signed quote " + q.r + " and would like to pay my " + dep + " deposit by card."); if (hasBank) $("bankd").open = true; }
+    }
+    function loadStripe() {
+      return new Promise(function (ok, no) {
+        if (window.Stripe) return ok();
+        var s = document.createElement("script"); s.src = "https://js.stripe.com/v3/"; s.onload = function () { ok(); }; s.onerror = no; document.head.appendChild(s);
+      });
+    }
+    function embedCard() {
+      $("stripe-wrap").hidden = false;
+      var back = null; try { back = new URLSearchParams(location.search).get("paid"); } catch (e) {}
+      (back ? RA.api({ action: "paid", session: back }).catch(function () { return {}; }) : Promise.resolve({})).then(function (p) {
+        if (p && p.paid) return paidUI();
+        return RA.api({ action: "checkout", r: q.r, s: q.s, email: email || "", back: location.origin + location.pathname, h: location.hash }).then(function (c) {
+          if (c && c.paid) return paidUI();
+          if (!c || !c.ok || !c.secret || !c.pk) throw new Error("no-session");
+          return loadStripe().then(function () {
+            var co = null;
+            return window.Stripe(c.pk).initEmbeddedCheckout({ clientSecret: c.secret, onComplete: function () {
+              RA.api({ action: "paid", session: c.id }).catch(function () {});
+              try { if (co) co.destroy(); } catch (e) {}
+              paidUI(); $("pay").scrollIntoView({ block: "start" });
+            } }).then(function (x) { co = x; $("stripe-load").hidden = true; co.mount("#stripe-box"); });
+          });
+        });
+      }).catch(linkCard);
+    }
+    if (hasBank || hasCard || embed) {
       $("pay").hidden = false; $("pay-amt").textContent = dep;
-      document.querySelector(".paysub").textContent = "Your deposit secures your start date. " + (hasBank && hasCard ? "Pay by bank transfer or by card." : hasBank ? "Pay by bank transfer using the details below." : "Pay securely by card.");
+      document.querySelector(".paysub").textContent = "Your deposit secures your start date. " + (embed || hasCard ? "Pay securely by card below, at no extra cost." : "Pay by bank transfer using the details below.");
       if (hasBank) {
-        $("bank").hidden = false; $("b-sort").textContent = P.sortCode; $("b-acc").textContent = P.accountNumber; $("b-ref").textContent = q.r; $("b-amt").textContent = dep;
+        $("bankd").hidden = false; $("b-sort").textContent = P.sortCode; $("b-acc").textContent = P.accountNumber; $("b-ref").textContent = q.r; $("b-amt").textContent = dep;
         $("b-name").textContent = P.accountName || ""; $("b-name-row").hidden = !P.accountName;
         $("b-bank").textContent = P.bankName || ""; $("b-bank-row").hidden = !P.bankName;
       }
-      if (hasCard) { $("card").hidden = false; $("card").href = cardUrl; $("card-note").hidden = false; if (!fixedUrl) $("card-note").innerHTML = "On the next screen, enter your deposit of <b>" + dep + "</b> and pay securely by card through Stripe. There is no extra cost to you."; if (hasBank) { $("card").textContent = "Or pay by card"; } }
-      if (!hasCard) { $("card-ask").hidden = false; $("card-wa").href = "https://wa.me/447515334455?text=" + encodeURIComponent("Hi Carl, I have signed quote " + q.r + " and would like to pay my " + dep + " deposit by card."); }
       $("next-text").textContent = "Once your deposit arrives I will send your receipt and book the measured survey of your home.";
+      var was = false; try { was = !!localStorage.getItem(paidKey); } catch (e) {}
+      if (was) paidUI(); else if (embed) embedCard(); else linkCard();
     }
     var discounted = agreed < q.f, when = RA.when(at);
     if (!$("tickmark")) { var t = document.createElement("div"); t.className = "tickmark"; t.id = "tickmark"; $("eyebrow").parentNode.insertBefore(t, $("eyebrow")); }
@@ -292,7 +343,7 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
     (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { b.textContent = "Copied"; }, function () {});
   });
   var prev = null; try { prev = JSON.parse(localStorage.getItem(key) || "null"); } catch (e) {}
-  if (prev) { showDone(prev.name, prev.at, prev.agreed); return; }
+  if (prev) { showDone(prev.name, prev.at, prev.agreed, prev.email); return; }
 
   var msg = "Hi Carl, please could you send me an updated quote for " + A + " (" + q.r + ").";
   $("old-wa").href = "https://wa.me/447515334455?text=" + encodeURIComponent(msg);
@@ -325,7 +376,7 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
     var btn = $("go"); btn.disabled = true; btn.textContent = "Signing…";
     RA.api(data)
       .then(function (r) { if (!r || !r.ok) throw new Error("not-saved"); })
-      .then(function () { try { localStorage.setItem(key, JSON.stringify({ name: name, at: at, agreed: agreed })); } catch (e) {} showDone(name, at, agreed); })
+      .then(function () { try { localStorage.setItem(key, JSON.stringify({ name: name, at: at, agreed: agreed, email: email })); } catch (e) {} showDone(name, at, agreed, email); })
       .catch(function () {
         btn.disabled = false; btn.textContent = "Sign and accept this quote";
         var m = "I accept quote " + q.r + " for " + q.p.toLowerCase() + " at " + A + " at a fixed fee of " + RA.money(agreed) + ". " + name;
