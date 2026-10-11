@@ -224,8 +224,8 @@ details.alt .bank { margin-top:.9rem; }
 </div>
 
 
-<script src="pay.js?v=32"></script>
-<script src="q.js?v=32"></script>
+<script src="pay.js?v=33"></script>
+<script src="q.js?v=33"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
@@ -235,6 +235,7 @@ details.alt .bank { margin-top:.9rem; }
   var q = RA.decode((location.hash || "").replace(/^#/, ""));
   if (!q) { $("bad").hidden = false; return; }
   var A = q.a.split(/\n+/).join(", ");
+  var BAL = /[?&]pay=balance(&|$)/.test(location.search); /* the link Carl sends with the first draft, for the remaining 50% */
   var key = "ra-signed-" + q.r, price = { ends: 0, agreed: q.f };
 
   $("quote").hidden = false;
@@ -282,19 +283,19 @@ details.alt .bank { margin-top:.9rem; }
       $("offer").hidden = true; $("fee-std").textContent = RA.money(agreed); $("fee-std").classList.remove("struck"); $("fee-lbl").textContent = "Agreed fixed fee";
     }
     $("dep").textContent = RA.money(Math.round(agreed * 50) / 100);
-    var P = q.b ? { accountName: q.b[0], bankName: q.b[1], sortCode: q.b[2], accountNumber: q.b[3], cardLink: "" } : (window.RA_PAY || {}), dep = RA.money(Math.round(agreed * 50) / 100), hasBank = !!(P.sortCode && P.accountNumber), fixedUrl = (agreed < q.f ? q.c2 : q.c1) || "", openUrl = P.cardLink || STRIPE_DEPOSIT_LINK, cardUrl = fixedUrl || (openUrl ? openUrl + (openUrl.indexOf("?") < 0 ? "?" : "&") + "client_reference_id=" + encodeURIComponent(String(q.r).replace(/[^A-Za-z0-9_-]/g, "-")) : ""), hasCard = /^https:\/\//.test(cardUrl);
-    var paidKey = "ra-paid-" + q.r, embed = !!(RA.hasApi && location.protocol === "https:");
+    var P = q.b ? { accountName: q.b[0], bankName: q.b[1], sortCode: q.b[2], accountNumber: q.b[3], cardLink: "" } : (window.RA_PAY || {}), depAmt = Math.round(agreed * 50) / 100, due = BAL ? Math.round((agreed - depAmt) * 100) / 100 : depAmt, dep = RA.money(due), hasBank = !!(P.sortCode && P.accountNumber), fixedUrl = (agreed < q.f ? q.c2 : q.c1) || "", openUrl = P.cardLink || STRIPE_DEPOSIT_LINK, cardUrl = fixedUrl || (openUrl ? openUrl + (openUrl.indexOf("?") < 0 ? "?" : "&") + "client_reference_id=" + encodeURIComponent(String(q.r).replace(/[^A-Za-z0-9_-]/g, "-")) : ""), hasCard = /^https:\/\//.test(cardUrl);
+    var paidKey = "ra-paid-" + q.r + (BAL ? "-bal" : ""), what = BAL ? "balance" : "deposit", embed = !!(RA.hasApi && location.protocol === "https:");
     function paidUI() {
       try { localStorage.setItem(paidKey, "1"); } catch (e) {}
-      $("due").classList.add("paid"); $("due-badge").textContent = "Deposit paid"; $("due-sub").textContent = "Received with thanks";
+      $("due").classList.add("paid"); $("due-badge").textContent = BAL ? "Balance paid" : "Deposit paid"; $("due-sub").textContent = "Received with thanks";
       $("stripe-wrap").hidden = true; $("kl-pay").hidden = true; $("card").hidden = true; $("card-note").hidden = true; $("bankd").hidden = true; $("card-ask").hidden = true;
-      document.querySelector(".payhead").textContent = "Deposit paid"; document.querySelector(".paysub").textContent = "Thank you. Your payment has gone through.";
-      $("next-text").textContent = "I will be in touch shortly to book the measured survey of your home.";
+      document.querySelector(".payhead").textContent = BAL ? "Balance paid" : "Deposit paid"; document.querySelector(".paysub").textContent = "Thank you. Your payment has gone through.";
+      $("next-text").textContent = BAL ? "Your fee is now paid in full. Thank you." : "I will be in touch shortly to book the measured survey of your home.";
     }
     function linkCard() { /* fallback: the Stripe page in a new tab */
       $("stripe-wrap").hidden = true;
-      if (hasCard) { $("card").hidden = false; $("card").href = cardUrl; $("card-note").hidden = false; if (!fixedUrl) $("card-note").innerHTML = "On the next screen, enter your deposit of <b>" + dep + "</b> and pay securely by card through Stripe. There is no extra cost to you."; }
-      else { $("card-ask").hidden = false; $("card-wa").href = "https://wa.me/447515334455?text=" + encodeURIComponent("Hi Carl, I have signed quote " + q.r + " and would like to pay my " + dep + " deposit by card."); if (hasBank) $("bankd").open = true; }
+      if (hasCard) { $("card").hidden = false; $("card").href = cardUrl; $("card-note").hidden = false; if (!fixedUrl) $("card-note").innerHTML = "On the next screen, enter your " + what + " of <b>" + dep + "</b> and pay securely by card through Stripe. There is no extra cost to you."; }
+      else { $("card-ask").hidden = false; $("card-wa").href = "https://wa.me/447515334455?text=" + encodeURIComponent("Hi Carl, I have signed quote " + q.r + " and would like to pay my " + dep + " " + what + " by card."); if (hasBank) $("bankd").open = true; }
     }
     function loadStripe() {
       return new Promise(function (ok, no) {
@@ -303,11 +304,11 @@ details.alt .bank { margin-top:.9rem; }
       });
     }
     function embedCard() {
-      $("stripe-wrap").hidden = false; $("kl-pay").hidden = false; RA.klarna("#kl-pay-box", Math.round(agreed * 50) / 100);
+      $("stripe-wrap").hidden = false; $("kl-pay").hidden = false; RA.klarna("#kl-pay-box", due);
       var back = null; try { back = new URLSearchParams(location.search).get("paid"); } catch (e) {}
       (back ? RA.api({ action: "paid", session: back }).catch(function () { return {}; }) : Promise.resolve({})).then(function (p) {
         if (p && p.paid) return paidUI();
-        return RA.api({ action: "checkout", r: q.r, s: q.s, email: email || "", back: location.origin + location.pathname, h: location.hash }).then(function (c) {
+        return RA.api({ action: "checkout", kind: BAL ? "balance" : "deposit", r: q.r, s: q.s, email: email || "", back: location.origin + location.pathname, h: location.hash }).then(function (c) {
           if (c && c.paid) return paidUI();
           if (!c || !c.ok || !c.secret || !c.pk) throw new Error("no-session");
           return loadStripe().then(function () {
@@ -323,22 +324,23 @@ details.alt .bank { margin-top:.9rem; }
     }
     if (hasBank || hasCard || embed) {
       $("pay").hidden = false; $("pay-amt").textContent = dep;
-      document.querySelector(".paysub").textContent = "Your deposit secures your start date. " + (embed || hasCard ? "Pay securely by card below, at no extra cost." : "Pay by bank transfer using the details below.");
+      document.querySelector(".paysub").textContent = (BAL ? "Your first draft is ready. The remaining 50% of your agreed fee is payable within 7 days. " : "Your deposit secures your start date. ") + (embed || hasCard ? "Pay securely by card below, at no extra cost." : "Pay by bank transfer using the details below.");
+      if (BAL) { document.querySelector(".payhead").textContent = "Pay your balance"; $("due-badge").textContent = "Balance due"; $("due-sub").textContent = "Remaining 50% of your agreed fee"; }
       if (hasBank) {
         $("bankd").hidden = false; $("b-sort").textContent = P.sortCode; $("b-acc").textContent = P.accountNumber; $("b-ref").textContent = q.r; $("b-amt").textContent = dep;
         $("b-name").textContent = P.accountName || ""; $("b-name-row").hidden = !P.accountName;
         $("b-bank").textContent = P.bankName || ""; $("b-bank-row").hidden = !P.bankName;
       }
-      $("next-text").textContent = "Once your deposit arrives I will send your receipt and book the measured survey of your home.";
+      $("next-text").textContent = BAL ? "Once your balance arrives I will send your receipt." : "Once your deposit arrives I will send your receipt and book the measured survey of your home.";
       var was = false; try { was = !!localStorage.getItem(paidKey); } catch (e) {}
       if (was) paidUI(); else if (embed) embedCard(); else linkCard();
     }
     var discounted = agreed < q.f, when = RA.when(at);
     if (!$("tickmark")) { var t = document.createElement("div"); t.className = "tickmark"; t.id = "tickmark"; $("eyebrow").parentNode.insertBefore(t, $("eyebrow")); }
-    $("eyebrow").textContent = "Quote " + q.r; $("title").textContent = "Contract signed and confirmed";
+    $("eyebrow").textContent = "Quote " + q.r; $("title").textContent = BAL ? "Your balance payment" : "Contract signed and confirmed";
     $("intro").textContent = "Thank you. Your quote for " + q.p.charAt(0).toLowerCase() + q.p.slice(1) + " at " + A + " was signed by " + name + " on " + when + ".";
-    $("fee-head").textContent = discounted ? "Discount secured" : "Your agreed fee";
-    document.title = "Contract signed | Residential Architecture";
+    $("fee-head").textContent = BAL ? "Your agreed fee" : discounted ? "Discount secured" : "Your agreed fee";
+    document.title = (BAL ? "Pay your balance" : "Contract signed") + " | Residential Architecture";
     $("done-head").hidden = true;
     $("done-text").textContent = "Signed by " + name + " on " + RA.when(at) + ". Agreed fixed fee: " + RA.money(agreed) + (agreed < q.f ? ", which includes your " + Math.round((1 - agreed / q.f) * 100) + "% discount (" + RA.money(q.f - agreed) + " off the standard " + RA.money(q.f) + ")." : ".");
     $("done-text").hidden = !$("pay").hidden; if ($("pay").hidden) { $("done-head").hidden = false; $("done-head").textContent = "What happens next"; $("done-text").hidden = true; }
@@ -351,6 +353,12 @@ details.alt .bank { margin-top:.9rem; }
   });
   var prev = null; try { prev = JSON.parse(localStorage.getItem(key) || "null"); } catch (e) {}
   if (prev) { showDone(prev.name, prev.at, prev.agreed, prev.email); return; }
+  /* Signed on another device? Ask the sheet, so the client sees the signed page (and the payment form) wherever they open the link. */
+  if (RA.hasApi) RA.api({ action: "state", r: q.r, s: q.s }).then(function (st) {
+    if (!st || !st.signed || !st.agreed || document.body.classList.contains("signed")) return;
+    try { localStorage.setItem(key, JSON.stringify({ name: st.name, at: st.at, agreed: st.agreed })); if (st.deposit) localStorage.setItem("ra-paid-" + q.r, "1"); if (st.balance) localStorage.setItem("ra-paid-" + q.r + "-bal", "1"); } catch (e) {}
+    showDone(st.name, st.at, st.agreed, "");
+  }).catch(function () {});
 
   var msg = "Hi Carl, please could you send me an updated quote for " + A + " (" + q.r + ").";
   $("old-wa").href = "https://wa.me/447515334455?text=" + encodeURIComponent(msg);

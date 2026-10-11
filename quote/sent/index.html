@@ -62,7 +62,7 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
     <p class="err" id="adderr" hidden></p>
   </div>
 </div>
-<script src="../q.js?v=31"></script>
+<script src="../q.js?v=33"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
@@ -127,6 +127,9 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
       b4.onclick = function () { var a2 = load(); a2[ix].signed = !a2[ix].signed; save(a2); push({ action: "status", r: x.r, s: x.s, status: a2[ix].signed ? "Signed" : "Sent" }); render(); };
       var b5 = el("button", "ghost", "Remove"); b5.type = "button";
       b5.onclick = function () { if (b5.textContent !== "Confirm remove") { b5.textContent = "Confirm remove"; return; } var a2 = load(); push({ action: "status", r: x.r, s: x.s, status: "Removed" }); a2.splice(ix, 1); save(a2); render(); };
+      var b6 = el("button", "btn", "Copy balance payment link"); b6.type = "button";
+      b6.onclick = function () { var u = base(x.u).replace("/quote/#", "/quote/?pay=balance#"); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function () { b6.textContent = "Copied. Send it with the first draft"; }, function () { out.innerHTML = ""; var ta = el("textarea"); ta.readOnly = true; ta.value = u; out.appendChild(ta); out.hidden = false; }); };
+      if (x.signed) act.appendChild(b6);
       if (!x.signed) act.appendChild(b1); act.appendChild(b2); act.appendChild(b3); act.appendChild(b4); act.appendChild(b5);
       c.appendChild(act); c.appendChild(out); list.appendChild(c);
     });
