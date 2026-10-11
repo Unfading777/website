@@ -151,7 +151,7 @@ details.alt .bank { margin-top:.9rem; }
         <li>Council, Building Control and Thames Water application fees are paid by you directly and are not included.</li>
         <li>This quote is valid for 30 days.</li>
       </ul>
-      <div class="kl noprint" id="kl-fee"><b>Klarna available</b><div id="kl-fee-box"></div><p class="small">Shown for your deposit of <span id="kl-fee-amt"></span>.</p></div>
+      <div class="kl noprint" id="kl-fee"><b>Klarna available</b><div id="kl-fee-box"></div><p class="small" id="kl-fee-note" hidden>Shown for your deposit of <span id="kl-fee-amt"></span>.</p></div>
     </div>
 
     <div class="card" id="inccard">
@@ -224,8 +224,8 @@ details.alt .bank { margin-top:.9rem; }
 </div>
 
 
-<script src="pay.js?v=31"></script>
-<script src="q.js?v=31"></script>
+<script src="pay.js?v=32"></script>
+<script src="q.js?v=32"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
@@ -263,7 +263,7 @@ details.alt .bank { margin-top:.9rem; }
     }
     var depNow = Math.round(agreed * 50) / 100;
     $("dep").textContent = RA.money(depNow); $("kl-fee-amt").textContent = RA.money(depNow);
-    if (klAmt !== depNow) { klAmt = depNow; if (klEl) { try { klEl.update({ amount: Math.round(depNow * 100) }); } catch (e) {} } else if (!klAsked) { klAsked = true; RA.klarna("#kl-fee-box", depNow).then(function (e) { klEl = e; if (e && klAmt !== depNow) { try { e.update({ amount: Math.round(klAmt * 100) }); } catch (x) {} } }); } }
+    if (klAmt !== depNow) { klAmt = depNow; if (klEl) { try { klEl.update({ amount: Math.round(depNow * 100) }); } catch (e) {} } else if (!klAsked) { klAsked = true; RA.klarna("#kl-fee-box", depNow).then(function (e) { klEl = e; var n = 0, t = setInterval(function () { if ($("kl-fee-box").offsetHeight > 20) { $("kl-fee-note").hidden = false; clearInterval(t); } else if (++n > 20) clearInterval(t); }, 500); if (e && klAmt !== depNow) { try { e.update({ amount: Math.round(klAmt * 100) }); } catch (x) {} } }); } }
     $("agree-text").textContent = "I, the person named above, accept this quotation for " + q.p.toLowerCase() + " at " + A + " at a fixed fee of " + RA.money(agreed) + ", and instruct Residential Architecture to proceed on the terms shown on this page.";
   }
   paint(); var timer = setInterval(paint, 30000);
