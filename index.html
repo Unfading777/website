@@ -983,7 +983,8 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
         if (w > 60) { r.setAttribute('width', w); ln2.setAttribute('x1', -468 + w); }
       });
     }
-    var cur = 0, nxt = 0, t0 = 0, HOLD = 1900, MORPH = 1100, raf = 0, timer = 0, visible = true;
+    var phone = window.matchMedia && window.matchMedia('(max-width: 700px)').matches; /* phones scroll past quickly, so each design shows for 1 second there */
+    var cur = 0, nxt = 0, t0 = 0, HOLD = phone ? 1000 : 1900, MORPH = phone ? 700 : 1100, raf = 0, timer = 0, visible = true;
     var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     states.forEach(function (st, i) {
       var b = document.createElement('button');
