@@ -245,7 +245,7 @@ details.alt .bank { margin-top:.9rem; }
   if (!q) { $("bad").hidden = false; return; }
   var A = q.a.split(/\n+/).join(", ");
   var BAL = /[?&]pay=balance(&|$)/.test(location.search); /* the link Carl sends with the first draft, for the remaining 50% */
-  var key = "ra-signed-" + q.r, price = { ends: 0, agreed: q.f };
+  var key = "ra-signed-" + q.r + "-" + q.s, price = { ends: 0, agreed: q.f };
 
   $("quote").hidden = false;
   $("ref").textContent = "Quote " + q.r;
@@ -293,12 +293,12 @@ details.alt .bank { margin-top:.9rem; }
     }
     $("dep").textContent = RA.money(Math.round(agreed * 50) / 100);
     var P = q.b ? { accountName: q.b[0], bankName: q.b[1], sortCode: q.b[2], accountNumber: q.b[3], cardLink: "" } : (window.RA_PAY || {}), depAmt = Math.round(agreed * 50) / 100, due = BAL ? Math.round((agreed - depAmt) * 100) / 100 : depAmt, dep = RA.money(due), hasBank = !!(P.sortCode && P.accountNumber), fixedUrl = (agreed < q.f ? q.c2 : q.c1) || "", openUrl = P.cardLink || STRIPE_DEPOSIT_LINK, cardUrl = fixedUrl || (openUrl ? openUrl + (openUrl.indexOf("?") < 0 ? "?" : "&") + "client_reference_id=" + encodeURIComponent(String(q.r).replace(/[^A-Za-z0-9_-]/g, "-")) : ""), hasCard = /^https:\/\//.test(cardUrl);
-    var paidKey = "ra-paid-" + q.r + (BAL ? "-bal" : ""), what = BAL ? "balance" : "deposit", embed = !!(RA.hasApi && location.protocol === "https:");
+    var paidKey = "ra-paid-" + q.r + "-" + q.s + (BAL ? "-bal" : ""), what = BAL ? "balance" : "deposit", embed = !!(RA.hasApi && location.protocol === "https:");
     var full = false, co = null, mountN = 0;
-    if (!BAL) try { if (localStorage.getItem("ra-paid-" + q.r) && localStorage.getItem("ra-paid-" + q.r + "-bal")) full = true; } catch (e) {}
+    if (!BAL) try { if (localStorage.getItem("ra-paid-" + q.r + "-" + q.s) && localStorage.getItem("ra-paid-" + q.r + "-" + q.s + "-bal")) full = true; } catch (e) {}
     function paidUI() {
       try { localStorage.setItem(paidKey, "1"); } catch (e) {}
-      if (full) try { localStorage.setItem("ra-paid-" + q.r + "-bal", "1"); } catch (e) {}
+      if (full) try { localStorage.setItem("ra-paid-" + q.r + "-" + q.s + "-bal", "1"); } catch (e) {}
       $("opts").hidden = true; $("opt-note").hidden = true;
       $("due").classList.add("paid"); $("due-badge").textContent = BAL ? "Balance paid" : full ? "Paid in full" : "Deposit paid"; $("due-sub").textContent = "Received with thanks";
       $("stripe-wrap").hidden = true; $("kl-pay").hidden = true; $("card").hidden = true; $("card-note").hidden = true; $("bankd").hidden = true; $("card-ask").hidden = true;
@@ -392,7 +392,7 @@ details.alt .bank { margin-top:.9rem; }
   /* Signed on another device? Ask the sheet, so the client sees the signed page (and the payment form) wherever they open the link. */
   if (RA.hasApi) RA.api({ action: "state", r: q.r, s: q.s }).then(function (st) {
     if (!st || !st.signed || !st.agreed || document.body.classList.contains("signed")) return;
-    try { localStorage.setItem(key, JSON.stringify({ name: st.name, at: st.at, agreed: st.agreed })); if (st.deposit) localStorage.setItem("ra-paid-" + q.r, "1"); if (st.balance) localStorage.setItem("ra-paid-" + q.r + "-bal", "1"); } catch (e) {}
+    try { localStorage.setItem(key, JSON.stringify({ name: st.name, at: st.at, agreed: st.agreed })); if (st.deposit) localStorage.setItem("ra-paid-" + q.r + "-" + q.s, "1"); if (st.balance) localStorage.setItem("ra-paid-" + q.r + "-" + q.s + "-bal", "1"); } catch (e) {}
     showDone(st.name, st.at, st.agreed, "");
   }).catch(function () {});
 
