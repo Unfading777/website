@@ -21,7 +21,7 @@ var RA = (function () {
     ["Liaison with the Party Wall Surveyor", 1],
     ["A quotation for structural calculations following the approved design", 1],
     ["Introductions to local building companies", 1],
-    ["Credit card payments accepted at no extra cost. Klarna available", 1],
+    ["Card, Apple Pay and Google Pay accepted. Klarna available", 1],
     ["Planning guarantee: if planning is refused, I revise the design in line with the council's feedback at no extra cost and resubmit, as many times as it takes to get approval", 1]
   ];
   /* Structural calculations quotes: what the fee covers (Carl's standard list). */
@@ -36,7 +36,7 @@ var RA = (function () {
     ["Ceiling joists", 1],
     ["Trimming to roof windows", 1],
     ["Floor joists", 1],
-    ["Credit card payments accepted at no extra cost. Klarna available", 1]
+    ["Card, Apple Pay and Google Pay accepted. Klarna available", 1]
   ];
   function isCalcs(q) { return /^structural calculations/i.test(String(q && q.p || "")); }
   var HOUR = 3600000, DAY = 24 * HOUR;

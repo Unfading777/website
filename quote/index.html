@@ -223,7 +223,7 @@ details.alt .bank { margin-top:.9rem; }
             <div><dt>Amount</dt><dd><span id="b-amt"></span></dd></div>
           </dl>
         </details>
-        <p id="card-ask" hidden>The payment form could not load just now. <a id="card-wa" target="_blank" rel="noopener">Message me on WhatsApp</a> or reply to my email and I will send you a secure payment link, at no extra cost.</p>
+        <p id="card-ask" hidden>The payment form could not load just now. <a id="card-wa" target="_blank" rel="noopener">Message me on WhatsApp</a> or reply to my email and I will send you a secure payment link.</p>
       </div>
       <p id="next-text">I will be in touch shortly with your deposit invoice and a date for the measured survey.</p>
       <div class="actions"><button class="ghost" type="button" onclick="window.print()">Print or save a copy</button><a class="ghost" href="https://wa.me/447515334455">WhatsApp Carl</a></div>
@@ -235,7 +235,7 @@ details.alt .bank { margin-top:.9rem; }
 
 
 <script src="pay.js?v=35"></script>
-<script src="q.js?v=39"></script>
+<script src="q.js?v=40"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
@@ -321,7 +321,7 @@ details.alt .bank { margin-top:.9rem; }
     function linkCard() { /* fallback: the Stripe page in a new tab */
       $("stripe-wrap").hidden = true;
       $("opts").hidden = true; $("opt-note").hidden = true;
-      if (hasCard && !CALC) { $("card").hidden = false; $("card").href = cardUrl; $("card-note").hidden = false; if (!fixedUrl) $("card-note").innerHTML = "On the next screen, enter your " + what + " of <b>" + dep + "</b> and pay securely by card through Stripe. There is no extra cost to you."; }
+      if (hasCard && !CALC) { $("card").hidden = false; $("card").href = cardUrl; $("card-note").hidden = false; if (!fixedUrl) $("card-note").innerHTML = "On the next screen, enter your " + what + " of <b>" + dep + "</b> and pay securely by card through Stripe."; }
       else { $("card-ask").hidden = false; $("card-wa").href = "https://wa.me/447515334455?text=" + encodeURIComponent("Hi Carl, I have signed quote " + q.r + " and would like to pay my " + dep + " " + what + " by card."); if (hasBank) $("bankd").open = true; }
     }
     function loadStripe() {
@@ -357,7 +357,7 @@ details.alt .bank { margin-top:.9rem; }
       $("pay-amt").textContent = RA.money(full ? agreed : due);
       $("due-badge").textContent = full ? "Full fee" : "Deposit due today"; $("due-sub").textContent = full ? "Your agreed fee, paid in full" : "50% of your agreed fee";
       document.querySelector(".payhead").textContent = full ? "Pay in full" : "Pay your deposit";
-      document.querySelector(".paysub").textContent = (full ? "Pay your whole fee now and there is nothing more to pay later. " : "Your deposit secures your start date. ") + "Pay securely by card below, at no extra cost.";
+      document.querySelector(".paysub").textContent = (full ? "Pay your whole fee now and there is nothing more to pay later. " : "Your deposit secures your start date. ") + "Pay securely by card below.";
       var kl = document.querySelector("#kl-pay .kl-line"); if (kl) kl.textContent = kl.textContent.replace(full ? "of your deposit" : "of your fee", full ? "of your fee" : "of your deposit");
       $("next-text").textContent = full ? "Once your payment arrives I will send your receipt and book the measured survey of your home." : "Once your deposit arrives I will send your receipt and book the measured survey of your home.";
       $("opt-note").textContent = full ? "Your whole fee in one payment, with nothing more to pay later. With Klarna you can still spread it into instalments." : "The remaining 50% (" + RA.money(Math.round((agreed - depAmt) * 100) / 100) + ") is charged to the same card when I issue your first draft. If you pay with Klarna, I will send you a payment link instead.";
@@ -366,7 +366,7 @@ details.alt .bank { margin-top:.9rem; }
     }
     if (hasBank || hasCard || embed) {
       $("pay").hidden = false; $("pay-amt").textContent = dep;
-      document.querySelector(".paysub").textContent = (BAL ? "Your first draft is ready. The remaining 50% of your agreed fee is now due, and your drawings are released as soon as it is paid. " : "Your deposit secures your start date. ") + (embed || hasCard ? "Pay securely by card below, at no extra cost." : "Pay by bank transfer using the details below.");
+      document.querySelector(".paysub").textContent = (BAL ? "Your first draft is ready. The remaining 50% of your agreed fee is now due, and your drawings are released as soon as it is paid. " : "Your deposit secures your start date. ") + (embed || hasCard ? "Pay securely by card below." : "Pay by bank transfer using the details below.");
       if (BAL) { document.querySelector(".payhead").textContent = "Pay your balance"; $("due-badge").textContent = "Balance due"; $("due-sub").textContent = "Remaining 50% of your agreed fee"; }
       if (hasBank) {
         $("bankd").hidden = false; $("b-sort").textContent = P.sortCode; $("b-acc").textContent = P.accountNumber; $("b-ref").textContent = q.r; $("b-amt").textContent = dep;
@@ -378,7 +378,7 @@ details.alt .bank { margin-top:.9rem; }
       if (was) paidUI(); else if (embed) {
         if (CALC) {
           $("pay-amt").textContent = RA.money(agreed); $("due-badge").textContent = "Fee due"; $("due-sub").textContent = "Your fixed fee, paid in full";
-          document.querySelector(".payhead").textContent = "Pay your fee"; document.querySelector(".paysub").textContent = "Pay securely by card below, at no extra cost. Your calculations are released once payment has gone through.";
+          document.querySelector(".payhead").textContent = "Pay your fee"; document.querySelector(".paysub").textContent = "Pay securely by card below. Your calculations are released once payment has gone through.";
           var kl = document.querySelector("#kl-pay .kl-line"); if (kl) kl.textContent = kl.textContent.replace("of your deposit", "of your fee");
           $("next-text").textContent = "Once your payment is through, work on your structural calculations starts straight away.";
         } else if (!BAL) {
