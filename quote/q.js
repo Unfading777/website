@@ -22,7 +22,7 @@ var RA = (function () {
     ["A quotation for structural calculations following the approved design", 1],
     ["Introductions to local building companies", 1],
     ["Credit card payments accepted at no extra cost. Klarna available", 1],
-    ["Planning guarantee: if planning is refused, I revise the design in line with the council's feedback and resubmit at no extra fee, as many times as it takes to get approval", 1]
+    ["Planning guarantee: if planning is refused, I revise the design in line with the council's feedback at no extra cost and resubmit, as many times as it takes to get approval", 1]
   ];
   var HOUR = 3600000, DAY = 24 * HOUR;
   /* Extra dates when the discount is offered again, e.g. bank-holiday promotions.
