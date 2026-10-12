@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Pipeline | Residential Architecture</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='4' transform='rotate(45 16 16)' fill='%23E6007A'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap">
+<style>
+:root { --pink:#E6007A; --pink-hover:#C40068; --ink:#1F1E26; --grey:#6A6875; --line:#E4E3EA; --tint:#FFE3F1; --bg:#F6F5F9; --ok:#12805C; --okbg:#DDF3EA; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:'DM Sans',system-ui,sans-serif; line-height:1.5; }
+.wrap { max-width:56rem; margin:0 auto; padding:1rem 1rem 4rem; }
+.brand { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.15rem; display:inline-flex; align-items:center; gap:.55rem; margin:.4rem 0 .6rem; }
+.brand i { width:.8rem; height:.8rem; background:var(--pink); border-radius:3px; transform:rotate(45deg); display:inline-block; }
+h1 { font-family:'Outfit',sans-serif; font-size:1.8rem; margin:.2rem 0 .2rem; letter-spacing:-.02em; }
+h2 { font-family:'Outfit',sans-serif; font-size:1.15rem; margin:0 0 .7rem; }
+a { color:var(--pink); font-weight:600; }
+.card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:1.1rem 1.2rem; margin-bottom:.8rem; }
+.small { color:var(--grey); font-size:.9rem; }
+.err { color:#B3261E; font-size:.92rem; }
+input[type=text], input[type=password], input[type=search], textarea { width:100%; font:inherit; padding:.7rem .9rem; border:1.5px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); }
+input:focus, textarea:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(--tint); }
+.actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.7rem; }
+.btn, .ghost, .chip { font:inherit; font-weight:600; font-size:.9rem; padding:.5rem .95rem; border-radius:999px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; }
+.btn { border:0; background:var(--pink); color:#fff; } .btn:hover { background:var(--pink-hover); }
+.ghost, .chip { border:1.5px solid var(--line); background:#fff; color:var(--ink); }
+.chip[aria-pressed=true] { background:var(--ink); border-color:var(--ink); color:#fff; }
+.btn:focus-visible, .ghost:focus-visible, .chip:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
+.periods { display:flex; flex-wrap:wrap; gap:.4rem; margin:.2rem 0 1rem; }
+.funnel { display:grid; grid-template-columns:repeat(auto-fit, minmax(7.5rem, 1fr)); gap:.6rem; }
+.stat { background:#fff; border:1px solid var(--line); border-radius:16px; padding:.8rem .9rem; }
+.stat b { display:block; font-family:'Outfit',sans-serif; font-size:1.7rem; line-height:1.1; font-variant-numeric:tabular-nums; }
+.stat span { display:block; font-size:.85rem; color:var(--grey); }
+.stat em { display:block; font-style:normal; font-size:.82rem; font-weight:600; color:var(--pink-hover); margin-top:.2rem; }
+.stat.won { background:var(--ink); border-color:var(--ink); color:#fff; } .stat.won span { color:#C9C7D2; } .stat.won em { color:#FF8CC6; }
+.bar { height:6px; border-radius:6px; background:var(--tint); margin-top:.5rem; overflow:hidden; } .bar i { display:block; height:100%; background:var(--pink); }
+.tables { display:grid; grid-template-columns:1fr; gap:.8rem; margin-top:.8rem; }
+@media (min-width:46rem) { .tables { grid-template-columns:1fr 1fr; } }
+table { width:100%; border-collapse:collapse; font-size:.92rem; font-variant-numeric:tabular-nums; }
+th { text-align:left; font-size:.78rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--grey); padding:.35rem .3rem; border-bottom:1px solid var(--line); }
+td { padding:.45rem .3rem; border-bottom:1px solid var(--line); }
+td.n, th.n { text-align:right; }
+tr:last-child td { border-bottom:0; }
+.person .top { display:flex; flex-wrap:wrap; justify-content:space-between; gap:.3rem 1rem; align-items:baseline; }
+.name { font-family:'Outfit',sans-serif; font-weight:600; font-size:1.1rem; }
+.tag { display:inline-block; font-size:.74rem; font-weight:600; letter-spacing:.05em; text-transform:uppercase; padding:.12rem .55rem; border-radius:999px; background:var(--tint); color:var(--pink-hover); margin-left:.4rem; vertical-align:middle; }
+.tag.ok { background:var(--okbg); color:var(--ok); } .tag.off { background:var(--bg); color:var(--grey); }
+.steps { display:flex; gap:3px; margin:.6rem 0 .2rem; } .steps i { flex:1; height:5px; border-radius:5px; background:var(--line); } .steps i.on { background:var(--pink); } .steps.won i.on { background:var(--ok); }
+.note { margin-top:.6rem; background:var(--bg); border-radius:10px; padding:.5rem .7rem; font-size:.92rem; white-space:pre-wrap; }
+.edit { margin-top:.7rem; } .edit textarea { min-height:4rem; }
+.toolbar { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin:1.4rem 0 .7rem; } .toolbar input { flex:1 1 14rem; }
+[hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><i></i>Residential Architecture</div>
+  <h1>Pipeline</h1>
+  <p class="small" style="margin:0 0 1rem"><span id="src">Every lead, visit and quote in one place. It updates itself.</span> <a href="../sent/">Sent quotes</a> <a id="sheet" target="_blank" rel="noopener" hidden style="margin-left:.6rem">Open the Google Sheet</a></p>
+
+  <div class="card" id="connect" hidden>
+    <label for="pw" style="font-weight:600;display:block;margin-bottom:.3rem">Enter your passphrase</label>
+    <p class="small" style="margin:0 0 .5rem">The same one you use on the Sent quotes page.</p>
+    <input type="password" id="pw" autocomplete="current-password">
+    <div class="actions"><button class="btn" type="button" id="pwgo">Open pipeline</button></div>
+    <p class="err" id="pwerr" hidden></p>
+  </div>
+
+  <p class="small" id="loading">Loading your pipeline&hellip;</p>
+
+  <div id="main" hidden>
+    <div class="card" id="calcard" hidden>
+      <h2>Connect Calendly to track home visits</h2>
+      <p class="small" style="margin:0 0 .6rem">Leads, quotes and payments are already tracked. To count booked and completed home visits too, paste a Calendly personal access token here once. In Calendly go to <b>Integrations &amp; apps</b>, then <b>API and webhooks</b>, then <b>Generate new token</b>. Name it anything and copy it.</p>
+      <input type="password" id="tok" placeholder="Paste the token" autocomplete="off">
+      <div class="actions"><button class="btn" type="button" id="tokgo">Connect Calendly</button></div>
+      <p class="err" id="tokerr" hidden></p>
+    </div>
+
+    <div class="periods" role="group" aria-label="Period">
+      <button class="chip" type="button" data-p="30">Last 30 days</button>
+      <button class="chip" type="button" data-p="90">Last 3 months</button>
+      <button class="chip" type="button" data-p="365">Last 12 months</button>
+      <button class="chip" type="button" data-p="0">All time</button>
+    </div>
+    <div class="funnel" id="funnel"></div>
+    <div class="tables">
+      <div class="card"><h2>By area</h2><table id="byarea"></table></div>
+      <div class="card"><h2>By source</h2><table id="bysrc"></table></div>
+    </div>
+
+    <div class="toolbar">
+      <input type="search" id="find" placeholder="Search by name, postcode or reference" autocomplete="off">
+    </div>
+    <div class="periods" role="group" aria-label="Stage" id="stages"></div>
+    <div id="list"></div>
+    <p class="small" id="empty" hidden>Nobody here yet. New leads from Local Surveyors Direct, Calendly bookings and quotes you send all appear automatically.</p>
+  </div>
+</div>
+<script src="../q.js?v=36"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var DAY = 86400000, people = [], period = 90, stage = "Open", now = Date.now();
+  var STAGES = ["Lead", "Visit booked", "Visited", "Quote sent", "Signed", "Deposit paid"];
+  var STEP = { "Lead": 1, "Visit booked": 2, "Visited": 3, "Quote sent": 4, "Signed": 5, "Deposit paid": 6, "Lost": 0 };
+  function pref(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function money(n) { return "£" + Math.round(n || 0).toLocaleString("en-GB"); }
+  function day(t) { return t ? new Date(t).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: new Date(t).getFullYear() === new Date().getFullYear() ? undefined : "numeric" }) : ""; }
+  function pct(a, b) { return b ? Math.round(a / b * 100) + "%" : "–"; }
+  function reached(p, s) { return (STEP[p.st] || 0) >= s || (s <= 3 && p.vs === "Visited") || (s === 2 && (p.vs === "Booked" || p.vs === "Visited")) || (s === 4 && p.qs) || (s === 5 && p.sg); }
+  function inPeriod(p) { return !period || (p.f || p.qs || p.vb) >= now - period * DAY; }
+
+  function load(pw) {
+    $("loading").hidden = false; $("pwerr").hidden = true;
+    return RA.api({ action: "pipeline", pass: pw }).then(function (r) {
+      $("loading").hidden = true;
+      if (!r.ok) { try { localStorage.removeItem("ra-pass"); } catch (e) {} $("connect").hidden = false; $("pwerr").textContent = r.error === "bad-pass" ? "That passphrase is not right." : "Could not load the pipeline. Please try again."; $("pwerr").hidden = false; return; }
+      try { localStorage.setItem("ra-pass", pw); } catch (e) {}
+      people = r.people || []; now = r.now || Date.now();
+      $("connect").hidden = true; $("main").hidden = false;
+      $("calcard").hidden = r.calendly === "on";
+      if (r.calendly === "error") { $("tokerr").textContent = "Calendly stopped answering. Paste a fresh token to reconnect."; $("tokerr").hidden = false; }
+      if (r.sheet) { $("sheet").href = r.sheet; $("sheet").hidden = false; }
+      render();
+    }).catch(function () { $("loading").textContent = "Could not reach your Google Sheet. Check your connection and refresh."; });
+  }
+
+  function renderFunnel(set) {
+    var n = function (s) { return set.filter(function (p) { return reached(p, s); }).length; };
+    var leads = set.length, booked = n(2), visited = n(3), quoted = n(4), signed = n(5);
+    var won = set.filter(function (p) { return p.sg; }).reduce(function (a, p) { return a + (p.ag || p.qf || 0); }, 0);
+    var cells = [["Leads", leads, ""], ["Visits booked", booked, pct(booked, leads) + " of leads"], ["Visits done", visited, pct(visited, booked) + " of booked"], ["Quotes sent", quoted, pct(quoted, visited || leads) + (visited ? " of visits" : " of leads")], ["Signed", signed, pct(signed, quoted) + " of quotes"]];
+    var f = $("funnel"); f.innerHTML = "";
+    cells.forEach(function (c, i) {
+      var s = el("div", "stat"); s.appendChild(el("b", null, c[1])); s.appendChild(el("span", null, c[0])); if (c[2]) s.appendChild(el("em", null, c[2]));
+      var bar = el("div", "bar"), b = el("i"); b.style.width = (leads ? Math.round(c[1] / leads * 100) : 0) + "%"; bar.appendChild(b); s.appendChild(bar); f.appendChild(s);
+    });
+    var w = el("div", "stat won"); w.appendChild(el("b", null, money(won))); w.appendChild(el("span", null, "Work won")); w.appendChild(el("em", null, signed ? money(won / signed) + " average" : "")); f.appendChild(w);
+  }
+  function renderTable(id, set, keyFn, label) {
+    var g = {}; set.forEach(function (p) { var k = keyFn(p) || "Unknown"; (g[k] = g[k] || []).push(p); });
+    var keys = Object.keys(g).sort(function (a, b) { return g[b].length - g[a].length || (a < b ? -1 : 1); });
+    var t = $(id); t.innerHTML = "";
+    var h = el("tr"); [label, "Leads", "Visits", "Signed", "Won"].forEach(function (x, i) { h.appendChild(el("th", i ? "n" : null, x)); }); t.appendChild(h);
+    if (!keys.length) { var r0 = el("tr"), c0 = el("td", "small", "Nothing yet"); c0.colSpan = 5; r0.appendChild(c0); t.appendChild(r0); return; }
+    keys.forEach(function (k) {
+      var a = g[k], v = a.filter(function (p) { return reached(p, 3); }).length, s = a.filter(function (p) { return p.sg; });
+      var r = el("tr"); r.appendChild(el("td", null, k)); r.appendChild(el("td", "n", a.length)); r.appendChild(el("td", "n", v)); r.appendChild(el("td", "n", s.length + (a.length ? " (" + pct(s.length, a.length) + ")" : "")));
+      r.appendChild(el("td", "n", money(s.reduce(function (x, p) { return x + (p.ag || p.qf || 0); }, 0)))); t.appendChild(r);
+    });
+  }
+  function renderStages(set) {
+    var box = $("stages"); box.innerHTML = "";
+    var opts = [["Open", set.filter(function (p) { return !p.sg && !p.lost; }).length]].concat(STAGES.map(function (s) { return [s, set.filter(function (p) { return p.st === s; }).length]; })).concat([["Lost", set.filter(function (p) { return p.st === "Lost"; }).length], ["All", set.length]]);
+    opts.forEach(function (o) {
+      var b = el("button", "chip", o[0] + " " + o[1]); b.type = "button"; b.setAttribute("aria-pressed", stage === o[0] ? "true" : "false");
+      b.onclick = function () { stage = o[0]; pref("ra-pipe-stage", stage); render(); }; box.appendChild(b);
+    });
+  }
+  function wa(m, first) { return "https://wa.me/" + m + "?text=" + encodeURIComponent("Hi " + first + ", it's Carl from Residential Architecture. "); }
+  function renderList(set) {
+    var term = $("find").value.trim().toLowerCase(), list = $("list"), shown = 0; list.innerHTML = "";
+    set.forEach(function (p) {
+      if (stage === "Open" && (p.sg || p.lost)) return;
+      if (stage !== "Open" && stage !== "All" && p.st !== stage) return;
+      if (term && (p.n + " " + p.pc + " " + p.qr + " " + p.e + " " + p.src).toLowerCase().indexOf(term) < 0) return;
+      shown++;
+      var c = el("div", "card person"), top = el("div", "top"), left = el("div");
+      left.appendChild(el("span", "name", p.n || "No name"));
+      left.appendChild(el("span", "tag" + (p.st === "Deposit paid" || p.st === "Signed" ? " ok" : p.st === "Lost" ? " off" : ""), p.st));
+      top.appendChild(left); top.appendChild(el("span", "small", [p.pc, p.src].filter(Boolean).join(" · "))); c.appendChild(top);
+      var st = el("div", "steps" + (p.sg ? " won" : "")); for (var i = 1; i <= 6; i++) st.appendChild(el("i", reached(p, i) ? "on" : null)); c.appendChild(st);
+      var bits = [];
+      if (p.f) bits.push("Lead " + day(p.f));
+      if (p.vd) bits.push((p.vs === "Cancelled" ? "Visit cancelled " : p.vs === "Visited" ? "Visited " : "Visit ") + day(p.vd));
+      if (p.qs) bits.push("Quoted " + day(p.qs) + " at " + money(p.qf));
+      if (p.sg) bits.push("Signed " + day(p.sg) + (p.ag ? " at " + money(p.ag) : ""));
+      if (p.dp) bits.push("Deposit " + money(p.dp) + " paid");
+      if (p.svc) bits.push(p.svc);
+      c.appendChild(el("div", "small", bits.join(" · ")));
+      if (p.lost) c.appendChild(el("div", "note", "Lost: " + p.lost));
+      if (p.note) c.appendChild(el("div", "note", p.note));
+      var act = el("div", "actions"), first = (p.n || "").split(/\s+/)[0] || "there";
+      if (p.m) { var w = el("a", "btn", "WhatsApp"); w.href = wa(p.m, first); w.target = "_blank"; w.rel = "noopener"; act.appendChild(w); }
+      if (p.e) { var em = el("a", "ghost", "Email"); em.href = "mailto:" + p.e; act.appendChild(em); }
+      if (p.ql) { var q = el("a", "ghost", "Open quote"); q.href = p.ql; q.target = "_blank"; q.rel = "noopener"; act.appendChild(q); }
+      var nb = el("button", "ghost", p.note ? "Edit note" : "Add note"); nb.type = "button"; act.appendChild(nb);
+      var lb = el("button", "ghost", p.lost ? "Reopen" : "Mark as lost"); lb.type = "button"; if (!p.sg) act.appendChild(lb);
+      c.appendChild(act);
+      var ed = el("div", "edit"); ed.hidden = true; var ta = el("textarea"); var save = el("button", "btn", "Save"); save.type = "button";
+      var sv = el("div", "actions"); sv.appendChild(save); ed.appendChild(ta); ed.appendChild(sv); c.appendChild(ed);
+      nb.onclick = function () { ed.hidden = false; ta.placeholder = "Anything worth remembering"; ta.value = p.note || ""; ta.focus(); save.onclick = function () { p.note = ta.value.trim(); push({ key: p.k, note: p.note }); render(); }; };
+      lb.onclick = function () {
+        if (p.lost) { p.lost = ""; p.st = p.qs ? "Quote sent" : p.vs === "Visited" ? "Visited" : p.vs === "Booked" ? "Visit booked" : "Lead"; push({ key: p.k, lost: "" }); render(); return; }
+        ed.hidden = false; ta.placeholder = "Why? For example: went with another architect, price, project on hold"; ta.value = ""; ta.focus();
+        save.onclick = function () { p.lost = ta.value.trim() || "No reason given"; p.st = "Lost"; push({ key: p.k, lost: p.lost }); render(); };
+      };
+      list.appendChild(c);
+    });
+    $("empty").hidden = shown > 0;
+  }
+  function push(o) { o.action = "pipe-set"; o.pass = RA.pass(); RA.api(o).catch(function () {}); }
+  function render() {
+    [].forEach.call(document.querySelectorAll("[data-p]"), function (b) { b.setAttribute("aria-pressed", String(+b.getAttribute("data-p") === period)); });
+    var set = people.filter(inPeriod);
+    renderFunnel(set);
+    renderTable("byarea", set, function (p) { return p.a; }, "Area");
+    renderTable("bysrc", set, function (p) { return p.src; }, "Source");
+    renderStages(set); renderList(set);
+  }
+  [].forEach.call(document.querySelectorAll("[data-p]"), function (b) { b.onclick = function () { period = +b.getAttribute("data-p"); pref("ra-pipe-period", String(period)); render(); }; });
+  $("find").addEventListener("input", render);
+  $("pwgo").addEventListener("click", function () { var pw = $("pw").value; if (pw) load(pw); });
+  $("pw").addEventListener("keydown", function (e) { if (e.key === "Enter") $("pwgo").click(); });
+  $("tokgo").addEventListener("click", function () {
+    var t = $("tok").value.trim(), err = $("tokerr"); if (!t) return; err.hidden = true; $("tokgo").textContent = "Checking…";
+    RA.api({ action: "pipe-token", pass: RA.pass(), token: t }).then(function (r) {
+      $("tokgo").textContent = "Connect Calendly";
+      if (!r.ok) { err.textContent = "Calendly did not accept that token. Copy it again and paste the whole thing."; err.hidden = false; return; }
+      $("tok").value = ""; load(RA.pass());
+    }).catch(function () { $("tokgo").textContent = "Connect Calendly"; err.textContent = "Could not connect. Please try again."; err.hidden = false; });
+  });
+  var pp = pref("ra-pipe-period"); if (pp !== null && pp !== "") period = +pp;
+  var ps = pref("ra-pipe-stage"); if (ps) stage = ps;
+  if (RA.pass()) load(RA.pass()); else { $("loading").hidden = true; $("connect").hidden = false; }
+})();
+</script>
+</body>
+</html>
