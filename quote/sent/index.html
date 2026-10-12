@@ -127,8 +127,33 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
       b4.onclick = function () { var a2 = load(); a2[ix].signed = !a2[ix].signed; save(a2); push({ action: "status", r: x.r, s: x.s, status: a2[ix].signed ? "Signed" : "Sent" }); render(); };
       var b5 = el("button", "ghost", "Remove"); b5.type = "button";
       b5.onclick = function () { if (b5.textContent !== "Confirm remove") { b5.textContent = "Confirm remove"; return; } var a2 = load(); push({ action: "status", r: x.r, s: x.s, status: "Removed" }); a2.splice(ix, 1); save(a2); render(); };
-      var b6 = el("button", "btn", "Copy balance payment link"); b6.type = "button";
+      var b6 = el("button", "ghost", "Copy balance payment link"); b6.type = "button";
       b6.onclick = function () { var u = base(x.u).replace("/quote/#", "/quote/?pay=balance#"); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function () { b6.textContent = "Copied. Send it with the first draft"; }, function () { out.innerHTML = ""; var ta = el("textarea"); ta.readOnly = true; ta.value = u; out.appendChild(ta); out.hidden = false; }); };
+      var b7 = el("button", "btn", "Charge balance"); b7.type = "button";
+      b7.onclick = function () {
+        out.innerHTML = ""; out.hidden = false; out.appendChild(el("div", null, "Checking the card on file\u2026"));
+        RA.api({ action: "card-info", pass: RA.pass(), r: x.r, s: x.s }).then(function (ci) {
+          out.innerHTML = "";
+          if (!ci || !ci.ok) { out.appendChild(el("div", null, "Could not check this quote. Please try again.")); return; }
+          if (ci.balancePaid) { out.appendChild(el("div", null, "The balance is already paid. Nothing more to charge.")); b7.hidden = true; return; }
+          if (!ci.card) { out.appendChild(el("div", null, x.n + " did not pay the deposit by card (Klarna, bank transfer or not paid yet), so there is no card to charge. Send them the balance payment link instead.")); var c1 = el("button", "btn", "Copy balance payment link"); c1.type = "button"; c1.style.marginTop = ".5rem"; c1.onclick = b6.onclick; out.appendChild(c1); return; }
+          var brand = String(ci.card.brand || "card"); brand = brand.charAt(0).toUpperCase() + brand.slice(1);
+          out.appendChild(el("div", null, "Charge " + RA.money(ci.amount) + " to " + x.n + "'s " + brand + " ending " + ci.card.last4 + "? Stripe emails them a receipt."));
+          var go = el("button", "btn", "Charge " + RA.money(ci.amount) + " now"); go.type = "button"; go.style.marginTop = ".5rem";
+          var no = el("button", "ghost", "Cancel"); no.type = "button"; no.style.margin = ".5rem 0 0 .5rem"; no.onclick = function () { out.hidden = true; };
+          go.onclick = function () {
+            go.disabled = true; no.disabled = true; go.textContent = "Charging\u2026";
+            RA.api({ action: "charge-balance", pass: RA.pass(), r: x.r, s: x.s }).then(function (r) {
+              out.innerHTML = "";
+              if (r && r.ok) { out.appendChild(el("div", null, (r.already ? "Already paid. " : "Done. ") + RA.money(r.amount || ci.amount) + " charged. You are clear to send the first draft.")); b7.hidden = true; return; }
+              out.appendChild(el("div", null, (r && r.error === "auth" ? "The bank wants " + x.n + " to approve this payment themselves." : "The card was declined" + (r && r.message ? " (" + r.message + ")" : "") + ".") + " Send them the balance payment link instead, and hold the drawings until it is paid."));
+              var c2 = el("button", "btn", "Copy balance payment link"); c2.type = "button"; c2.style.marginTop = ".5rem"; c2.onclick = b6.onclick; out.appendChild(c2);
+            }).catch(function () { out.innerHTML = ""; out.appendChild(el("div", null, "Could not reach the server, so nothing was charged. Please try again.")); });
+          };
+          out.appendChild(go); out.appendChild(no);
+        }).catch(function () { out.innerHTML = ""; out.appendChild(el("div", null, "Could not reach the server. Please try again.")); });
+      };
+      if (x.signed && remote) act.appendChild(b7);
       if (x.signed) act.appendChild(b6);
       if (!x.signed) act.appendChild(b1); act.appendChild(b2); act.appendChild(b3); act.appendChild(b4); act.appendChild(b5);
       c.appendChild(act); c.appendChild(out); list.appendChild(c);

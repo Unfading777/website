@@ -82,6 +82,12 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
 .tickmark::after { content:""; width:1rem; height:.5rem; border-left:3px solid #fff; border-bottom:3px solid #fff; transform:rotate(-45deg) translate(1px,-2px); }
 @media print { .signed .meta { display:grid; } }
 .paysub { margin:0 0 .9rem; color:var(--grey); }
+.opts { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; margin:0 0 .5rem; }
+.opt { font:inherit; text-align:left; padding:.8rem .9rem; border:1.5px solid var(--line); border-radius:14px; background:#fff; color:var(--ink); cursor:pointer; }
+.opt b { display:block; } .opt span { color:var(--grey); font-size:.92rem; font-variant-numeric:tabular-nums; }
+.opt[aria-pressed=true] { border-color:var(--pink); background:var(--tint); }
+.opt:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
+#opt-note { margin:0 0 1rem; }
 #card { width:auto; padding:.85rem 1.6rem; font-size:1rem; }
 .bank { margin:0 0 1rem; background:var(--bg); border-radius:14px; padding:1rem 1.1rem; display:grid; gap:.7rem 1.5rem; grid-template-columns:1fr; }
 @media (min-width:34rem){ .bank { grid-template-columns:1fr 1fr; } .bank .full { grid-column:1 / -1; } }
@@ -147,7 +153,8 @@ details.alt .bank { margin-top:.9rem; }
       <ul class="terms">
         <li id="lump">One lump sum fee for everything listed below. No hourly rates.</li>
         <li>50% deposit payable on instruction: <b id="dep"></b>.</li>
-        <li>Remaining 50% invoiced with your first draft and payable within 7 days.</li>
+        <li>Remaining 50% charged to the card you pay your deposit with when I issue your first draft. If you pay by Klarna or bank transfer, I send you a payment link with your first draft instead.</li>
+        <li>Prefer to pay everything at once? You can pay in full when you sign.</li>
         <li>Council, Building Control and Thames Water application fees are paid by you directly and are not included.</li>
         <li>This quote is valid for 30 days.</li>
       </ul>
@@ -198,6 +205,8 @@ details.alt .bank { margin-top:.9rem; }
         <h2 class="payhead">Pay your deposit</h2>
         <p class="paysub">Your deposit secures your start date. Pay securely by card below.</p>
         <div class="due" id="due"><span class="badge" id="due-badge">Deposit due today</span><div class="fee"><span class="now pink" id="pay-amt"></span><span class="save" id="due-sub">50% of your agreed fee</span></div></div>
+        <div class="opts noprint" id="opts" role="group" aria-label="How would you like to pay?" hidden><button type="button" class="opt" data-k="deposit" aria-pressed="true"><b>Pay 50% deposit</b><span id="opt-dep"></span></button><button type="button" class="opt" data-k="full" aria-pressed="false"><b>Pay in full</b><span id="opt-full"></span></button></div>
+        <p class="small noprint" id="opt-note" hidden></p>
         <div class="kl noprint" id="kl-pay" hidden><b>Klarna available</b><div id="kl-pay-box"></div><p class="small kl-line">Spread the cost of your deposit with Klarna: choose Klarna when you pay to see your options, including paying in instalments. 18+, T&amp;Cs apply, credit subject to status.</p></div>
         <div id="stripe-wrap" class="noprint" hidden><p class="small" id="stripe-load">Loading secure card payment…</p><div id="stripe-box"></div></div>
         <a class="btn noprint" id="card" target="_blank" rel="noopener" hidden>Pay deposit by card</a>
@@ -285,12 +294,16 @@ details.alt .bank { margin-top:.9rem; }
     $("dep").textContent = RA.money(Math.round(agreed * 50) / 100);
     var P = q.b ? { accountName: q.b[0], bankName: q.b[1], sortCode: q.b[2], accountNumber: q.b[3], cardLink: "" } : (window.RA_PAY || {}), depAmt = Math.round(agreed * 50) / 100, due = BAL ? Math.round((agreed - depAmt) * 100) / 100 : depAmt, dep = RA.money(due), hasBank = !!(P.sortCode && P.accountNumber), fixedUrl = (agreed < q.f ? q.c2 : q.c1) || "", openUrl = P.cardLink || STRIPE_DEPOSIT_LINK, cardUrl = fixedUrl || (openUrl ? openUrl + (openUrl.indexOf("?") < 0 ? "?" : "&") + "client_reference_id=" + encodeURIComponent(String(q.r).replace(/[^A-Za-z0-9_-]/g, "-")) : ""), hasCard = /^https:\/\//.test(cardUrl);
     var paidKey = "ra-paid-" + q.r + (BAL ? "-bal" : ""), what = BAL ? "balance" : "deposit", embed = !!(RA.hasApi && location.protocol === "https:");
+    var full = false, co = null, mountN = 0;
+    if (!BAL) try { if (localStorage.getItem("ra-paid-" + q.r) && localStorage.getItem("ra-paid-" + q.r + "-bal")) full = true; } catch (e) {}
     function paidUI() {
       try { localStorage.setItem(paidKey, "1"); } catch (e) {}
-      $("due").classList.add("paid"); $("due-badge").textContent = BAL ? "Balance paid" : "Deposit paid"; $("due-sub").textContent = "Received with thanks";
+      if (full) try { localStorage.setItem("ra-paid-" + q.r + "-bal", "1"); } catch (e) {}
+      $("opts").hidden = true; $("opt-note").hidden = true;
+      $("due").classList.add("paid"); $("due-badge").textContent = BAL ? "Balance paid" : full ? "Paid in full" : "Deposit paid"; $("due-sub").textContent = "Received with thanks";
       $("stripe-wrap").hidden = true; $("kl-pay").hidden = true; $("card").hidden = true; $("card-note").hidden = true; $("bankd").hidden = true; $("card-ask").hidden = true;
-      document.querySelector(".payhead").textContent = BAL ? "Balance paid" : "Deposit paid"; document.querySelector(".paysub").textContent = "Thank you. Your payment has gone through.";
-      $("next-text").textContent = BAL ? "Your fee is now paid in full. Thank you." : "I will be in touch shortly to book the measured survey of your home.";
+      document.querySelector(".payhead").textContent = BAL ? "Balance paid" : full ? "Paid in full" : "Deposit paid"; document.querySelector(".paysub").textContent = "Thank you. Your payment has gone through.";
+      $("next-text").textContent = BAL ? "Your fee is now paid in full. Thank you." : full ? "Your fee is paid in full, with nothing more to pay later. I will be in touch shortly to book the measured survey of your home." : "I will be in touch shortly to book the measured survey of your home.";
     }
     function linkCard() { /* fallback: the Stripe page in a new tab */
       $("stripe-wrap").hidden = true;
@@ -304,27 +317,39 @@ details.alt .bank { margin-top:.9rem; }
       });
     }
     function embedCard() {
-      $("stripe-wrap").hidden = false; $("kl-pay").hidden = false; RA.klarna("#kl-pay-box", due);
+      $("stripe-wrap").hidden = false; $("kl-pay").hidden = false; if (!embedCard.kl) { embedCard.kl = 1; RA.klarna("#kl-pay-box", due); }
       var back = null; try { back = new URLSearchParams(location.search).get("paid"); } catch (e) {}
       (back ? RA.api({ action: "paid", session: back }).catch(function () { return {}; }) : Promise.resolve({})).then(function (p) {
         if (p && p.paid) return paidUI();
-        return RA.api({ action: "checkout", kind: BAL ? "balance" : "deposit", r: q.r, s: q.s, email: email || "", back: location.origin + location.pathname, h: location.hash }).then(function (c) {
+        var my = ++mountN;
+        return RA.api({ action: "checkout", kind: BAL ? "balance" : full ? "full" : "deposit", r: q.r, s: q.s, email: email || "", back: location.origin + location.pathname, h: location.hash }).then(function (c) {
+          if (my !== mountN) return;
           if (c && c.paid) return paidUI();
           if (!c || !c.ok || !c.secret || !c.pk) throw new Error("no-session");
           return loadStripe().then(function () {
-            var co = null;
+            if (my !== mountN) return;
             return window.Stripe(c.pk).initEmbeddedCheckout({ clientSecret: c.secret, onComplete: function () {
               RA.api({ action: "paid", session: c.id }).catch(function () {});
               try { if (co) co.destroy(); } catch (e) {}
               paidUI(); $("pay").scrollIntoView({ block: "start" });
-            } }).then(function (x) { co = x; $("stripe-load").hidden = true; co.mount("#stripe-box"); });
+            } }).then(function (x) { if (my !== mountN) { try { x.destroy(); } catch (e) {} return; } co = x; $("stripe-load").hidden = true; co.mount("#stripe-box"); });
           });
         });
-      }).catch(linkCard);
+      }).catch(function () { if (full) { setKind("deposit"); return; } linkCard(); });
+    }
+    function setKind(k) {
+      full = k === "full";
+      [].forEach.call(document.querySelectorAll(".opt"), function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-k") === k)); });
+      $("pay-amt").textContent = RA.money(full ? agreed : due);
+      $("due-badge").textContent = full ? "Full fee" : "Deposit due today"; $("due-sub").textContent = full ? "Your agreed fee, paid in full" : "50% of your agreed fee";
+      document.querySelector(".payhead").textContent = full ? "Pay in full" : "Pay your deposit";
+      $("opt-note").textContent = full ? "Your whole fee in one payment, with nothing more to pay later. With Klarna you can still spread it into instalments." : "The remaining 50% (" + RA.money(Math.round((agreed - depAmt) * 100) / 100) + ") is charged to the same card when I issue your first draft. If you pay with Klarna, I will send you a payment link instead.";
+      try { if (co) co.destroy(); } catch (e) {} co = null; $("stripe-box").innerHTML = ""; $("stripe-load").hidden = false;
+      embedCard();
     }
     if (hasBank || hasCard || embed) {
       $("pay").hidden = false; $("pay-amt").textContent = dep;
-      document.querySelector(".paysub").textContent = (BAL ? "Your first draft is ready. The remaining 50% of your agreed fee is payable within 7 days. " : "Your deposit secures your start date. ") + (embed || hasCard ? "Pay securely by card below, at no extra cost." : "Pay by bank transfer using the details below.");
+      document.querySelector(".paysub").textContent = (BAL ? "Your first draft is ready. The remaining 50% of your agreed fee is now due. " : "Your deposit secures your start date. ") + (embed || hasCard ? "Pay securely by card below, at no extra cost." : "Pay by bank transfer using the details below.");
       if (BAL) { document.querySelector(".payhead").textContent = "Pay your balance"; $("due-badge").textContent = "Balance due"; $("due-sub").textContent = "Remaining 50% of your agreed fee"; }
       if (hasBank) {
         $("bankd").hidden = false; $("b-sort").textContent = P.sortCode; $("b-acc").textContent = P.accountNumber; $("b-ref").textContent = q.r; $("b-amt").textContent = dep;
@@ -333,7 +358,14 @@ details.alt .bank { margin-top:.9rem; }
       }
       $("next-text").textContent = BAL ? "Once your balance arrives I will send your receipt." : "Once your deposit arrives I will send your receipt and book the measured survey of your home.";
       var was = false; try { was = !!localStorage.getItem(paidKey); } catch (e) {}
-      if (was) paidUI(); else if (embed) embedCard(); else linkCard();
+      if (was) paidUI(); else if (embed) {
+        if (!BAL) {
+          $("opts").hidden = false; $("opt-note").hidden = false; $("opt-dep").textContent = RA.money(depAmt) + " now"; $("opt-full").textContent = RA.money(agreed) + " now";
+          [].forEach.call(document.querySelectorAll(".opt"), function (b) { b.onclick = function () { var k = b.getAttribute("data-k"); if ((k === "full") !== full) setKind(k); }; });
+          $("opt-note").textContent = "The remaining 50% (" + RA.money(Math.round((agreed - depAmt) * 100) / 100) + ") is charged to the same card when I issue your first draft. If you pay with Klarna, I will send you a payment link instead.";
+        }
+        embedCard();
+      } else linkCard();
     }
     var discounted = agreed < q.f, when = RA.when(at);
     if (!$("tickmark")) { var t = document.createElement("div"); t.className = "tickmark"; t.id = "tickmark"; $("eyebrow").parentNode.insertBefore(t, $("eyebrow")); }
