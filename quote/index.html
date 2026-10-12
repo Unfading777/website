@@ -307,6 +307,7 @@ details.alt .bank { margin-top:.9rem; }
     }
     function linkCard() { /* fallback: the Stripe page in a new tab */
       $("stripe-wrap").hidden = true;
+      $("opts").hidden = true; $("opt-note").hidden = true;
       if (hasCard) { $("card").hidden = false; $("card").href = cardUrl; $("card-note").hidden = false; if (!fixedUrl) $("card-note").innerHTML = "On the next screen, enter your " + what + " of <b>" + dep + "</b> and pay securely by card through Stripe. There is no extra cost to you."; }
       else { $("card-ask").hidden = false; $("card-wa").href = "https://wa.me/447515334455?text=" + encodeURIComponent("Hi Carl, I have signed quote " + q.r + " and would like to pay my " + dep + " " + what + " by card."); if (hasBank) $("bankd").open = true; }
     }
@@ -343,6 +344,9 @@ details.alt .bank { margin-top:.9rem; }
       $("pay-amt").textContent = RA.money(full ? agreed : due);
       $("due-badge").textContent = full ? "Full fee" : "Deposit due today"; $("due-sub").textContent = full ? "Your agreed fee, paid in full" : "50% of your agreed fee";
       document.querySelector(".payhead").textContent = full ? "Pay in full" : "Pay your deposit";
+      document.querySelector(".paysub").textContent = (full ? "Pay your whole fee now and there is nothing more to pay later. " : "Your deposit secures your start date. ") + "Pay securely by card below, at no extra cost.";
+      var kl = document.querySelector("#kl-pay .kl-line"); if (kl) kl.textContent = kl.textContent.replace(full ? "of your deposit" : "of your fee", full ? "of your fee" : "of your deposit");
+      $("next-text").textContent = full ? "Once your payment arrives I will send your receipt and book the measured survey of your home." : "Once your deposit arrives I will send your receipt and book the measured survey of your home.";
       $("opt-note").textContent = full ? "Your whole fee in one payment, with nothing more to pay later. With Klarna you can still spread it into instalments." : "The remaining 50% (" + RA.money(Math.round((agreed - depAmt) * 100) / 100) + ") is charged to the same card when I issue your first draft. If you pay with Klarna, I will send you a payment link instead.";
       try { if (co) co.destroy(); } catch (e) {} co = null; $("stripe-box").innerHTML = ""; $("stripe-load").hidden = false;
       embedCard();
