@@ -171,7 +171,7 @@ p { margin: 0; max-width: 60ch; }
 .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem 2rem; margin: 0; padding-block: clamp(2rem, 5vw, 3rem); }
 .stats div { min-width: 0; text-align: center; }
 .stats dt { color: var(--grey); font-size: var(--step--1); }
-.stats dd { margin: 0; font-family: var(--display); font-weight: 700; font-size: min(var(--step-2), 4.2vw); white-space: nowrap; line-height: 1.1; color: var(--pink); font-variant-numeric: tabular-nums; }
+.stats dd { margin: 0; font-family: var(--display); font-weight: 700; font-size: min(var(--step-2), 4.2vw); white-space: nowrap; display: flex; justify-content: center; line-height: 1.1; color: var(--pink); font-variant-numeric: tabular-nums; }
 
 /* Sections */
 .band { background: var(--soft); }
@@ -308,8 +308,8 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
   .hero-grid, .two { grid-template-columns: minmax(0, 1fr); }
   .opts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .answer { grid-template-columns: minmax(0, 1fr); }
-  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .stats dd { font-size: min(var(--step-2), 6.4vw); }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: .75rem; }
+  .stats dd { font-size: min(var(--step-2), 6vw); }
   .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .steps { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
   .steps li { padding-left: 3.6rem; min-height: 2.6rem; }
