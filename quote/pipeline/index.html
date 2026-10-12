@@ -99,7 +99,7 @@ tr:last-child td { border-bottom:0; }
     <p class="small" id="empty" hidden>Nobody here yet. New leads from Local Surveyors Direct, Calendly bookings and quotes you send all appear automatically.</p>
   </div>
 </div>
-<script src="../q.js?v=36"></script>
+<script src="../q.js?v=37"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
@@ -112,7 +112,8 @@ tr:last-child td { border-bottom:0; }
   function day(t) { return t ? new Date(t).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: new Date(t).getFullYear() === new Date().getFullYear() ? undefined : "numeric" }) : ""; }
   function pct(a, b) { return b ? Math.round(a / b * 100) + "%" : "–"; }
   function reached(p, s) { return (STEP[p.st] || 0) >= s || (s <= 3 && p.vs === "Visited") || (s === 2 && (p.vs === "Booked" || p.vs === "Visited")) || (s === 4 && p.qs) || (s === 5 && p.sg); }
-  function inPeriod(p) { return !period || (p.f || p.qs || p.vb) >= now - period * DAY; }
+  function inPeriod(p) { return !period || (p.f || p.qs || p.vb || p.cs) >= now - period * DAY; }
+  function calcsOnly(p) { return p.cs && !p.qs && !p.vb && p.src === "Other"; }
 
   function load(pw) {
     $("loading").hidden = false; $("pwerr").hidden = true;
@@ -129,6 +130,7 @@ tr:last-child td { border-bottom:0; }
     }).catch(function () { $("loading").textContent = "Could not reach your Google Sheet. Check your connection and refresh."; });
   }
 
+  var calcsSet = [];
   function renderFunnel(set) {
     var n = function (s) { return set.filter(function (p) { return reached(p, s); }).length; };
     var leads = set.length, booked = n(2), visited = n(3), quoted = n(4), signed = n(5);
@@ -139,7 +141,9 @@ tr:last-child td { border-bottom:0; }
       var s = el("div", "stat"); s.appendChild(el("b", null, c[1])); s.appendChild(el("span", null, c[0])); if (c[2]) s.appendChild(el("em", null, c[2]));
       var bar = el("div", "bar"), b = el("i"); b.style.width = (leads ? Math.round(c[1] / leads * 100) : 0) + "%"; bar.appendChild(b); s.appendChild(bar); f.appendChild(s);
     });
-    var w = el("div", "stat won"); w.appendChild(el("b", null, money(won))); w.appendChild(el("span", null, "Work won")); w.appendChild(el("em", null, signed ? money(won / signed) + " average" : "")); f.appendChild(w);
+    var w = el("div", "stat won"); w.appendChild(el("b", null, money(won))); w.appendChild(el("span", null, "Design work won")); w.appendChild(el("em", null, signed ? money(won / signed) + " average" : "")); f.appendChild(w);
+    var cs = calcsSet.filter(function (p) { return p.cs; }), cpd = cs.filter(function (p) { return p.cp; }), cwon = cpd.reduce(function (a, p) { return a + (p.cp || 0); }, 0);
+    var c = el("div", "stat"); c.appendChild(el("b", null, money(cwon))); c.appendChild(el("span", null, "Calcs paid")); c.appendChild(el("em", null, cpd.length + " of " + cs.length + " calcs quotes paid")); f.appendChild(c);
   }
   function renderTable(id, set, keyFn, label) {
     var g = {}; set.forEach(function (p) { var k = keyFn(p) || "Unknown"; (g[k] = g[k] || []).push(p); });
@@ -180,6 +184,7 @@ tr:last-child td { border-bottom:0; }
       if (p.qs) bits.push("Quoted " + day(p.qs) + " at " + money(p.qf));
       if (p.sg) bits.push("Signed " + day(p.sg) + (p.ag ? " at " + money(p.ag) : ""));
       if (p.dp) bits.push("Deposit " + money(p.dp) + " paid");
+      if (p.cs) bits.push("Calcs quoted " + day(p.cs) + " at " + money(p.cf) + (p.cp ? ", paid" : ", not paid yet"));
       if (p.svc) bits.push(p.svc);
       c.appendChild(el("div", "small", bits.join(" · ")));
       if (p.lost) c.appendChild(el("div", "note", "Lost: " + p.lost));
@@ -206,11 +211,11 @@ tr:last-child td { border-bottom:0; }
   function push(o) { o.action = "pipe-set"; o.pass = RA.pass(); RA.api(o).catch(function () {}); }
   function render() {
     [].forEach.call(document.querySelectorAll("[data-p]"), function (b) { b.setAttribute("aria-pressed", String(+b.getAttribute("data-p") === period)); });
-    var set = people.filter(inPeriod);
+    var all = people.filter(inPeriod), set = all.filter(function (p) { return !calcsOnly(p); }); calcsSet = all;
     renderFunnel(set);
     renderTable("byarea", set, function (p) { return p.a; }, "Area");
     renderTable("bysrc", set, function (p) { return p.src; }, "Source");
-    renderStages(set); renderList(set);
+    renderStages(all); renderList(all);
   }
   [].forEach.call(document.querySelectorAll("[data-p]"), function (b) { b.onclick = function () { period = +b.getAttribute("data-p"); pref("ra-pipe-period", String(period)); render(); }; });
   $("find").addEventListener("input", render);

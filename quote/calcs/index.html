@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>New calcs quote | Residential Architecture</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='4' transform='rotate(45 16 16)' fill='%23E6007A'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Outfit:wght@500;600;700&display=swap">
+<style>
+:root { --pink:#E6007A; --pink-hover:#C40068; --ink:#1F1E26; --grey:#6A6875; --line:#E4E3EA; --tint:#FFE3F1; --bg:#F6F5F9; }
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:'DM Sans',system-ui,sans-serif; line-height:1.55; }
+.wrap { max-width:44rem; margin:0 auto; padding:1rem 1rem 4rem; }
+.brand { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.15rem; display:inline-flex; align-items:center; gap:.55rem; margin:.4rem 0 1rem; }
+.brand i { width:.8rem; height:.8rem; background:var(--pink); border-radius:3px; transform:rotate(45deg); display:inline-block; }
+.card { background:#fff; border:1px solid var(--line); border-radius:20px; padding:1.4rem; margin-bottom:1rem; }
+h1 { font-family:'Outfit',sans-serif; font-size:1.7rem; margin:0 0 .3rem; letter-spacing:-.02em; }
+h2 { font-family:'Outfit',sans-serif; font-size:1.1rem; margin:0 0 .8rem; }
+label { display:block; font-weight:600; font-size:.92rem; margin:0 0 .3rem; }
+input[type=text], input[type=number], select, textarea { width:100%; font:inherit; padding:.75rem .85rem; border:1.5px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); }
+input:focus, select:focus, textarea:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(--tint); }
+.grid { display:grid; gap:1rem; grid-template-columns:1fr; }
+@media (min-width:34rem){ .grid.two { grid-template-columns:1fr 1fr; } }
+.checks { display:grid; gap:.45rem; }
+textarea { resize:vertical; line-height:1.45; }
+.grp { font-size:.78rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--grey); margin:1rem 0 .5rem; }
+.grp:first-child { margin-top:0; }
+@media (min-width:34rem){ .checks.cols { grid-template-columns:1fr 1fr; } }
+.checks label { display:flex; gap:.6rem; font-weight:400; margin:0; cursor:pointer; }
+.checks input { width:1.15rem; height:1.15rem; margin-top:.2rem; accent-color:var(--pink); flex:none; }
+.btn { font:inherit; font-weight:600; padding:.85rem 1.4rem; border-radius:999px; border:0; background:var(--pink); color:#fff; cursor:pointer; text-decoration:none; display:inline-flex; }
+.btn:hover { background:var(--pink-hover); }
+.ghost { font:inherit; font-weight:600; padding:.8rem 1.3rem; border-radius:999px; border:1.5px solid var(--line); background:#fff; color:var(--ink); cursor:pointer; text-decoration:none; display:inline-flex; }
+.actions { display:flex; flex-wrap:wrap; gap:.7rem; margin-top:1rem; }
+.link { width:100%; font:.85rem ui-monospace,Menlo,Consolas,monospace; padding:.8rem; border:1.5px solid var(--line); border-radius:12px; background:var(--bg); min-height:5.5rem; resize:vertical; word-break:break-all; }
+.small { color:var(--grey); font-size:.9rem; }
+ol { padding-left:1.2rem; margin:.4rem 0 0; }
+.err { color:#B3261E; font-size:.92rem; }
+[hidden] { display:none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><i></i>Residential Architecture</div>
+  <p style="margin:-.4rem 0 1rem"><a href="../sent/" style="color:var(--pink);font-weight:600">Sent quotes</a> <a href="../new/" style="color:var(--pink);font-weight:600;margin-left:.8rem">New design quote</a></p>
+  <div class="card">
+    <h1>New structural calculations quote</h1>
+    <p class="small">The client accepts on their phone and pays the full fee straight away. No discount, no deposit. Calculations are released once paid.</p>
+    <div class="grid two">
+      <div><label for="n">Client name</label><input type="text" id="n" placeholder="Mr and Mrs Smith" autocomplete="off"></div>
+      <div><label for="f">Lump sum fee (&pound;)</label><input type="number" id="f" value="1495" min="1" step="1" inputmode="decimal"></div>
+      <div><label for="em">Client email <span class="small">(optional, for your pipeline)</span></label><input type="email" id="em" placeholder="name@example.com" autocomplete="off" inputmode="email"></div>
+      <div><label for="r">Quote reference</label><input type="text" id="r" autocomplete="off"></div>
+    </div>
+    <div class="grid" style="margin-top:1rem">
+      <div><label for="a">Property address (one line per row)</label><textarea id="a" rows="4" placeholder="143 Hawthorne Road&#10;High Wycombe&#10;HP13 7ES" autocomplete="off"></textarea></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>What the fee covers</h2>
+    <p class="small" style="margin-top:-.4rem">Untick anything that does not apply to this project.</p>
+    <div class="checks" id="checks"></div>
+  </div>
+  <div class="card">
+    <button class="btn" type="button" id="make">Create calcs quote link</button>
+    <p class="err" id="err" hidden></p>
+    <div id="out" hidden>
+      <p class="small" style="margin:1rem 0 .4rem">Send this link to the client. When they accept and pay, you get an email.</p>
+      <textarea class="link" id="link" readonly></textarea>
+      <div class="actions"><button class="btn" type="button" id="copy">Copy link</button><a class="ghost" id="open" target="_blank" rel="noopener">Preview the quote</a><a class="ghost" id="wa" target="_blank" rel="noopener" hidden>Send on WhatsApp</a></div>
+    </div>
+  </div>
+</div>
+<script src="../q.js?v=37"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  RA.CALCS.forEach(function (it, ix) {
+    var l = document.createElement("label"), c = document.createElement("input"), s = document.createElement("span");
+    c.type = "checkbox"; c.checked = !!it[1]; c.value = ix; s.textContent = it[0]; l.appendChild(c); l.appendChild(s); $("checks").appendChild(l);
+  });
+  function autoRef() {
+    var t = new Date(), p = function (v) { return ("0" + v).slice(-2); };
+    var ini = ($("n").value.match(/[A-Za-z]+/g) || []).filter(function (w) { return !/^(mr|mrs|ms|miss|dr|and)$/i.test(w); }).map(function (w) { return w[0].toUpperCase(); }).join("").slice(0, 3);
+    return "RA-" + String(t.getFullYear()).slice(2) + p(t.getMonth() + 1) + p(t.getDate()) + (ini ? "-" + ini : "") + "-SC";
+  }
+  $("n").addEventListener("input", function () { if (!$("r").dataset.touched) $("r").value = autoRef(); });
+  $("r").addEventListener("input", function () { this.dataset.touched = 1; });
+  $("r").value = autoRef();
+  $("make").addEventListener("click", function () {
+    var n = $("n").value.trim(), a = $("a").value.split(/\n+/).map(function (x) { return x.trim().replace(/,+$/, ""); }).filter(Boolean).join("\n"), f = parseFloat($("f").value), err = $("err");
+    if (!n || !a || !(f > 0)) { err.textContent = "Please fill in the client name, address and fee."; err.hidden = false; $("out").hidden = true; return; }
+    err.hidden = true;
+    var i = [].slice.call(document.querySelectorAll("#checks input:checked")).map(function (c) { return +c.value; });
+    var q = { n: n, a: a, p: "Structural calculations", f: f, s: Date.now(), i: i, d: 0, r: $("r").value.trim() || autoRef() };
+    var url = location.origin + "/quote/#" + RA.encode(q);
+    try { var all = JSON.parse(localStorage.getItem("ra-quotes") || "[]"); all.unshift({ r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: 0, u: url }); localStorage.setItem("ra-quotes", JSON.stringify(all.slice(0, 500))); } catch (e) {}
+    $("out").hidden = false; $("copy").textContent = "Copy link";
+    var first = n.replace(/^(mr|mrs|ms|miss|dr)\.?\s+(and\s+(mr|mrs|ms|miss|dr)\.?\s+)?/i, "").split(/\s+/)[0];
+    var show = function (u) {
+      $("link").value = u; $("open").href = u; $("copy").disabled = false;
+      $("wa").href = "https://wa.me/?text=" + encodeURIComponent("Hi " + first + ", here is my quote for the structural calculations at " + a.split("\n")[0] + ". You can read it, accept and pay securely online here: " + u + "\n\nAny questions, just reply here."); $("wa").hidden = false;
+    };
+    var useLong = function () { if (!$("link").value) show(url); };
+    if (RA.pass()) {
+      $("link").value = ""; $("link").placeholder = "Making your short link\u2026"; $("copy").disabled = true; $("open").href = url;
+      RA.api({ action: "create", pass: RA.pass(), quote: { r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: 0, u: url, email: $("em").value.trim() } }).then(function (r) { if (r && r.short) show(r.short); else useLong(); }).catch(useLong);
+      setTimeout(useLong, 15000);
+    } else show(url);
+  });
+  $("copy").addEventListener("click", function () { var b = $("link"); b.select(); (navigator.clipboard ? navigator.clipboard.writeText(b.value) : Promise.reject()).catch(function () { document.execCommand("copy"); }); this.textContent = "Copied"; });
+})();
+</script>
+</body>
+</html>

@@ -235,7 +235,7 @@ details.alt .bank { margin-top:.9rem; }
 
 
 <script src="pay.js?v=35"></script>
-<script src="q.js?v=35"></script>
+<script src="q.js?v=37"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
@@ -255,7 +255,19 @@ details.alt .bank { margin-top:.9rem; }
   $("intro").textContent = "Following my visit to your home, I have pleasure in presenting my fee quotation for architectural services. Below is everything the fee covers, the price, and a button to accept it.";
   $("m-name").textContent = q.n; $("m-addr").textContent = q.n + "\n" + q.a;
   $("m-date").textContent = RA.day(q.s); $("m-valid").textContent = RA.day(q.s + 30 * RA.DAY);
-  (q.i || []).forEach(function (ix) { if (RA.ITEMS[ix]) { var li = document.createElement("li"); li.textContent = RA.ITEMS[ix][0]; $("inc").appendChild(li); } });
+  var CALC = RA.isCalcs ? RA.isCalcs(q) : false, LIST = CALC ? RA.CALCS : RA.ITEMS;
+  (q.i || []).forEach(function (ix) { if (LIST[ix]) { var li = document.createElement("li"); li.textContent = LIST[ix][0]; $("inc").appendChild(li); } });
+  if (CALC) {
+    $("eyebrow").textContent = "Quotation for structural calculations";
+    $("intro").textContent = "Following our correspondence, I have pleasure in presenting my fixed fee quotation for the structural design for the alterations at " + A + ". Below is everything the fee covers, the price, and a button to accept it.";
+    document.title = "Your structural calculations quote for " + A + " | Residential Architecture";
+    document.querySelector("#inccard h2").textContent = "What the fee covers";
+    document.querySelector(".terms").innerHTML = "";
+    ["One lump sum fee for the structural requirements listed below. No hourly rates.", "Payment in full on acceptance: <b id=\"dep\"></b>.", "*Should adverse soil conditions, tree roots, inadequate existing foundations or the need for piled foundations be found on site, additional foundation design will be required at a further pre-agreed cost.", "All drawings and calculations are issued electronically. Printed copies, if needed, are charged separately at a pre-agreed cost.", "No drawings or calculations are released or submitted to the local authority until the fee has been paid in full.", "This quote is valid for 30 days."].forEach(function (t, i) { var li = document.createElement("li"); if (i === 0) li.id = "lump"; li.innerHTML = t; document.querySelector(".terms").appendChild(li); });
+    document.querySelector("#nextcard h2").textContent = "What happens after you accept";
+    document.querySelector("#nextcard .steps").innerHTML = "<li>You pay the fee securely on this page, by card, Apple Pay, Google Pay or Klarna.</li><li>The structural calculations and drawings are prepared for your project.</li><li>They are issued to you electronically, ready for Building Control and your builder.</li>";
+    $("kl-fee-note").innerHTML = "Shown for your fee of <span id=\"kl-fee-amt\"></span>.";
+  }
 
   var klEl = null, klAmt = 0, klAsked = false;
   function paint() {
@@ -272,7 +284,7 @@ details.alt .bank { margin-top:.9rem; }
       $("offer-pct").textContent = q.d; $("offer-kind").textContent = (RA.offer(q, now) || {}).short ? "24-hour offer" : "Limited offer"; $("offer-save").textContent = RA.money(q.f - agreed);
       $("offer-after").textContent = "After that the fee returns to the standard " + RA.money(q.f) + ".";
     }
-    var depNow = Math.round(agreed * 50) / 100;
+    var depNow = CALC ? agreed : Math.round(agreed * 50) / 100;
     $("dep").textContent = RA.money(depNow); $("kl-fee-amt").textContent = RA.money(depNow);
     if (klAmt !== depNow) { klAmt = depNow; if (klEl) { try { klEl.update({ amount: Math.round(depNow * 100) }); } catch (e) {} } else if (!klAsked) { klAsked = true; RA.klarna("#kl-fee-box", depNow).then(function (e) { klEl = e; var n = 0, t = setInterval(function () { if ($("kl-fee-box").offsetHeight > 20) { $("kl-fee-note").hidden = false; clearInterval(t); } else if (++n > 20) clearInterval(t); }, 500); if (e && klAmt !== depNow) { try { e.update({ amount: Math.round(klAmt * 100) }); } catch (x) {} } }); } }
     $("agree-text").textContent = "I, the person named above, accept this quotation for " + q.p.toLowerCase() + " at " + A + " at a fixed fee of " + RA.money(agreed) + ", and instruct Residential Architecture to proceed on the terms shown on this page.";
@@ -292,10 +304,10 @@ details.alt .bank { margin-top:.9rem; }
     } else {
       $("offer").hidden = true; $("fee-std").textContent = RA.money(agreed); $("fee-std").classList.remove("struck"); $("fee-lbl").textContent = "Agreed fixed fee";
     }
-    $("dep").textContent = RA.money(Math.round(agreed * 50) / 100);
+    $("dep").textContent = RA.money(CALC ? agreed : Math.round(agreed * 50) / 100);
     var P = q.b ? { accountName: q.b[0], bankName: q.b[1], sortCode: q.b[2], accountNumber: q.b[3], cardLink: "" } : (window.RA_PAY || {}), depAmt = Math.round(agreed * 50) / 100, due = BAL ? Math.round((agreed - depAmt) * 100) / 100 : depAmt, dep = RA.money(due), hasBank = false /* bank transfer no longer offered */, fixedUrl = (agreed < q.f ? q.c2 : q.c1) || "", openUrl = P.cardLink || STRIPE_DEPOSIT_LINK, cardUrl = fixedUrl || (openUrl ? openUrl + (openUrl.indexOf("?") < 0 ? "?" : "&") + "client_reference_id=" + encodeURIComponent(String(q.r).replace(/[^A-Za-z0-9_-]/g, "-")) : ""), hasCard = /^https:\/\//.test(cardUrl);
     var paidKey = "ra-paid-" + q.r + "-" + q.s + (BAL ? "-bal" : ""), what = BAL ? "balance" : "deposit", embed = !!(RA.hasApi && location.protocol === "https:");
-    var full = false, co = null, mountN = 0;
+    var full = CALC, co = null, mountN = 0;
     if (!BAL) try { if (localStorage.getItem("ra-paid-" + q.r + "-" + q.s) && localStorage.getItem("ra-paid-" + q.r + "-" + q.s + "-bal")) full = true; } catch (e) {}
     function paidUI() {
       try { localStorage.setItem(paidKey, "1"); } catch (e) {}
@@ -304,12 +316,12 @@ details.alt .bank { margin-top:.9rem; }
       $("due").classList.add("paid"); $("due-badge").textContent = BAL ? "Balance paid" : full ? "Paid in full" : "Deposit paid"; $("due-sub").textContent = "Received with thanks";
       $("stripe-wrap").hidden = true; $("kl-pay").hidden = true; $("card").hidden = true; $("card-note").hidden = true; $("bankd").hidden = true; $("card-ask").hidden = true;
       document.querySelector(".payhead").textContent = BAL ? "Balance paid" : full ? "Paid in full" : "Deposit paid"; document.querySelector(".paysub").textContent = "Thank you. Your payment has gone through.";
-      $("next-text").textContent = BAL ? "Your fee is now paid in full. Thank you." : full ? "Your fee is paid in full, with nothing more to pay later. I will be in touch shortly to book the measured survey of your home." : "I will be in touch shortly to book the measured survey of your home.";
+      $("next-text").textContent = BAL ? "Your fee is now paid in full. Thank you." : CALC ? "Thank you. Your fee is paid in full, and work on your structural calculations starts now. They will be sent to you electronically." : full ? "Your fee is paid in full, with nothing more to pay later. I will be in touch shortly to book the measured survey of your home." : "I will be in touch shortly to book the measured survey of your home.";
     }
     function linkCard() { /* fallback: the Stripe page in a new tab */
       $("stripe-wrap").hidden = true;
       $("opts").hidden = true; $("opt-note").hidden = true;
-      if (hasCard) { $("card").hidden = false; $("card").href = cardUrl; $("card-note").hidden = false; if (!fixedUrl) $("card-note").innerHTML = "On the next screen, enter your " + what + " of <b>" + dep + "</b> and pay securely by card through Stripe. There is no extra cost to you."; }
+      if (hasCard && !CALC) { $("card").hidden = false; $("card").href = cardUrl; $("card-note").hidden = false; if (!fixedUrl) $("card-note").innerHTML = "On the next screen, enter your " + what + " of <b>" + dep + "</b> and pay securely by card through Stripe. There is no extra cost to you."; }
       else { $("card-ask").hidden = false; $("card-wa").href = "https://wa.me/447515334455?text=" + encodeURIComponent("Hi Carl, I have signed quote " + q.r + " and would like to pay my " + dep + " " + what + " by card."); if (hasBank) $("bankd").open = true; }
     }
     function loadStripe() {
@@ -364,7 +376,12 @@ details.alt .bank { margin-top:.9rem; }
       $("next-text").textContent = BAL ? "Once your balance arrives I will send your receipt." : "Once your deposit arrives I will send your receipt and book the measured survey of your home.";
       var was = false; try { was = !!localStorage.getItem(paidKey); } catch (e) {}
       if (was) paidUI(); else if (embed) {
-        if (!BAL) {
+        if (CALC) {
+          $("pay-amt").textContent = RA.money(agreed); $("due-badge").textContent = "Fee due"; $("due-sub").textContent = "Your fixed fee, paid in full";
+          document.querySelector(".payhead").textContent = "Pay your fee"; document.querySelector(".paysub").textContent = "Pay securely by card below, at no extra cost. Your calculations are released once payment has gone through.";
+          var kl = document.querySelector("#kl-pay .kl-line"); if (kl) kl.textContent = kl.textContent.replace("of your deposit", "of your fee");
+          $("next-text").textContent = "Once your payment is through, work on your structural calculations starts straight away.";
+        } else if (!BAL) {
           $("opts").hidden = false; $("opt-note").hidden = false; $("opt-dep").textContent = RA.money(depAmt) + " now"; $("opt-full").textContent = RA.money(agreed) + " now";
           [].forEach.call(document.querySelectorAll(".opt"), function (b) { b.onclick = function () { var k = b.getAttribute("data-k"); if ((k === "full") !== full) setKind(k); }; });
           $("opt-note").textContent = "The remaining 50% (" + RA.money(Math.round((agreed - depAmt) * 100) / 100) + ") is charged to the same card when I issue your first draft. If you pay with Klarna, I will send you a payment link instead.";

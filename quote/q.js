@@ -24,6 +24,21 @@ var RA = (function () {
     ["Credit card payments accepted at no extra cost. Klarna available", 1],
     ["Planning guarantee: if planning is refused, I revise the design in line with the council's feedback at no extra cost and resubmit, as many times as it takes to get approval", 1]
   ];
+  /* Structural calculations quotes: what the fee covers (Carl's standard list). */
+  var CALCS = [
+    ["Trench fill foundations*", 1],
+    ["Steel beams as required", 1],
+    ["Padstone design and masonry checks, or steel columns as required", 1],
+    ["Connection details", 1],
+    ["Lintels as required", 1],
+    ["Flat roof joists", 1],
+    ["Rafters", 1],
+    ["Ceiling joists", 1],
+    ["Trimming to roof windows", 1],
+    ["Floor joists", 1],
+    ["Credit card payments accepted at no extra cost. Klarna available", 1]
+  ];
+  function isCalcs(q) { return /^structural calculations/i.test(String(q && q.p || "")); }
   var HOUR = 3600000, DAY = 24 * HOUR;
   /* Extra dates when the discount is offered again, e.g. bank-holiday promotions.
      Each entry: [first day, last day] as YYYY-MM-DD (inclusive, UK time on the visitor's device). */
@@ -111,5 +126,5 @@ var RA = (function () {
     }).catch(function () { return null; });
   }
   function pass() { try { return localStorage.getItem("ra-pass") || ""; } catch (e) { return ""; } }
-  return { klarna: klarna, stripeJs: stripeJs, api: api, pass: pass, hasApi: !!API, ITEMS: ITEMS, encode: encode, decode: decode, offer: offer, windowCode: windowCode, money: money, offerEnds: offerEnds, expired: expired, when: when, day: day, DAY: DAY };
+  return { CALCS: CALCS, isCalcs: isCalcs, klarna: klarna, stripeJs: stripeJs, api: api, pass: pass, hasApi: !!API, ITEMS: ITEMS, encode: encode, decode: decode, offer: offer, windowCode: windowCode, money: money, offerEnds: offerEnds, expired: expired, when: when, day: day, DAY: DAY };
 })();
