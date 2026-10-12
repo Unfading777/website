@@ -61,7 +61,7 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
       <div><label for="r">Quote reference</label><input type="text" id="r" autocomplete="off"></div>
     </div>
   </div>
-  <div class="card">
+  <div class="card" hidden><!-- bank transfer switched off: clients pay by card, Apple Pay, Google Pay or Klarna -->
     <h2>Deposit payments</h2>
     <div id="bank-saved" hidden><p style="margin:0">Your bank details are saved on this device and go on every quote. <button type="button" class="ghost" id="bank-edit" style="padding:.35rem .9rem;margin-left:.4rem">Change</button></p></div>
     <div id="bank-form">
@@ -195,6 +195,7 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
     var i = [].slice.call(document.querySelectorAll("#checks input:checked")).map(function (c) { return +c.value; });
     var q = { n: n, a: a, p: p, f: f, s: Date.now(), i: i, d: +$("d").value, r: $("r").value.trim() || autoRef() };
     var B = bank();
+    B = null; /* bank transfer is no longer offered on quotes */
     if (B) q.b = B; else if ($("b-sort").value.trim() || $("b-acc").value.trim()) { err.textContent = "Bank details need both a 6-digit sort code and an 8-digit account number."; err.hidden = false; $("out").hidden = true; return; }
     var url = location.origin + "/quote/#" + RA.encode(q);
     try {
