@@ -50,6 +50,8 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
     <div class="grid two">
       <div><label for="n">Client name</label><input type="text" id="n" placeholder="Mr and Mrs Smith" autocomplete="off"></div>
       <div><label for="f">Lump sum fee (&pound;)</label><input type="number" id="f" value="2495" min="1" step="1" inputmode="decimal"></div>
+      <div><label for="m">Client mobile <span class="small">(for WhatsApp follow-ups)</span></label><input type="tel" id="m" placeholder="07..." autocomplete="off" inputmode="tel"></div>
+      <div><label for="em">Client email <span class="small">(for the email follow-ups)</span></label><input type="email" id="em" placeholder="name@example.com" autocomplete="off" inputmode="email"></div>
     </div>
     <div class="grid" style="margin-top:1rem">
       <div><label for="a">Property address (one line per row)</label><textarea id="a" rows="4" placeholder="13 Hayfield Road&#10;Oxford&#10;OX2 6TX" autocomplete="off"></textarea></div>
@@ -199,7 +201,7 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
       var all = JSON.parse(localStorage.getItem("ra-quotes") || "[]"); all.unshift({ r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q.d, u: url });
       localStorage.setItem("ra-quotes", JSON.stringify(all.slice(0, 500)));
     } catch (e) {}
-    if (RA.pass()) RA.api({ action: "create", pass: RA.pass(), quote: { r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q.d, u: url } }).catch(function () {});
+    if (RA.pass()) RA.api({ action: "create", pass: RA.pass(), quote: { r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q.d, u: url, phone: $("m").value.trim(), email: $("em").value.trim() } }).catch(function () {});
     $("link").value = url; $("open").href = url; $("out").hidden = false; $("copy").textContent = "Copy link";
   });
   function copyFrom(btn, box) { box.select(); (navigator.clipboard ? navigator.clipboard.writeText(box.value) : Promise.reject()).catch(function () { document.execCommand("copy"); }); btn.textContent = "Copied"; }
