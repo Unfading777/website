@@ -201,8 +201,15 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
       var all = JSON.parse(localStorage.getItem("ra-quotes") || "[]"); all.unshift({ r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q.d, u: url });
       localStorage.setItem("ra-quotes", JSON.stringify(all.slice(0, 500)));
     } catch (e) {}
-    if (RA.pass()) RA.api({ action: "create", pass: RA.pass(), quote: { r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q.d, u: url, phone: $("m").value.trim(), email: $("em").value.trim() } }).then(function (r) { if (r && r.short) { $("link").value = r.short; $("open").href = r.short; } }).catch(function () {});
-    $("link").value = url; $("open").href = url; $("out").hidden = false; $("copy").textContent = "Copy link";
+    $("out").hidden = false; $("copy").textContent = "Copy link";
+    var useLong = function () { if (!$("link").value) { $("link").value = url; $("open").href = url; $("copy").disabled = false; } };
+    if (RA.pass()) {
+      $("link").value = ""; $("link").placeholder = "Making your short link\u2026"; $("copy").disabled = true; $("open").href = url;
+      RA.api({ action: "create", pass: RA.pass(), quote: { r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q.d, u: url, phone: $("m").value.trim(), email: $("em").value.trim() } }).then(function (r) {
+        if (r && r.short) { $("link").value = r.short; $("open").href = r.short; $("copy").disabled = false; } else useLong();
+      }).catch(useLong);
+      setTimeout(useLong, 15000);
+    } else { $("link").value = url; $("open").href = url; }
   });
   function copyFrom(btn, box) { box.select(); (navigator.clipboard ? navigator.clipboard.writeText(box.value) : Promise.reject()).catch(function () { document.execCommand("copy"); }); btn.textContent = "Copied"; }
   $("ro-go").addEventListener("click", function () {

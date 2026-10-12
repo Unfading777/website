@@ -72,7 +72,7 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
   function save(a) { if (remote) remote = a; else try { localStorage.setItem("ra-quotes", JSON.stringify(a)); } catch (e) {} }
   function push(payload) { if (!remote) return; payload.pass = RA.pass(); RA.api(payload).catch(function () {}); }
   function fromSheet(rows) {
-    return rows.map(function (x) { return { r: x.r, n: x.n, a: String(x.a), p: x.p, f: Number(x.f), s: Number(x.s), d: Number(x.d) || 0, u: x.u, signed: x.status === "Signed", signedAt: x.signedAt, agreed: x.agreed, o: x.ou && x.oe ? { u: x.ou, e: x.oe } : null }; });
+    return rows.map(function (x) { return { r: x.r, n: x.n, a: String(x.a), p: x.p, f: Number(x.f), s: Number(x.s), d: Number(x.d) || 0, u: x.u, signed: x.status === "Signed", signedAt: x.signedAt, agreed: x.agreed, o: x.ou && x.oe ? { u: x.ou, e: x.oe } : null, su: x.su || "" }; });
   }
   function connect(pw, first) {
     var err = $("pwerr"); err.hidden = true;
@@ -115,20 +115,20 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
         var t = Date.now(), end = t + 24 * 3600000, u = base(x.u) + RA.windowCode(t, end), a2 = load(); a2[ix].o = { u: u, e: end }; save(a2);
         push({ action: "reopen", r: x.r, s: x.s, u: u, e: end });
         out.innerHTML = ""; out.appendChild(el("div", null, "Send this link to " + x.n + ". The 25% is open until " + RA.when(end) + "."));
-        var ta = el("textarea"); ta.readOnly = true; ta.value = u; out.appendChild(ta);
+        var ta = el("textarea"); ta.readOnly = true; if (x.su) u = x.su; ta.value = u; out.appendChild(ta);
         var cp = el("button", "btn", "Copy link"); cp.type = "button"; cp.style.marginTop = ".5rem";
         cp.onclick = function () { ta.select(); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).catch(function () { document.execCommand("copy"); }); cp.textContent = "Copied"; };
         out.appendChild(cp); out.hidden = false; left.querySelector(".tag") && (left.querySelector(".tag").textContent = "25% open until " + RA.when(end), left.querySelector(".tag").className = "tag");
       };
       var b2 = el("a", "ghost", "Open quote"); b2.href = x.o && x.o.e > now ? x.o.u : x.u; b2.target = "_blank"; b2.rel = "noopener";
       var b3 = el("button", "ghost", "Copy link"); b3.type = "button";
-      b3.onclick = function () { var u = x.o && x.o.e > Date.now() ? x.o.u : x.u; (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function () { b3.textContent = "Copied"; }, function () {}); };
+      b3.onclick = function () { var u = x.su || (x.o && x.o.e > Date.now() ? x.o.u : x.u); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function () { b3.textContent = "Copied"; }, function () {}); };
       var b4 = el("button", "ghost", x.signed ? "Mark as not signed" : "Mark as signed"); b4.type = "button";
       b4.onclick = function () { var a2 = load(); a2[ix].signed = !a2[ix].signed; save(a2); push({ action: "status", r: x.r, s: x.s, status: a2[ix].signed ? "Signed" : "Sent" }); render(); };
       var b5 = el("button", "ghost", "Remove"); b5.type = "button";
       b5.onclick = function () { if (b5.textContent !== "Confirm remove") { b5.textContent = "Confirm remove"; return; } var a2 = load(); push({ action: "status", r: x.r, s: x.s, status: "Removed" }); a2.splice(ix, 1); save(a2); render(); };
       var b6 = el("button", "ghost", "Copy balance payment link"); b6.type = "button";
-      b6.onclick = function () { var u = base(x.u).replace("/quote/#", "/quote/?pay=balance#"); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function () { b6.textContent = "Copied. Send it with the first draft"; }, function () { out.innerHTML = ""; var ta = el("textarea"); ta.readOnly = true; ta.value = u; out.appendChild(ta); out.hidden = false; }); };
+      b6.onclick = function () { var u = base(x.u).replace("/quote/#", "/quote/?pay=balance#"); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function () { b6.textContent = "Copied. Send it with the first draft"; }, function () { out.innerHTML = ""; var ta = el("textarea"); ta.readOnly = true; if (x.su) u = x.su; ta.value = u; out.appendChild(ta); out.hidden = false; }); };
       var b7 = el("button", "btn", "Charge balance"); b7.type = "button";
       b7.onclick = function () {
         out.innerHTML = ""; out.hidden = false; out.appendChild(el("div", null, "Checking the card on file\u2026"));
