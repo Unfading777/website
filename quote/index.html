@@ -153,7 +153,8 @@ details.alt .bank { margin-top:.9rem; }
       <ul class="terms">
         <li id="lump">One lump sum fee for everything listed below. No hourly rates.</li>
         <li>50% deposit payable on instruction: <b id="dep"></b>.</li>
-        <li>Remaining 50% charged to the card you pay your deposit with when I issue your first draft. If you pay by Klarna or bank transfer, I send you a payment link with your first draft instead.</li>
+        <li>Remaining 50% charged to the card you pay your deposit with when I issue your first draft. If you pay by Klarna or bank transfer, I send you a payment link instead.</li>
+        <li>Your first draft, and all drawings after it, are released once the balance has been paid.</li>
         <li>Prefer to pay everything at once? You can pay in full when you sign.</li>
         <li>Council, Building Control and Thames Water application fees are paid by you directly and are not included.</li>
         <li>This quote is valid for 30 days.</li>
@@ -353,7 +354,7 @@ details.alt .bank { margin-top:.9rem; }
     }
     if (hasBank || hasCard || embed) {
       $("pay").hidden = false; $("pay-amt").textContent = dep;
-      document.querySelector(".paysub").textContent = (BAL ? "Your first draft is ready. The remaining 50% of your agreed fee is now due. " : "Your deposit secures your start date. ") + (embed || hasCard ? "Pay securely by card below, at no extra cost." : "Pay by bank transfer using the details below.");
+      document.querySelector(".paysub").textContent = (BAL ? "Your first draft is ready. The remaining 50% of your agreed fee is now due, and your drawings are released as soon as it is paid. " : "Your deposit secures your start date. ") + (embed || hasCard ? "Pay securely by card below, at no extra cost." : "Pay by bank transfer using the details below.");
       if (BAL) { document.querySelector(".payhead").textContent = "Pay your balance"; $("due-badge").textContent = "Balance due"; $("due-sub").textContent = "Remaining 50% of your agreed fee"; }
       if (hasBank) {
         $("bankd").hidden = false; $("b-sort").textContent = P.sortCode; $("b-acc").textContent = P.accountNumber; $("b-ref").textContent = q.r; $("b-amt").textContent = dep;
