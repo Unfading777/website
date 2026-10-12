@@ -83,8 +83,9 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
       }
       if (!r.ok) { try { localStorage.removeItem("ra-pass"); } catch (e) {} $("connect").hidden = false; err.textContent = r.error === "bad-pass" ? "That passphrase is not right." : "Could not load your quotes. Please try again."; err.hidden = false; return; }
       try { localStorage.setItem("ra-pass", pw); } catch (e) {}
-      var have = {}; r.quotes.forEach(function (x) { have[x.r + "|" + x.s] = 1; });
-      var missing = local().filter(function (x) { return !have[x.r + "|" + x.s]; });
+      var have = {}, gone = {}; r.quotes.forEach(function (x) { have[x.r + "|" + x.s] = 1; }); (r.removed || []).forEach(function (k) { gone[k] = 1; });
+      var keep = local().filter(function (x) { return !gone[x.r + "|" + x.s]; }); try { localStorage.setItem("ra-quotes", JSON.stringify(keep)); } catch (e) {}
+      var missing = keep.filter(function (x) { return !have[x.r + "|" + x.s]; });
       remote = fromSheet(r.quotes);
       if (missing.length) { RA.api({ action: "create", pass: pw, quotes: missing }).catch(function () {}); remote = remote.concat(missing); remote.sort(function (a, b) { return b.s - a.s; }); }
       $("connect").hidden = true; $("src").textContent = "Every quote you have sent, from your Google Sheet, newest first.";
@@ -126,7 +127,7 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
       var b4 = el("button", "ghost", x.signed ? "Mark as not signed" : "Mark as signed"); b4.type = "button";
       b4.onclick = function () { var a2 = load(); a2[ix].signed = !a2[ix].signed; save(a2); push({ action: "status", r: x.r, s: x.s, status: a2[ix].signed ? "Signed" : "Sent" }); render(); };
       var b5 = el("button", "ghost", "Remove"); b5.type = "button";
-      b5.onclick = function () { if (b5.textContent !== "Confirm remove") { b5.textContent = "Confirm remove"; return; } var a2 = load(); push({ action: "status", r: x.r, s: x.s, status: "Removed" }); a2.splice(ix, 1); save(a2); render(); };
+      b5.onclick = function () { if (b5.textContent !== "Confirm remove") { b5.textContent = "Confirm remove"; return; } var a2 = load(); push({ action: "status", r: x.r, s: x.s, status: "Removed" }); a2.splice(ix, 1); save(a2); try { localStorage.setItem("ra-quotes", JSON.stringify(local().filter(function (y) { return !(y.r === x.r && y.s === x.s); }))); } catch (e) {} render(); };
       var b6 = el("button", "ghost", "Copy balance payment link"); b6.type = "button";
       var balLink = function () { return x.su ? x.su.replace("/q/#", "/q/?b#") : base(x.u).replace("/quote/#", "/quote/?pay=balance#"); };
       var waBal = function (amt) {
