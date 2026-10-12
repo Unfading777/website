@@ -29,10 +29,11 @@ a { color:var(--pink); }
 (function () {
   var c = (location.hash || location.search).replace(/^[#?]/, "").replace(/[^A-Za-z0-9]/g, "");
   var msg = document.getElementById("msg");
+  var bal = /^\?b(&|=|$)/.test(location.search) || /[?&]b(&|=|$)/.test(location.search); /* ?b = the balance payment page */
   function fail() { msg.innerHTML = 'Sorry, this link could not be opened. Please <a href="https://wa.me/447515334455">message Carl on WhatsApp</a> and he will resend it.'; }
   if (!c) return fail();
   RA.api({ action: "go", c: c }).then(function (r) {
-    if (r && r.ok && /^https:\/\/residential-architecture\.co\.uk\//.test(r.url)) location.replace(r.url); else fail();
+    if (r && r.ok && /^https:\/\/residential-architecture\.co\.uk\//.test(r.url)) location.replace(bal ? r.url.replace("/quote/#", "/quote/?pay=balance#") : r.url); else fail();
   }).catch(fail);
 })();
 </script>
