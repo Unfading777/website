@@ -134,6 +134,11 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
         var t = "Hi " + first + ", your first draft is ready. The remaining 50%" + (amt ? " (" + RA.money(amt) + ")" : "") + " is now due. You can pay securely here, with Klarna again if you like: " + balLink() + "\n\nAs soon as it's through I'll send your drawings over.";
         var a = el("a", "btn", "Send balance link on WhatsApp"); a.href = "https://wa.me/?text=" + encodeURIComponent(t); a.target = "_blank"; a.rel = "noopener"; a.style.marginTop = ".5rem"; return a;
       };
+      var mailBal = function (amt, to) {
+        var first = String(x.n || "").split(/\s+/)[0] || "there";
+        var body = "Hi " + first + ",\n\nYour first draft is ready. The remaining 50% of your agreed fee" + (amt ? " (" + RA.money(amt) + ")" : "") + " is now due, and you can pay securely here, with Klarna again if you like:\n\n" + balLink() + "\n\nAs soon as it's through I'll send your drawings over.\n\nKind regards,\nCarl Collins BSc (Hons)\nResidential Architecture";
+        var a = el("a", "ghost", "Email balance link"); a.href = "mailto:" + encodeURIComponent(to || "") + "?subject=" + encodeURIComponent("Your first draft is ready: " + String(x.a).split("\n")[0]) + "&body=" + encodeURIComponent(body); a.style.margin = ".5rem 0 0 .5rem"; return a;
+      };
       b6.onclick = function () { var u = balLink(); (navigator.clipboard ? navigator.clipboard.writeText(u) : Promise.reject()).then(function () { b6.textContent = "Copied. Send it with the first draft"; }, function () { out.innerHTML = ""; var ta = el("textarea"); ta.readOnly = true; if (x.su) u = x.su; ta.value = u; out.appendChild(ta); out.hidden = false; }); };
       var b7 = el("button", "btn", "Charge balance"); b7.type = "button";
       b7.onclick = function () {
@@ -142,7 +147,7 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
           out.innerHTML = "";
           if (!ci || !ci.ok) { out.appendChild(el("div", null, "Could not check this quote. Please try again.")); return; }
           if (ci.balancePaid) { out.appendChild(el("div", null, "The balance is already paid. Nothing more to charge.")); b7.hidden = true; return; }
-          if (!ci.card) { out.appendChild(el("div", null, x.n + " did not pay the deposit by card (Klarna, or not paid yet), so there is no card to charge. Send them the balance link instead.")); out.appendChild(waBal(ci.amount)); var c1 = el("button", "ghost", "Copy link"); c1.type = "button"; c1.style.margin = ".5rem 0 0 .5rem"; c1.onclick = b6.onclick; out.appendChild(c1); return; }
+          if (!ci.card) { out.appendChild(el("div", null, x.n + " did not pay the deposit by card (Klarna, or not paid yet), so there is no card to charge. Send them the balance link instead.")); out.appendChild(waBal(ci.amount)); out.appendChild(mailBal(ci.amount, ci.email)); var c1 = el("button", "ghost", "Copy link"); c1.type = "button"; c1.style.margin = ".5rem 0 0 .5rem"; c1.onclick = b6.onclick; out.appendChild(c1); return; }
           var brand = String(ci.card.brand || "card"); brand = brand.charAt(0).toUpperCase() + brand.slice(1);
           out.appendChild(el("div", null, "Charge " + RA.money(ci.amount) + " to " + x.n + "'s " + (ci.card.last4 ? brand + " ending " + ci.card.last4 : "saved " + brand + " payment") + "? Stripe emails them a receipt."));
           var go = el("button", "btn", "Charge " + RA.money(ci.amount) + " now"); go.type = "button"; go.style.marginTop = ".5rem";
@@ -154,7 +159,7 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
               if (r && r.ok) { out.appendChild(el("div", null, (r.already ? "Already paid. " : "Done. ") + RA.money(r.amount || ci.amount) + " charged. You are clear to send the first draft.")); b7.hidden = true; return; }
               if (r && r.error === "setup") { out.appendChild(el("div", null, "Nothing was charged. Stripe would not accept the request because of a setting on your Stripe account, not the client's card. Details: " + (r.message || "unknown"))); return; }
               out.appendChild(el("div", null, (r && r.error === "auth" ? "The bank wants " + x.n + " to approve this payment themselves." : "The card was declined" + (r && r.message ? " (" + r.message + ")" : "") + ".") + " Send them the balance payment link instead, and hold the drawings until it is paid."));
-              out.appendChild(waBal(ci.amount)); var c2 = el("button", "ghost", "Copy link"); c2.type = "button"; c2.style.margin = ".5rem 0 0 .5rem"; c2.onclick = b6.onclick; out.appendChild(c2);
+              out.appendChild(waBal(ci.amount)); out.appendChild(mailBal(ci.amount, ci.email)); var c2 = el("button", "ghost", "Copy link"); c2.type = "button"; c2.style.margin = ".5rem 0 0 .5rem"; c2.onclick = b6.onclick; out.appendChild(c2);
             }).catch(function () { out.innerHTML = ""; out.appendChild(el("div", null, "Could not reach the server, so nothing was charged. Please try again.")); });
           };
           out.appendChild(go); out.appendChild(no);
