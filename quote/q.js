@@ -26,16 +26,16 @@ var RA = (function () {
   ];
   /* Structural calculations quotes: what the fee covers (Carl's standard list). */
   var CALCS = [
-    ["Trench fill foundations, where required*", 1],
+    ["Trench fill foundations*", 1],
     ["Steel beams as required", 1],
     ["Padstone design and masonry checks, or steel columns as required", 1],
-    ["Connection details, where required", 1],
+    ["Connection details", 1],
     ["Lintels as required", 1],
-    ["Flat roof joists, where required", 1],
-    ["Rafters, where required", 1],
-    ["Ceiling joists, where required", 1],
-    ["Trimming to roof windows, where required", 1],
-    ["Floor joists, where required", 1],
+    ["Flat roof joists", 1],
+    ["Rafters", 1],
+    ["Ceiling joists", 1],
+    ["Trimming to roof windows", 1],
+    ["Floor joists", 1],
     ["Credit card payments accepted at no extra cost. Klarna available", 1]
   ];
   function isCalcs(q) { return /^structural calculations/i.test(String(q && q.p || "")); }

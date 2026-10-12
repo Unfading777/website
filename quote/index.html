@@ -235,7 +235,7 @@ details.alt .bank { margin-top:.9rem; }
 
 
 <script src="pay.js?v=35"></script>
-<script src="q.js?v=38"></script>
+<script src="q.js?v=39"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
@@ -261,8 +261,7 @@ details.alt .bank { margin-top:.9rem; }
     $("eyebrow").textContent = "Quotation for structural calculations";
     $("intro").textContent = "Following our correspondence, I have pleasure in presenting my fixed fee quotation for the structural design for the alterations at " + A + ". Below is everything the fee covers, the price, and a button to accept it.";
     document.title = "Your structural calculations quote for " + A + " | Residential Architecture";
-    document.querySelector("#inccard h2").textContent = "What the fee covers";
-    var note = document.createElement("p"); note.className = "small"; note.style.margin = "-.3rem 0 .8rem"; note.textContent = "Every structural element your project needs is covered by the one fixed fee, including those listed below where they apply."; document.querySelector("#inccard h2").after(note);
+    document.querySelector("#inccard h2").textContent = "What the fee covers (where applicable)";
     document.querySelector(".terms").innerHTML = "";
     ["One lump sum fee for the structural requirements listed below. No hourly rates.", "Payment in full on acceptance: <b id=\"dep\"></b>.", "*Should adverse soil conditions, tree roots, inadequate existing foundations or the need for piled foundations be found on site, additional foundation design will be required at a further pre-agreed cost.", "All drawings and calculations are issued electronically. Printed copies, if needed, are charged separately at a pre-agreed cost.", "No drawings or calculations are released or submitted to the local authority until the fee has been paid in full.", "This quote is valid for 30 days."].forEach(function (t, i) { var li = document.createElement("li"); if (i === 0) li.id = "lump"; li.innerHTML = t; document.querySelector(".terms").appendChild(li); });
     document.querySelector("#nextcard h2").textContent = "What happens after you accept";
