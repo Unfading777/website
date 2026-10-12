@@ -92,7 +92,7 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
 .copy:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
 .done h2 { color:var(--ok); }
 .kl { margin:1.1rem 0 0; padding-top:1rem; border-top:1px solid var(--line); } .kl b { display:block; font-size:.95rem; margin-bottom:.3rem; } .kl .small { margin:.3rem 0 0; }
-.signed #kl-fee { display:none; } #kl-pay { border-top:0; padding-top:0; margin:0 0 1rem; }
+.signed #kl-fee { display:none; } .kl-line { margin:.3rem 0 0; } #kl-pay { border-top:0; padding-top:0; margin:0 0 1rem; }
 .due { background:var(--tint); border:1.5px solid var(--pink); border-radius:16px; padding:1.1rem 1.2rem 1rem; margin:0 0 1.2rem; }
 .due .fee { margin:.7rem 0 0; }
 .due.paid { background:#E7F6EF; border-color:var(--ok); } .due.paid .badge { background:var(--ok); } .due.paid .now, .due.paid .save { color:var(--ok); }
@@ -151,7 +151,7 @@ details.alt .bank { margin-top:.9rem; }
         <li>Council, Building Control and Thames Water application fees are paid by you directly and are not included.</li>
         <li>This quote is valid for 30 days.</li>
       </ul>
-      <div class="kl noprint" id="kl-fee"><b>Klarna available</b><div id="kl-fee-box"></div><p class="small" id="kl-fee-note" hidden>Shown for your deposit of <span id="kl-fee-amt"></span>.</p></div>
+      <div class="kl noprint" id="kl-fee"><b>Klarna available</b><div id="kl-fee-box"></div><p class="small kl-line">Spread the cost of your fee with Klarna: choose Klarna when you pay to see your options, including paying in instalments. 18+, T&amp;Cs apply, credit subject to status.</p><p class="small" id="kl-fee-note" hidden>Shown for your deposit of <span id="kl-fee-amt"></span>.</p></div>
     </div>
 
     <div class="card" id="inccard">
@@ -198,7 +198,7 @@ details.alt .bank { margin-top:.9rem; }
         <h2 class="payhead">Pay your deposit</h2>
         <p class="paysub">Your deposit secures your start date. Pay securely by card below.</p>
         <div class="due" id="due"><span class="badge" id="due-badge">Deposit due today</span><div class="fee"><span class="now pink" id="pay-amt"></span><span class="save" id="due-sub">50% of your agreed fee</span></div></div>
-        <div class="kl noprint" id="kl-pay" hidden><b>Klarna available</b><div id="kl-pay-box"></div></div>
+        <div class="kl noprint" id="kl-pay" hidden><b>Klarna available</b><div id="kl-pay-box"></div><p class="small kl-line">Spread the cost of your deposit with Klarna: choose Klarna when you pay to see your options, including paying in instalments. 18+, T&amp;Cs apply, credit subject to status.</p></div>
         <div id="stripe-wrap" class="noprint" hidden><p class="small" id="stripe-load">Loading secure card payment…</p><div id="stripe-box"></div></div>
         <a class="btn noprint" id="card" target="_blank" rel="noopener" hidden>Pay deposit by card</a>
         <p class="small" id="card-note" hidden></p>
