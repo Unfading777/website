@@ -138,7 +138,7 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
           if (ci.balancePaid) { out.appendChild(el("div", null, "The balance is already paid. Nothing more to charge.")); b7.hidden = true; return; }
           if (!ci.card) { out.appendChild(el("div", null, x.n + " did not pay the deposit by card (Klarna, bank transfer or not paid yet), so there is no card to charge. Send them the balance payment link instead.")); var c1 = el("button", "btn", "Copy balance payment link"); c1.type = "button"; c1.style.marginTop = ".5rem"; c1.onclick = b6.onclick; out.appendChild(c1); return; }
           var brand = String(ci.card.brand || "card"); brand = brand.charAt(0).toUpperCase() + brand.slice(1);
-          out.appendChild(el("div", null, "Charge " + RA.money(ci.amount) + " to " + x.n + "'s " + brand + " ending " + ci.card.last4 + "? Stripe emails them a receipt."));
+          out.appendChild(el("div", null, "Charge " + RA.money(ci.amount) + " to " + x.n + "'s " + (ci.card.last4 ? brand + " ending " + ci.card.last4 : "saved " + brand + " payment") + "? Stripe emails them a receipt."));
           var go = el("button", "btn", "Charge " + RA.money(ci.amount) + " now"); go.type = "button"; go.style.marginTop = ".5rem";
           var no = el("button", "ghost", "Cancel"); no.type = "button"; no.style.margin = ".5rem 0 0 .5rem"; no.onclick = function () { out.hidden = true; };
           go.onclick = function () {
@@ -146,6 +146,7 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
             RA.api({ action: "charge-balance", pass: RA.pass(), r: x.r, s: x.s }).then(function (r) {
               out.innerHTML = "";
               if (r && r.ok) { out.appendChild(el("div", null, (r.already ? "Already paid. " : "Done. ") + RA.money(r.amount || ci.amount) + " charged. You are clear to send the first draft.")); b7.hidden = true; return; }
+              if (r && r.error === "setup") { out.appendChild(el("div", null, "Nothing was charged. Stripe would not accept the request because of a setting on your Stripe account, not the client's card. Details: " + (r.message || "unknown"))); return; }
               out.appendChild(el("div", null, (r && r.error === "auth" ? "The bank wants " + x.n + " to approve this payment themselves." : "The card was declined" + (r && r.message ? " (" + r.message + ")" : "") + ".") + " Send them the balance payment link instead, and hold the drawings until it is paid."));
               var c2 = el("button", "btn", "Copy balance payment link"); c2.type = "button"; c2.style.marginTop = ".5rem"; c2.onclick = b6.onclick; out.appendChild(c2);
             }).catch(function () { out.innerHTML = ""; out.appendChild(el("div", null, "Could not reach the server, so nothing was charged. Please try again.")); });
