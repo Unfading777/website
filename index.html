@@ -212,17 +212,15 @@ thead .me { color: var(--pink); }
 @media (max-width: 40rem) {
   .tablebox { overflow: visible; }
   .tablebox table { min-width: 0; }
-  .tablebox thead { display: none; }
-  .tablebox table, .tablebox tbody, .tablebox tr, .tablebox th, .tablebox td { display: block; width: 100%; }
-  .tablebox tbody tr { padding: 1rem; border-bottom: 1px solid var(--line); }
-  .tablebox tbody tr:last-child { border-bottom: 0; }
-  .tablebox tbody th { padding: 0 0 .55rem; border: 0; color: var(--ink); font-weight: 700; }
-  .tablebox tbody td { padding: .6rem .8rem; border: 0; border-radius: 12px; }
-  .tablebox tbody td.them { margin-top: .4rem; background: var(--bg); }
-  .tablebox tbody td::before { content: attr(data-l); display: block; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; margin-bottom: .2rem; }
-  .tablebox tbody td.me::before { color: var(--pink); }
-  .tablebox tbody td.them::before { color: var(--grey); }
+  .tablebox table, .tablebox thead, .tablebox tbody { display: block; }
+  .tablebox tr { display: grid; grid-template-columns: 1fr 1fr; }
+  .tablebox thead td { display: none; }
+  .tablebox thead th { font-size: .95rem; padding: .9rem .8rem .7rem; border-bottom: 1px solid var(--line); }
+  .tablebox tbody th { grid-column: 1 / -1; width: auto; padding: .8rem .8rem .2rem; border: 0; font-size: .85rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--ink); background: var(--card); }
+  .tablebox tbody td { padding: .3rem .8rem .9rem; font-size: .95rem; }
+  .tablebox tbody th + td { padding-top: .5rem; }
 }
+
 
 .steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1.5rem; }
 .steps li { counter-increment: s; position: relative; display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
