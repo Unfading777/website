@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Your quote | Residential Architecture</title>
+<meta property="og:title" content="Your quote | Residential Architecture">
+<meta property="og:description" content="Your fixed-price quote from Carl Collins BSc (Hons). Read it and sign online in about two minutes.">
+<meta property="og:site_name" content="Residential Architecture">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='4' transform='rotate(45 16 16)' fill='%23E6007A'/%3E%3C/svg%3E">
+<style>
+:root { --ink:#1F1E26; --grey:#6A6875; --pink:#E6007A; --bg:#F4F4F6; }
+body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; background:var(--bg); color:var(--ink); font-family:'DM Sans',Arial,Helvetica,sans-serif; text-align:center; padding:16px; box-sizing:border-box; }
+.box { max-width:26rem; }
+.dot { width:14px; height:14px; margin:0 auto 1rem; background:var(--pink); transform:rotate(45deg); border-radius:3px; animation:p 1s ease-in-out infinite alternate; }
+@keyframes p { to { opacity:.35; } }
+a { color:var(--pink); }
+@media (prefers-reduced-motion: reduce) { .dot { animation:none; } }
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="dot" aria-hidden="true"></div>
+  <p id="msg">Opening your quote&hellip;</p>
+</div>
+<script src="/quote/q.js?v=36"></script>
+<script>
+(function () {
+  var c = (location.hash || location.search).replace(/^[#?]/, "").replace(/[^A-Za-z0-9]/g, "");
+  var msg = document.getElementById("msg");
+  function fail() { msg.innerHTML = 'Sorry, this link could not be opened. Please <a href="https://wa.me/447515334455">message Carl on WhatsApp</a> and he will resend it.'; }
+  if (!c) return fail();
+  RA.api({ action: "go", c: c }).then(function (r) {
+    if (r && r.ok && /^https:\/\/residential-architecture\.co\.uk\//.test(r.url)) location.replace(r.url); else fail();
+  }).catch(fail);
+})();
+</script>
+</body>
+</html>
