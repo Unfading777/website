@@ -170,7 +170,8 @@ details.alt .bank { margin-top:.9rem; }
     <div class="card" id="nextcard">
       <h2>What happens after you sign</h2>
       <ol class="steps">
-        <li>I send your deposit invoice and book the measured survey of your home.</li>
+        <li>You pay your deposit securely online, and we agree a date for me to come back to your home.</li>
+        <li>I return in person to carry out a full measured survey of your home, and we go through your brief together in detail. I then write it up for you, so we both agree exactly what is being designed before I start.</li>
         <li>I prepare your first draft within one week of the survey, with the design modelled in 3D.</li>
         <li>We revise it together until you are happy, on site, by phone or by email.</li>
         <li>I submit the application and deal with the council for you.</li>
@@ -225,7 +226,7 @@ details.alt .bank { margin-top:.9rem; }
         </details>
         <p id="card-ask" hidden>The payment form could not load just now. <a id="card-wa" target="_blank" rel="noopener">Message me on WhatsApp</a> or reply to my email and I will send you a secure payment link.</p>
       </div>
-      <p id="next-text">I will be in touch shortly with your deposit invoice and a date for the measured survey.</p>
+      <p id="next-text">I will be in touch shortly to arrange my return visit for the measured survey and your written brief.</p>
       <div class="actions"><button class="ghost" type="button" onclick="window.print()">Print or save a copy</button><a class="ghost" href="https://wa.me/447515334455">WhatsApp Carl</a></div>
     </div>
 
@@ -316,7 +317,7 @@ details.alt .bank { margin-top:.9rem; }
       $("due").classList.add("paid"); $("due-badge").textContent = BAL ? "Balance paid" : full ? "Paid in full" : "Deposit paid"; $("due-sub").textContent = "Received with thanks";
       $("stripe-wrap").hidden = true; $("kl-pay").hidden = true; $("card").hidden = true; $("card-note").hidden = true; $("bankd").hidden = true; $("card-ask").hidden = true;
       document.querySelector(".payhead").textContent = BAL ? "Balance paid" : full ? "Paid in full" : "Deposit paid"; document.querySelector(".paysub").textContent = "Thank you. Your payment has gone through.";
-      $("next-text").textContent = BAL ? "Your fee is now paid in full. Thank you." : CALC ? "Thank you. Your fee is paid in full, and work on your structural calculations starts now. They will be sent to you electronically." : full ? "Your fee is paid in full, with nothing more to pay later. I will be in touch shortly to book the measured survey of your home." : "I will be in touch shortly to book the measured survey of your home.";
+      $("next-text").textContent = BAL ? "Your fee is now paid in full. Thank you." : CALC ? "Thank you. Your fee is paid in full, and work on your structural calculations starts now. They will be sent to you electronically." : full ? "Your fee is paid in full, with nothing more to pay later. I will be in touch shortly to arrange my return visit for the measured survey and your written brief." : "I will be in touch shortly to arrange my return visit for the measured survey and your written brief.";
     }
     function linkCard() { /* fallback: the Stripe page in a new tab */
       $("stripe-wrap").hidden = true;
@@ -359,7 +360,7 @@ details.alt .bank { margin-top:.9rem; }
       document.querySelector(".payhead").textContent = full ? "Pay in full" : "Pay your deposit";
       document.querySelector(".paysub").textContent = (full ? "Pay your whole fee now and there is nothing more to pay later. " : "Your deposit secures your start date. ") + "Pay securely by card below.";
       var kl = document.querySelector("#kl-pay .kl-line"); if (kl) kl.textContent = kl.textContent.replace(full ? "of your deposit" : "of your fee", full ? "of your fee" : "of your deposit");
-      $("next-text").textContent = full ? "Once your payment arrives I will send your receipt and book the measured survey of your home." : "Once your deposit arrives I will send your receipt and book the measured survey of your home.";
+      $("next-text").textContent = full ? "Once your payment arrives I will send your receipt and arrange my return visit for the measured survey and your written brief." : "Once your deposit arrives I will send your receipt and arrange my return visit for the measured survey and your written brief.";
       $("opt-note").textContent = full ? "Your whole fee in one payment, with nothing more to pay later. With Klarna you can still spread it into instalments." : "The remaining 50% (" + RA.money(Math.round((agreed - depAmt) * 100) / 100) + ") is charged to the same card when I issue your first draft. If you pay with Klarna, I will send you a payment link instead.";
       try { if (co) co.destroy(); } catch (e) {} co = null; $("stripe-box").innerHTML = ""; $("stripe-load").hidden = false;
       embedCard();
@@ -373,7 +374,7 @@ details.alt .bank { margin-top:.9rem; }
         $("b-name").textContent = P.accountName || ""; $("b-name-row").hidden = !P.accountName;
         $("b-bank").textContent = P.bankName || ""; $("b-bank-row").hidden = !P.bankName;
       }
-      $("next-text").textContent = BAL ? "Once your balance arrives I will send your receipt." : "Once your deposit arrives I will send your receipt and book the measured survey of your home.";
+      $("next-text").textContent = BAL ? "Once your balance arrives I will send your receipt." : "Once your deposit arrives I will send your receipt and arrange my return visit for the measured survey and your written brief.";
       var was = false; try { was = !!localStorage.getItem(paidKey); } catch (e) {}
       if (was) paidUI(); else if (embed) {
         if (CALC) {

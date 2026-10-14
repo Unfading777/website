@@ -221,10 +221,10 @@ thead .me { color: var(--pink); }
 }
 
 
-.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1.5rem; }
+.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 1.25rem; }
 .steps li { counter-increment: s; position: relative; display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
 .steps li::before { content: counter(s); width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--pink); color: var(--on-pink); font-family: var(--display); font-weight: 700; font-size: 1.15rem; display: grid; place-items: center; position: relative; z-index: 1; }
-.steps li::after { content: ""; position: absolute; top: 1.3rem; left: 2.6rem; right: -1.5rem; height: 2px; background: var(--line); }
+.steps li::after { content: ""; position: absolute; top: 1.3rem; left: 2.6rem; right: -1.25rem; height: 2px; background: var(--line); }
 .steps li:last-child::after { display: none; }
 .steps strong { font-family: var(--display); font-weight: 600; font-size: 1.15rem; line-height: 1.2; }
 .steps span { color: var(--grey); font-size: var(--step--1); }
@@ -543,7 +543,8 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
       <ol class="steps">
         <li><strong>Free home visit</strong><span>Thirty minutes at your home to look at the site and talk through what you want.</span></li>
         <li><strong>Fixed-price quote</strong><span>One price for the drawings, agreed before any work starts.</span></li>
-        <li><strong>First draft in 1 week</strong><span>Detailed floor plans and elevations, with a 3D model and rendered images of your design.</span></li>
+        <li><strong>Survey and written brief</strong><span>I come back to measure your home in full and agree a written brief with you, so the design starts from exact dimensions.</span></li>
+        <li><strong>First draft in 1&nbsp;week</strong><span>Detailed floor plans and elevations, with a 3D model and rendered images of your design.</span></li>
         <li><strong>Revisions</strong><span>As many rounds as it takes before the planning submission.</span></li>
         <li><strong>Planning and Building Regulations</strong><span>I submit the application, then prepare the builder-ready technical drawings.</span></li>
       </ol>
