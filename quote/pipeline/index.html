@@ -52,7 +52,7 @@ tr:last-child td { border-bottom:0; }
 .edit { margin-top:.7rem; } .edit textarea { min-height:4rem; }
 .toolbar { display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin:1.4rem 0 .7rem; } .toolbar input { flex:1 1 14rem; }
 .scroll { overflow-x:auto; -webkit-overflow-scrolling:touch; }
-.scroll table { min-width:30rem; }
+.scroll table { min-width:30rem; } #bytype { min-width:44rem; }
 .spend { display:grid; grid-template-columns:repeat(auto-fit, minmax(7.5rem, 1fr)); gap:.6rem; margin-top:.8rem; }
 .months { display:grid; gap:.4rem; margin-top:.4rem; }
 .month { display:grid; grid-template-columns:1fr auto 7.5rem; gap:.6rem; align-items:center; padding:.35rem 0; border-bottom:1px solid var(--line); }
@@ -100,6 +100,11 @@ input[type=number] { width:100%; font:inherit; border:1.5px solid var(--line); b
     <div class="tables">
       <div class="card"><h2>By postcode area</h2><div class="scroll"><table id="byarea"></table></div></div>
       <div class="card"><h2>By source</h2><div class="scroll"><table id="bysrc"></table></div></div>
+    </div>
+    <div class="card" style="margin-top:.8rem">
+      <h2>By lead type</h2>
+      <p class="small" style="margin:0 0 .5rem">What each kind of enquiry turns into. Miles are the round trip from home for every home visit done, as if each was its own trip.</p>
+      <div class="scroll"><table id="bytype"></table></div>
     </div>
     <div class="card" style="margin-top:.8rem">
       <h2>Lead invoices</h2>
@@ -225,6 +230,23 @@ input[type=number] { width:100%; font:inherit; border:1.5px solid var(--line); b
       var sp = spent(a), wn = wonOf(a); r.appendChild(el("td", "n", sp ? money(sp) : "–")); r.appendChild(el("td", "n", money(wn))); r.appendChild(el("td", "n", sp && wn ? Math.round(wn / sp) + "×" : "–")); t.appendChild(r);
     });
   }
+  var TYPES = [[/1 storey|single/i, "Single-storey extension"], [/2 or more|two/i, "Two-storey extension"], [/loft/i, "Loft conversion"], [/small/i, "Small project"], [/medium/i, "Medium project"], [/large/i, "Large project"], [/home improve/i, "Home improvements"], [/planning/i, "Planning permission"], [/building reg/i, "Building Regulations"], [/structural/i, "Structural calculations"], [/other/i, "Other"]];
+  function ltype(p) { var s = p.svc || ""; if (!s) return p.src === "Direct booking" ? "Direct booking (website)" : "Not stated"; for (var i = 0; i < TYPES.length; i++) if (TYPES[i][0].test(s)) return TYPES[i][1]; return s.replace(/^Architectural Design-?\s*/i, ""); }
+  function renderTypes(set) {
+    var g = {}; set.forEach(function (p) { var k = ltype(p); (g[k] = g[k] || []).push(p); });
+    var keys = Object.keys(g).sort(function (a, b) { return g[b].length - g[a].length || (a < b ? -1 : 1); });
+    var t = $("bytype"); t.innerHTML = "";
+    var h = el("tr"); ["Lead type", "Leads", "Visits", "Signed", "Converts", "Won", "Avg job", "Avg miles", "Miles driven", "Spent"].forEach(function (x, i) { h.appendChild(el("th", i ? "n" : null, x)); }); t.appendChild(h);
+    if (!keys.length) { var r0 = el("tr"), c0 = el("td", "small", "Nothing yet"); c0.colSpan = 10; r0.appendChild(c0); t.appendChild(r0); return; }
+    keys.forEach(function (k) {
+      var a = g[k], vis = a.filter(function (p) { return reached(p, 3); }), s = a.filter(function (p) { return p.sg; }), wn = wonOf(a), sp = spent(a);
+      var withMi = a.filter(function (p) { return p.mi; }), avgMi = withMi.length ? withMi.reduce(function (x, p) { return x + p.mi; }, 0) / withMi.length : 0;
+      var driven = vis.reduce(function (x, p) { return x + (p.mi || 0) * 2; }, 0);
+      var r = el("tr"); r.appendChild(el("td", null, k));
+      [a.length, vis.length, s.length, a.length ? pct(s.length, a.length) : "–", money(wn), s.length ? money(wn / s.length) : "–", avgMi ? Math.round(avgMi) + " mi" : "–", driven ? Math.round(driven) + " mi" : "–", sp ? money(sp) : "–"].forEach(function (v) { r.appendChild(el("td", "n", v)); });
+      t.appendChild(r);
+    });
+  }
   function renderStages(set) {
     var box = $("stages"); box.innerHTML = "";
     var opts = [["Open", set.filter(function (p) { return !p.sg && !p.lost; }).length]].concat(STAGES.map(function (s) { return [s, set.filter(function (p) { return p.st === s; }).length]; })).concat([["Lost", set.filter(function (p) { return p.st === "Lost"; }).length], ["All", set.length]]);
@@ -244,7 +266,7 @@ input[type=number] { width:100%; font:inherit; border:1.5px solid var(--line); b
       var c = el("div", "card person"), top = el("div", "top"), left = el("div");
       left.appendChild(el("span", "name", p.n || "No name"));
       left.appendChild(el("span", "tag" + (p.st === "Deposit paid" || p.st === "Signed" ? " ok" : p.st === "Lost" ? " off" : ""), p.st));
-      top.appendChild(left); top.appendChild(el("span", "small", [p.pc, p.src].filter(Boolean).join(" · "))); c.appendChild(top);
+      top.appendChild(left); top.appendChild(el("span", "small", [p.pc, p.mi ? Math.round(p.mi) + " mi, " + p.dm + " min" : "", p.src].filter(Boolean).join(" · "))); c.appendChild(top);
       var st = el("div", "steps" + (p.sg ? " won" : "")); for (var i = 1; i <= 6; i++) st.appendChild(el("i", reached(p, i) ? "on" : null)); c.appendChild(st);
       var bits = [];
       if (p.f) bits.push("Lead " + day(p.f) + (p.cost != null && p.src === LSD ? " (cost £" + p.cost.toFixed(2) + (p.lcm ? "" : ", share of invoice") + ")" : p.lcm ? " (cost £" + (p.lc || 0).toFixed(2) + ")" : ""));
@@ -253,7 +275,7 @@ input[type=number] { width:100%; font:inherit; border:1.5px solid var(--line); b
       if (p.sg) bits.push("Signed " + day(p.sg) + (p.ag ? " at " + money(p.ag) : ""));
       if (p.dp) bits.push("Deposit " + money(p.dp) + " paid");
       if (p.cs) bits.push("Calcs quoted " + day(p.cs) + " at " + money(p.cf) + (p.cp ? ", paid" : ", not paid yet"));
-      if (p.svc) bits.push(p.svc);
+      if (p.svc || p.src === "Local Surveyors Direct") bits.push(ltype(p));
       c.appendChild(el("div", "small", bits.join(" · ")));
       if (p.lost) c.appendChild(el("div", "note", "Lost: " + p.lost));
       if (p.note) c.appendChild(el("div", "note", p.note));
@@ -289,6 +311,7 @@ input[type=number] { width:100%; font:inherit; border:1.5px solid var(--line); b
     renderFunnel(set); renderSpend(set, byM); renderMonths(byM);
     renderTable("byarea", set, function (p) { return p.a; }, "Area");
     renderTable("bysrc", set, function (p) { return p.src; }, "Source");
+    renderTypes(set);
     renderStages(all); renderList(all);
   }
   [].forEach.call(document.querySelectorAll("[data-p]"), function (b) { b.onclick = function () { period = +b.getAttribute("data-p"); pref("ra-pipe-period", String(period)); render(); }; });
