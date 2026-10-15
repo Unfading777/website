@@ -111,7 +111,7 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
 .copy:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
 .done h2 { color:var(--ok); }
 .kl { margin:1.1rem 0 0; padding:1.1rem 1.2rem 1rem; background:var(--tint); border:1.5px solid var(--pink); border-radius:16px; } .kl b { display:block; font-family:'Outfit',sans-serif; font-size:1.15rem; color:var(--pink); margin-bottom:.4rem; } .kl .small { margin:.3rem 0 0; }
-.signed #kl-fee, .signed #kstart { display:none; } .kstart { margin:.8rem 0 0; padding-top:.75rem; border-top:1px dashed var(--pink); font-size:.98rem; line-height:1.45; } .kstart b { color:var(--pink); } .kstart .fine { display:block; margin-top:.25rem; font-size:.78rem; color:var(--grey); } .kstart.out { margin:.6rem 0 0; padding:.85rem 1rem; border:1.5px solid var(--pink); border-radius:14px; background:var(--tint); } .kl-line { margin:.3rem 0 0; } #kl-pay { margin:0 0 1rem; }
+.signed #kl-fee, .signed #kstart { display:none; } .kstart { margin:.8rem 0 0; padding-top:.75rem; border-top:1px dashed var(--pink); font-size:.98rem; line-height:1.45; } .kstart .kh { display:block; font-family:'Outfit',sans-serif; font-weight:600; font-size:1.2rem; line-height:1.25; color:var(--ink); } .kstart .kamt { display:block; font-family:'Outfit',sans-serif; font-weight:700; font-size:2.2rem; line-height:1.1; color:var(--pink); margin:.15rem 0 .2rem; letter-spacing:-.02em; } .kstart .ksub { display:block; font-size:.98rem; color:var(--ink); } .kstart .fine { display:block; margin-top:.25rem; font-size:.78rem; color:var(--grey); } .kstart.out { margin:.6rem 0 0; padding:.85rem 1rem; border:1.5px solid var(--pink); border-radius:14px; background:var(--tint); } .kl-line { margin:.3rem 0 0; } #kl-pay { margin:0 0 1rem; }
 .due { background:var(--tint); border:1.5px solid var(--pink); border-radius:16px; padding:1.1rem 1.2rem 1rem; margin:0 0 1.2rem; }
 .due .fee { margin:.7rem 0 0; }
 .due.paid { background:#E7F6EF; border-color:var(--ok); } .due.paid .badge { background:var(--ok); } .due.paid .now, .due.paid .save { color:var(--ok); }
@@ -163,7 +163,7 @@ details.alt .bank { margin-top:.9rem; }
         <div class="fee"><span class="now pink" id="fee-now"></span><span class="save"><span id="offer-verb">You save</span> <span id="offer-save"></span></span></div>
         <div class="small" id="offer-small"><span class="count" id="count"></span><span id="offer-after"></span></div>
       </div>
-      <div class="kstart noprint" id="kstart" hidden>Get started today for as little as <b id="kstart-amt"></b>, using Klarna to split your 50% deposit into 3 interest-free payments.<span class="fine">Klarna Pay in 3. 18+, UK residents only. T&amp;Cs apply, credit subject to status. Borrowing more than you can afford or paying late may negatively impact your financial status and ability to obtain credit.</span></div>
+      <div class="kstart noprint" id="kstart" hidden><span class="kh">Get started today for as little as</span><b class="kamt" id="kstart-amt"></b><span class="ksub">using Klarna to split your 50% deposit into 3 interest-free payments.</span><span class="fine">Klarna Pay in 3. 18+, UK residents only. T&amp;Cs apply, credit subject to status. Borrowing more than you can afford or paying late may negatively impact your financial status and ability to obtain credit.</span></div>
       <ul class="terms">
         <li id="lump">One fixed price for everything listed below. No hourly rates.</li>
         <li>50% deposit payable on instruction: <b id="dep"></b>.</li>
