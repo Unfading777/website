@@ -262,7 +262,7 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
     $("copy").textContent = "Copy link";
     var useLong = function () { if (!$("link").value) { $("link").value = url; $("open").href = url; $("copy").disabled = false; } };
     if (RA.pass()) {
-      $("link").value = ""; $("link").placeholder = "Making your short link\u2026"; $("copy").disabled = true; $("open").href = url;
+      $("link").value = ""; $("link").placeholder = "Saving your quote\u2026"; $("copy").disabled = true; $("open").href = url;
       RA.api({ action: "create", pass: RA.pass(), quote: { r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q.d, u: url, phone: $("m").value.trim(), email: $("em").value.trim() } }).then(function (r) {
         if (r && r.short) { $("link").value = r.short; $("open").href = r.short; $("copy").disabled = false; } else useLong();
       }).catch(useLong);

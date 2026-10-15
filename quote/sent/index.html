@@ -72,7 +72,7 @@ input:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(-
   function save(a) { if (remote) remote = a; else try { localStorage.setItem("ra-quotes", JSON.stringify(a)); } catch (e) {} }
   function push(payload) { if (!remote) return; payload.pass = RA.pass(); RA.api(payload).catch(function () {}); }
   function fromSheet(rows) {
-    return rows.map(function (x) { return { r: x.r, n: x.n, a: String(x.a), p: x.p, f: Number(x.f), s: Number(x.s), d: Number(x.d) || 0, u: x.u, signed: x.status === "Signed", signedAt: x.signedAt, agreed: x.agreed, o: x.ou && x.oe ? { u: x.ou, e: x.oe } : null, su: x.su || "" }; });
+    return rows.map(function (x) { return { r: x.r, n: x.n, a: String(x.a), p: x.p, f: Number(x.f), s: Number(x.s), d: Number(x.d) || 0, u: x.u, signed: x.status === "Signed", signedAt: x.signedAt, agreed: x.agreed, o: x.ou && x.oe ? { u: x.ou, e: x.oe } : null, su: "" /* full links only: they open instantly, short ones wait on Google */ }; });
   }
   function connect(pw, first) {
     var err = $("pwerr"); err.hidden = true;
