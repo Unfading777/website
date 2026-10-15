@@ -44,6 +44,7 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
 <div class="wrap">
   <div class="brand"><i></i>Residential Architecture</div>
   <p style="margin:-.4rem 0 1rem"><a href="../sent/" style="color:var(--pink);font-weight:600">Sent quotes</a> <a href="../calcs/" style="color:var(--pink);font-weight:600;margin-left:.8rem">New calcs quote</a></p>
+  <div id="form">
   <div class="card">
     <h1>New quote</h1>
     <p class="small">Fill this in after the visit. It creates the client's own quote page with a sign button. Nothing is stored here; the details live in the link.</p>
@@ -87,20 +88,33 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
     <div class="checks" id="checks"></div>
   </div>
   <div class="card">
-    <button class="btn" type="button" id="make">Create quote link</button>
+    <button class="btn" type="button" id="make">Preview quote</button>
+    <p class="small" style="margin:.6rem 0 0">Nothing is sent yet. You see the quote exactly as your client will, then release it.</p>
     <p class="err" id="err" hidden></p>
-    <div id="out" hidden>
-      <p class="small" style="margin:1rem 0 .4rem">The 24-hour discount clock started when you pressed the button, so send it now.</p>
+  </div>
+  </div>
+  <div id="pv" hidden>
+    <div class="card">
+      <h1>Check before you release</h1>
+      <p class="small" style="margin:.2rem 0 0">This is exactly what your client will see. Signing is switched off in this preview.</p>
+      <p id="pv-who" style="margin:.8rem 0 0"></p>
+      <div class="actions"><button class="btn" type="button" id="release">Release to client</button><button class="ghost" type="button" id="edit">Edit quote</button></div>
+      <p class="err" id="pv-err" hidden></p>
+    </div>
+    <iframe id="pv-frame" title="Quote preview" style="width:100%;height:80vh;border:1px solid var(--line);border-radius:20px;background:#fff;display:block"></iframe>
+    <div class="actions" style="justify-content:center"><button class="btn" type="button" id="release2">Release to client</button><button class="ghost" type="button" id="edit2">Edit quote</button></div>
+  </div>
+  <div id="out" hidden>
+    <div class="card">
+      <h1>Quote released</h1>
+      <p id="out-who" style="margin:.2rem 0 .8rem"></p>
+      <p class="small" style="margin:0 0 .4rem">The client's link. The 24-hour discount clock started when you pressed Release.</p>
       <textarea class="link" id="link" readonly></textarea>
-      <div class="actions"><button class="btn" type="button" id="copy">Copy link</button><a class="ghost" id="open" target="_blank" rel="noopener">Preview the quote</a></div>
-      <ol class="small">
-        <li>In MailerLite, open the client (or add them) and paste the link into the <b>Quote link</b> field.</li>
-        <li>Add them to the <b>Quote sent</b> group and take them out of <b>Local Surveyors Direct</b>.</li>
-        <li>The quote is saved to your <a href="../sent/">Sent quotes</a> list and your Google Sheet.</li>
-        <li>The first email goes straight away with the Open and sign button. When they sign, you get an email.</li>
-      </ol>
+      <div class="actions"><button class="btn" type="button" id="copy">Copy link</button><a class="ghost" id="open" target="_blank" rel="noopener">Open the quote</a><a class="ghost" href="./">Start a new quote</a></div>
+      <p class="small" style="margin:1rem 0 0">It is saved to your <a href="../sent/">Sent quotes</a> list and your Google Sheet. When they sign, you get an email.</p>
     </div>
   </div>
+  <div id="form2">
   <div class="card">
     <h2>Reopen the 25% discount</h2>
     <p class="small" style="margin-top:-.4rem">For when a client asks for the discount after it has ended, or when you send a promotion to everyone. Nothing about the quote itself changes.</p>
@@ -128,6 +142,7 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
       <textarea class="link" id="pm-code" readonly style="min-height:3rem"></textarea>
       <div class="actions"><button class="btn" type="button" id="pm-copy">Copy</button></div>
     </div>
+  </div>
   </div>
 </div>
 <script src="../q.js?v=40"></script>
@@ -188,21 +203,58 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
     if (!$("c2").dataset.touched) $("c2").value = L.c2 || "";
   }
 
-  $("make").addEventListener("click", function () {
-    var n = $("n").value.trim(), a = $("a").value.split(/\n+/).map(function (x) { return x.trim().replace(/,+$/, ""); }).filter(Boolean).join("\n"), p = $("p").value.trim(), f = parseFloat($("f").value), err = $("err");
-    if (!n || !a || !p || !(f > 0)) { err.textContent = "Please fill in the client name, address and fee, and tick at least one project type."; err.hidden = false; $("out").hidden = true; return; }
+  /* Step 1: build the quote from the form. Nothing is saved or sent. */
+  function build(err) {
+    var n = $("n").value.trim(), a = $("a").value.split(/\n+/).map(function (x) { return x.trim().replace(/,+$/, ""); }).filter(Boolean).join("\n"), p = $("p").value.trim(), f = parseFloat($("f").value);
+    if (!n || !a || !p || !(f > 0)) { err.textContent = "Please fill in the client name, address and fee, and tick at least one project type."; err.hidden = false; return null; }
+    var em = $("em").value.trim();
+    if (em && !/^\S+@\S+\.\S+$/.test(em)) { err.textContent = "That client email does not look right. Check it, or leave it blank to send the link yourself."; err.hidden = false; return null; }
     err.hidden = true;
     var i = [].slice.call(document.querySelectorAll("#checks input:checked")).map(function (c) { return +c.value; });
-    var q = { n: n, a: a, p: p, f: f, s: Date.now(), i: i, d: +$("d").value, r: $("r").value.trim() || autoRef() };
-    var B = bank();
-    B = null; /* bank transfer is no longer offered on quotes */
-    if (B) q.b = B; else if ($("b-sort").value.trim() || $("b-acc").value.trim()) { err.textContent = "Bank details need both a 6-digit sort code and an 8-digit account number."; err.hidden = false; $("out").hidden = true; return; }
+    return { n: n, a: a, p: p, f: f, s: Date.now(), i: i, d: +$("d").value, r: $("r").value.trim() || autoRef() };
+  }
+  function view(which) {
+    $("form").hidden = which !== "form"; $("form2").hidden = which !== "form"; $("pv").hidden = which !== "pv"; $("out").hidden = which !== "out";
+    window.scrollTo(0, 0);
+  }
+  function who(done) {
+    var em = $("em").value.trim(), m = $("m").value.trim(), first = ($("n").value.trim().match(/[A-Za-z][A-Za-z'-]*/g) || []).filter(function (w) { return !/^(mr|mrs|ms|miss|dr|and)$/i.test(w); })[0] || "the client";
+    var esc = function (s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); };
+    if (done) {
+      var wa = m ? " Your WhatsApp follow-ups to <b>" + esc(m) + "</b> have started." : "";
+      if (em) return "Emailed to <b>" + esc(em) + "</b>." + (wa || " No mobile, so no WhatsApp follow-ups.");
+      return "Nothing was emailed. Copy the link below and send it to " + esc(first) + " yourself." + wa;
+    }
+    if (em && m) return "Releasing emails the quote to <b>" + esc(em) + "</b> straight away and starts your WhatsApp follow-ups to <b>" + esc(m) + "</b>.";
+    if (em) return "Releasing emails the quote to <b>" + esc(em) + "</b> straight away. No mobile, so no WhatsApp follow-ups.";
+    if (m) return "No email, so nothing is emailed. Releasing gives you the link to send " + esc(first) + " yourself, and starts your WhatsApp follow-ups to <b>" + esc(m) + "</b>.";
+    return "No email or mobile, so nothing is sent automatically. Releasing gives you the link to send yourself.";
+  }
+  var frame = $("pv-frame");
+  frame.addEventListener("load", function () {
+    try { var d = frame.contentDocument; frame.style.height = Math.max(600, d.documentElement.scrollHeight + 20) + "px"; } catch (e) {}
+  });
+  $("make").addEventListener("click", function () {
+    var q = build($("err")); if (!q) return;
+    $("pv-who").innerHTML = who(); $("pv-err").hidden = true;
+    frame.src = location.origin + "/quote/?preview=1#" + RA.encode(q);
+    view("pv");
+  });
+  function back() { frame.src = "about:blank"; view("form"); $("make").scrollIntoView({ block: "center" }); }
+  $("edit").addEventListener("click", back); $("edit2").addEventListener("click", back);
+
+  /* Step 2: release. The quote gets a fresh time now, so the 24-hour discount starts from this moment. */
+  function release() {
+    var q = build($("pv-err")); if (!q) return;
+    $("release").disabled = $("release2").disabled = true;
     var url = location.origin + "/quote/#" + RA.encode(q);
+    $("out-who").innerHTML = who(true);
+    frame.src = "about:blank"; view("out");
     try {
       var all = JSON.parse(localStorage.getItem("ra-quotes") || "[]"); all.unshift({ r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q.d, u: url });
       localStorage.setItem("ra-quotes", JSON.stringify(all.slice(0, 500)));
     } catch (e) {}
-    $("out").hidden = false; $("copy").textContent = "Copy link";
+    $("copy").textContent = "Copy link";
     var useLong = function () { if (!$("link").value) { $("link").value = url; $("open").href = url; $("copy").disabled = false; } };
     if (RA.pass()) {
       $("link").value = ""; $("link").placeholder = "Making your short link\u2026"; $("copy").disabled = true; $("open").href = url;
@@ -210,8 +262,12 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
         if (r && r.short) { $("link").value = r.short; $("open").href = r.short; $("copy").disabled = false; } else useLong();
       }).catch(useLong);
       setTimeout(useLong, 15000);
-    } else { $("link").value = url; $("open").href = url; }
-  });
+    } else {
+      $("link").value = url; $("open").href = url;
+      $("out-who").innerHTML = "This device is not linked to your Google Sheet, so nothing was emailed and no follow-ups started. Open <a href=\"../sent/\">Sent quotes</a> once and enter your passphrase, then make the quote again. Or copy the link below and send it yourself.";
+    }
+  }
+  $("release").addEventListener("click", release); $("release2").addEventListener("click", release);
   function copyFrom(btn, box) { box.select(); (navigator.clipboard ? navigator.clipboard.writeText(box.value) : Promise.reject()).catch(function () { document.execCommand("copy"); }); btn.textContent = "Copied"; }
   $("ro-go").addEventListener("click", function () {
     var raw = $("ro-in").value.trim(), i = raw.indexOf("#"), frag = (i >= 0 ? raw.slice(i + 1) : raw).split(".")[0], err = $("ro-err");

@@ -194,7 +194,7 @@ details.alt .bank { margin-top:.9rem; }
           <div><label for="semail">Your email</label><input type="email" id="semail" autocomplete="email" inputmode="email" required></div>
         </div>
         <label class="tick"><input type="checkbox" id="agree" required><span id="agree-text"></span></label>
-        <button class="btn" type="submit" id="go">Sign and accept this quote</button>
+        <button class="btn" type="submit" id="go">Click to sign your quote</button>
         <p class="err" id="err" role="alert" hidden></p>
         <p class="small">Typing your name and pressing the button is your electronic signature. I receive your acceptance by email, with the date and time.</p>
       </form>
@@ -248,6 +248,15 @@ details.alt .bank { margin-top:.9rem; }
   var A = q.a.split(/\n+/).join(", ");
   var BAL = /[?&]pay=balance(&|$)/.test(location.search); /* the link Carl sends with the first draft, for the remaining 50% */
   var key = "ra-signed-" + q.r + "-" + q.s, price = { ends: 0, agreed: q.f };
+  /* Carl's preview from the quote maker: looks exactly like the client's page, but nothing can be signed or saved. */
+  var PREVIEW = /[?&]preview=1(&|$)/.test(location.search);
+  if (PREVIEW) {
+    var pb = document.createElement("div");
+    pb.className = "noprint";
+    pb.style.cssText = "background:#1F1E26;color:#fff;text-align:center;padding:.6rem 1rem;font:600 .9rem 'DM Sans',system-ui,sans-serif";
+    pb.textContent = "Preview only. This is what your client will see. Signing is switched off.";
+    document.body.insertBefore(pb, document.body.firstChild);
+  }
 
   $("quote").hidden = false;
   $("ref").textContent = "Quote " + q.r;
@@ -406,10 +415,10 @@ details.alt .bank { margin-top:.9rem; }
     var t = $(b.getAttribute("data-copy")).textContent;
     (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () { b.textContent = "Copied"; }, function () {});
   });
-  var prev = null; try { prev = JSON.parse(localStorage.getItem(key) || "null"); } catch (e) {}
+  var prev = null; try { prev = PREVIEW ? null : JSON.parse(localStorage.getItem(key) || "null"); } catch (e) {}
   if (prev) { showDone(prev.name, prev.at, prev.agreed, prev.email); return; }
   /* Signed on another device? Ask the sheet, so the client sees the signed page (and the payment form) wherever they open the link. */
-  if (RA.hasApi) RA.api({ action: "state", r: q.r, s: q.s }).then(function (st) {
+  if (RA.hasApi && !PREVIEW) RA.api({ action: "state", r: q.r, s: q.s }).then(function (st) {
     if (!st || !st.signed || !st.agreed || document.body.classList.contains("signed")) return;
     try { localStorage.setItem(key, JSON.stringify({ name: st.name, at: st.at, agreed: st.agreed })); if (st.deposit) localStorage.setItem("ra-paid-" + q.r + "-" + q.s, "1"); if (st.balance) localStorage.setItem("ra-paid-" + q.r + "-" + q.s + "-bal", "1"); } catch (e) {}
     showDone(st.name, st.at, st.agreed, "");
@@ -431,6 +440,7 @@ details.alt .bank { margin-top:.9rem; }
 
   $("sign").addEventListener("submit", function (ev) {
     ev.preventDefault();
+    if (PREVIEW) { $("err").textContent = "This is a preview, so signing is switched off. Your client's link will work normally."; $("err").hidden = false; return; }
     var name = $("sname").value.trim(), email = $("semail").value.trim(), err = $("err");
     function fail(t, el) { err.textContent = t; err.hidden = false; if (el) el.focus(); }
     if (name.split(/\s+/).length < 2) return fail("Please type your full name, first and last.", $("sname"));
@@ -448,7 +458,7 @@ details.alt .bank { margin-top:.9rem; }
       .then(function (r) { if (!r || !r.ok) throw new Error("not-saved"); })
       .then(function () { try { localStorage.setItem(key, JSON.stringify({ name: name, at: at, agreed: agreed, email: email })); } catch (e) {} showDone(name, at, agreed, email); })
       .catch(function () {
-        btn.disabled = false; btn.textContent = "Sign and accept this quote";
+        btn.disabled = false; btn.textContent = "Click to sign your quote";
         var m = "I accept quote " + q.r + " for " + q.p.toLowerCase() + " at " + A + " at a fixed fee of " + RA.money(agreed) + ". " + name;
         err.innerHTML = 'Sorry, that did not go through. Please try again, or <a href="mailto:carl@residential-architecture.co.uk?subject=' + encodeURIComponent("Quote accepted: " + q.a) + "&body=" + encodeURIComponent(m) + '">email your acceptance</a> instead.';
         err.hidden = false;
