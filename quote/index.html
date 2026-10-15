@@ -37,6 +37,10 @@ ul.inc { list-style:none; margin:0; padding:0; display:grid; gap:.55rem; }
 ul.inc li { position:relative; padding-left:1.7rem; }
 ul.inc li::before { content:""; position:absolute; left:0; top:.32em; width:1.05rem; height:1.05rem; border-radius:50%; background:var(--tint); }
 ul.inc li::after { content:""; position:absolute; left:.33rem; top:.56em; width:.36rem; height:.2rem; border-left:2px solid var(--pink); border-bottom:2px solid var(--pink); transform:rotate(-45deg); }
+ul.inc li.guar { background:var(--tint); border-radius:14px; padding:.85rem 1rem .85rem 2.75rem; margin-top:.35rem; }
+ul.inc li.guar::before { left:1rem; top:calc(.85rem + .32em); background:#fff; }
+ul.inc li.guar::after { left:1.33rem; top:calc(.85rem + .56em); }
+ul.inc li.guar b { color:var(--pink); }
 .fee { display:flex; flex-wrap:wrap; align-items:baseline; gap:.4rem 1rem; }
 .fee .now { font-family:var(--display); font-weight:700; font-size:clamp(2.2rem,8vw,3rem); line-height:1; letter-spacing:-.02em; font-variant-numeric:tabular-nums; }
 .fee .was { color:var(--grey); text-decoration:line-through; font-size:1.2rem; font-variant-numeric:tabular-nums; }
@@ -266,7 +270,7 @@ details.alt .bank { margin-top:.9rem; }
   $("m-name").textContent = q.n; $("m-addr").textContent = q.n + "\n" + q.a;
   $("m-date").textContent = RA.day(q.s); $("m-valid").textContent = RA.day(q.s + 30 * RA.DAY);
   var CALC = RA.isCalcs ? RA.isCalcs(q) : false, LIST = CALC ? RA.CALCS : RA.ITEMS;
-  (q.i || []).forEach(function (ix) { if (LIST[ix]) { var li = document.createElement("li"); li.textContent = LIST[ix][0]; $("inc").appendChild(li); } });
+  (q.i || []).forEach(function (ix) { if (LIST[ix]) { var li = document.createElement("li"), t = LIST[ix][0], g = /^Planning guarantee:\s*/.exec(t); if (g) { li.className = "guar"; var b = document.createElement("b"); b.textContent = "Planning guarantee: "; li.appendChild(b); li.appendChild(document.createTextNode(t.slice(g[0].length))); } else li.textContent = t; $("inc").appendChild(li); } });
   if (CALC) {
     $("eyebrow").textContent = "Quotation for structural calculations";
     $("intro").textContent = "Following our correspondence, I have pleasure in presenting my fixed fee quotation for the structural design for the alterations at " + A + ". Below is everything the fee covers, the price, and a button to accept it.";
