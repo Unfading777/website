@@ -199,6 +199,11 @@ p { margin: 0; max-width: 60ch; }
 .card p { color: var(--grey); }
 .card.feature { grid-column: 1 / -1; background: var(--pink); border-color: var(--pink); color: var(--on-pink); }
 .card.feature p { color: var(--on-pink); }
+.card.klarna { grid-column: 1 / -1; background: var(--tint); border: 1.5px solid var(--pink); }
+.card.klarna h3 { color: var(--pink); }
+#klarna { scroll-margin-top: 6rem; }
+#included .cards > .card:last-child { grid-column: 1 / -1; }
+.card.klarna .fine { font-size: .85rem; color: var(--grey); margin: .7rem 0 0; }
 
 .tablebox { overflow-x: auto; border: 1px solid var(--line); border-radius: 20px; background: var(--card); }
 table { border-collapse: collapse; width: 100%; min-width: 34rem; }
@@ -362,6 +367,7 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
           <li>Free 30-minute visit, in person</li>
           <li>Fixed-price quote for your project</li>
           <li>Planning guarantee</li>
+          <li><a href="#klarna" style="color:inherit;text-decoration:none">Spread the cost with Klarna</a></li>
         </ul>
         <div class="hero-cta rise r2">
           <a class="btn big" href="https://calendly.com/residential-architecture/free-home-visit" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Book a free home visit</a>
@@ -493,6 +499,11 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
           <h3>A planning guarantee</h3>
           <p>If planning is refused, I revise the design in line with the council&rsquo;s feedback at no extra cost and resubmit, as many times as it takes to get approval.</p>
         </div>
+        <div class="card klarna" id="klarna">
+          <h3>Spread the cost with Klarna</h3>
+          <p>Something few architects offer. When you go ahead, you can choose Klarna to spread the cost of your fee, including 3 interest-free payments, so getting your project started does not mean finding it all at once. All major cards, Apple Pay and Google Pay are accepted too.</p>
+          <p class="fine">18+, UK residents only. T&amp;Cs apply, credit subject to status. Borrowing more than you can afford or paying late may negatively impact your financial status and ability to obtain credit.</p>
+        </div>
         <div class="card">
           <h3>A fixed price with unlimited revisions</h3>
           <p>Unlimited revisions up to planning submission, where many firms stop at three.</p>
@@ -500,10 +511,6 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
         <div class="card">
           <h3>Your design in 3D</h3>
           <p>Every project is modelled in 3D, with photo-real rendered images so you can see your design before it is built.</p>
-        </div>
-        <div class="card">
-          <h3>Flexible ways to pay</h3>
-          <p>All major cards, Apple Pay and Google Pay accepted. Klarna available: spread the cost of your fee, including paying in instalments. 18+, T&amp;Cs apply, credit subject to status.</p>
         </div>
         <div class="card">
           <h3>Help finding a builder</h3>
