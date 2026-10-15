@@ -242,7 +242,7 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
   $("make").addEventListener("click", function () {
     var q = build($("err")); if (!q) return;
     $("pv-who").innerHTML = who(); $("pv-err").hidden = true;
-    frame.src = location.origin + "/quote/?preview=1#" + RA.encode(q);
+    frame.src = location.origin + "/quote/?preview=1&t=" + Date.now() + "#" + RA.encode(q); /* fresh copy every time, never an old cached one */
     view("pv");
   });
   function back() { frame.src = "about:blank"; view("form"); $("make").scrollIntoView({ block: "center" }); }
