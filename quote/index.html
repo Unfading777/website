@@ -172,7 +172,7 @@ details.alt .bank { margin-top:.9rem; }
         <li>Council, Building Control and Thames Water application fees are paid by you directly and are not included.</li>
         <li>This quote is valid for 30 days.</li>
       </ul>
-      <div class="kl noprint" id="kl-fee"><b>Klarna available</b><div id="kl-fee-box"></div><p class="small kl-line">Spread the cost of your fee with Klarna: choose Klarna when you pay to see your options, including paying in instalments. 18+, T&amp;Cs apply, credit subject to status.</p><p class="small" id="kl-fee-note" hidden>Shown for your full fee of <span id="kl-fee-amt"></span>. You can also use Klarna for just your 50% deposit.</p></div>
+      <div class="kl noprint" id="kl-fee"><b>Klarna available</b><div id="kl-fee-box"></div><p class="small kl-line">Spread the cost of your fee with Klarna: choose Klarna when you pay to see your options, including paying in instalments. 18+, T&amp;Cs apply, credit subject to status.</p><p class="small" id="kl-fee-note" hidden>Shown for your 50% deposit of <span id="kl-fee-amt"></span>. You can also use Klarna to pay your full fee.</p></div>
     </div>
 
     <div class="card" id="inccard">
@@ -308,9 +308,9 @@ details.alt .bank { margin-top:.9rem; }
       $("offer-after").textContent = "After that the fee returns to the standard " + RA.money(q.f) + ".";
     }
     var depNow = CALC ? agreed : Math.round(agreed * 50) / 100;
-    $("dep").textContent = RA.money(depNow); $("kl-fee-amt").textContent = RA.money(agreed);
-    /* Klarna is shown for the whole fee; the note says it can also be used for just the deposit. */
-    if (klAmt !== agreed) { klAmt = agreed; if (klEl) { try { klEl.update({ amount: Math.round(agreed * 100) }); } catch (e) {} } else if (!klAsked) { klAsked = true; RA.klarna("#kl-fee-box", agreed).then(function (e) { klEl = e; var n = 0, t = setInterval(function () { if ($("kl-fee-box").offsetHeight > 20) { $("kl-fee-note").hidden = false; clearInterval(t); } else if (++n > 20) clearInterval(t); }, 500); if (e && klAmt !== depNow) { try { e.update({ amount: Math.round(klAmt * 100) }); } catch (x) {} } }); } }
+    $("dep").textContent = RA.money(depNow); $("kl-fee-amt").textContent = RA.money(depNow);
+    /* Klarna is shown for the deposit (the low first step); the note says it can also cover the full fee. */
+    if (klAmt !== depNow) { klAmt = depNow; if (klEl) { try { klEl.update({ amount: Math.round(depNow * 100) }); } catch (e) {} } else if (!klAsked) { klAsked = true; RA.klarna("#kl-fee-box", depNow).then(function (e) { klEl = e; var n = 0, t = setInterval(function () { if ($("kl-fee-box").offsetHeight > 20) { $("kl-fee-note").hidden = false; clearInterval(t); } else if (++n > 20) clearInterval(t); }, 500); if (e && klAmt !== depNow) { try { e.update({ amount: Math.round(klAmt * 100) }); } catch (x) {} } }); } }
     $("agree-text").textContent = "I, the person named above, accept this quotation for " + q.p.toLowerCase() + " at " + A + " at a fixed fee of " + RA.money(agreed) + ", and instruct Residential Architecture to proceed on the terms shown on this page.";
   }
   paint(); var timer = setInterval(paint, 30000);
