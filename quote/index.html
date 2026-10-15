@@ -111,7 +111,7 @@ input[type=text]:focus, input[type=email]:focus { outline:none; border-color:var
 .copy:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
 .done h2 { color:var(--ok); }
 .kl { margin:1.1rem 0 0; padding:1.1rem 1.2rem 1rem; background:var(--tint); border:1.5px solid var(--pink); border-radius:16px; } .kl b { display:block; font-family:'Outfit',sans-serif; font-size:1.15rem; color:var(--pink); margin-bottom:.4rem; } .kl .small { margin:.3rem 0 0; }
-.signed #kl-fee { display:none; } .kl-line { margin:.3rem 0 0; } #kl-pay { margin:0 0 1rem; }
+.signed #kl-fee, .signed #kstart { display:none; } .kstart { margin:.8rem 0 0; padding-top:.75rem; border-top:1px dashed var(--pink); font-size:.98rem; line-height:1.45; } .kstart b { color:var(--pink); } .kstart .fine { display:block; margin-top:.25rem; font-size:.78rem; color:var(--grey); } .kstart.out { margin:.6rem 0 0; padding:.85rem 1rem; border:1.5px solid var(--pink); border-radius:14px; background:var(--tint); } .kl-line { margin:.3rem 0 0; } #kl-pay { margin:0 0 1rem; }
 .due { background:var(--tint); border:1.5px solid var(--pink); border-radius:16px; padding:1.1rem 1.2rem 1rem; margin:0 0 1.2rem; }
 .due .fee { margin:.7rem 0 0; }
 .due.paid { background:#E7F6EF; border-color:var(--ok); } .due.paid .badge { background:var(--ok); } .due.paid .now, .due.paid .save { color:var(--ok); }
@@ -163,6 +163,7 @@ details.alt .bank { margin-top:.9rem; }
         <div class="fee"><span class="now pink" id="fee-now"></span><span class="save"><span id="offer-verb">You save</span> <span id="offer-save"></span></span></div>
         <div class="small" id="offer-small"><span class="count" id="count"></span><span id="offer-after"></span></div>
       </div>
+      <div class="kstart noprint" id="kstart" hidden>Get started for as little as <b id="kstart-amt"></b> today, using Klarna to split your 50% deposit into 3 interest-free payments.<span class="fine">Klarna Pay in 3. 18+, UK residents only. T&amp;Cs apply, credit subject to status. Borrowing more than you can afford or paying late may negatively impact your financial status and ability to obtain credit.</span></div>
       <ul class="terms">
         <li id="lump">One lump sum fee for everything listed below. No hourly rates.</li>
         <li>50% deposit payable on instruction: <b id="dep"></b>.</li>
@@ -308,6 +309,17 @@ details.alt .bank { margin-top:.9rem; }
       $("offer-after").textContent = "After that the fee returns to the standard " + RA.money(q.f) + ".";
     }
     var depNow = CALC ? agreed : Math.round(agreed * 50) / 100;
+    /* Low barrier to entry: the deposit split into Klarna's 3 payments, inside the pink price box (or under the price when no offer is running). Klarna Pay in 3 covers £1 to £2,000 in the UK. */
+    var ks = $("kstart");
+    if (ks) {
+      var okK = !CALC && !BAL && depNow >= 1 && depNow <= 2000;
+      ks.hidden = !okK;
+      if (okK) {
+        $("kstart-amt").textContent = RA.money(Math.round(depNow / 3 * 100) / 100);
+        if (ends) { if (ks.parentNode !== $("offer")) $("offer").appendChild(ks); ks.classList.remove("out"); }
+        else { var tm = document.querySelector("#feecard .terms"); if (ks.nextSibling !== tm) tm.parentNode.insertBefore(ks, tm); ks.classList.add("out"); }
+      }
+    }
     $("dep").textContent = RA.money(depNow); $("kl-fee-amt").textContent = RA.money(depNow);
     /* Klarna is shown for the deposit (the low first step); the note says it can also cover the full fee. */
     if (klAmt !== depNow) { klAmt = depNow; if (klEl) { try { klEl.update({ amount: Math.round(depNow * 100) }); } catch (e) {} } else if (!klAsked) { klAsked = true; RA.klarna("#kl-fee-box", depNow).then(function (e) { klEl = e; var n = 0, t = setInterval(function () { if ($("kl-fee-box").offsetHeight > 20) { $("kl-fee-note").hidden = false; clearInterval(t); } else if (++n > 20) clearInterval(t); }, 500); if (e && klAmt !== depNow) { try { e.update({ amount: Math.round(klAmt * 100) }); } catch (x) {} } }); } }
