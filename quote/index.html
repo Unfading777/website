@@ -458,11 +458,14 @@ details.alt .bank { margin-top:.9rem; }
       inclusions: (q.i || []).map(function (ix) { return RA.ITEMS[ix] ? RA.ITEMS[ix][0] : ""; }).join("\n"), device: navigator.userAgent
     };
     var btn = $("go"); btn.disabled = true; btn.textContent = "Signing…";
+    /* The save can take up to half a minute, so reassure the client rather than leave them looking at a stuck button. */
+    var wait = setTimeout(function () { err.textContent = "Saving your signature securely. This can take up to 30 seconds, so please keep this page open."; err.style.color = "#6A6875"; err.hidden = false; }, 4000);
+    var unwait = function () { clearTimeout(wait); err.style.color = ""; err.hidden = true; };
     RA.api(data)
-      .then(function (r) { if (!r || !r.ok) throw new Error("not-saved"); })
+      .then(function (r) { unwait(); if (!r || !r.ok) throw new Error("not-saved"); })
       .then(function () { try { localStorage.setItem(key, JSON.stringify({ name: name, at: at, agreed: agreed, email: email })); } catch (e) {} showDone(name, at, agreed, email); })
       .catch(function () {
-        btn.disabled = false; btn.textContent = "Click to sign your quote";
+        unwait(); btn.disabled = false; btn.textContent = "Click to sign your quote";
         var m = "I accept quote " + q.r + " for " + q.p.toLowerCase() + " at " + A + " at a fixed fee of " + RA.money(agreed) + ". " + name;
         err.innerHTML = 'Sorry, that did not go through. Please try again, or <a href="mailto:carl@residential-architecture.co.uk?subject=' + encodeURIComponent("Quote accepted: " + q.a) + "&body=" + encodeURIComponent(m) + '">email your acceptance</a> instead.';
         err.hidden = false;
