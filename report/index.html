@@ -191,12 +191,13 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     <b id="pv-t">Preview: only you can see this</b>
     <div class="btns">
       <a class="btn ghost" id="pv-edit" href="/quote/visit/">Edit the visit</a>
-      <button class="btn" type="button" id="pv-go">Release report</button>
+      <button class="btn" type="button" id="pv-go">Ready for the quote</button>
     </div>
     <div class="out" id="pv-out" hidden>
-      <input type="text" id="pv-link" readonly aria-label="Report link">
-      <button class="btn ghost" type="button" id="pv-copy">Copy link</button>
-      <a class="btn" id="pv-wa" target="_blank" rel="noopener">Send on WhatsApp</a>
+      <span id="pv-note">Now make their quote and pick this report under <b>Feasibility report</b>. It appears on their quote, so they only get one link.</span>
+      <input type="text" id="pv-link" readonly aria-label="Report link" hidden>
+      <button class="btn ghost" type="button" id="pv-copy">Copy report link</button>
+      <a class="btn" id="pv-quote" href="/quote/new/">Make the quote</a>
     </div>
     <p class="err" id="pv-err" hidden></p>
   </div>
@@ -370,25 +371,22 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
       var b = this, err = $("pv-err"); err.hidden = true;
       if (rep.photos.some(function (p) { return !p.url; })) { err.textContent = "Some photos haven't uploaded yet. Open the visit with signal and wait for them to say Uploaded."; err.hidden = false; return; }
       if (!RA.pass()) { err.textContent = "Connect on the visit page first."; err.hidden = false; return; }
-      b.disabled = true; b.textContent = "Releasing…";
+      b.disabled = true; b.textContent = "Saving…";
       RA.api({ action: "visit-release", pass: RA.pass(), id: v.id, report: rep }).then(function (r) {
-        b.disabled = false; b.textContent = "Release again";
-        if (!r || !r.ok) { err.textContent = r && r.error === "not-found" ? "Save the visit to your sheet first (open the visit with signal)." : r && r.error === "unknown" ? "Releasing isn't switched on in your Google script yet." : "Couldn't release. Try again."; err.hidden = false; return; }
+        b.disabled = false; b.textContent = "Update the report";
+        if (!r || !r.ok) { err.textContent = r && r.error === "not-found" ? "Save the visit to your sheet first (open the visit with signal)." : "Couldn't save the report. Try again."; err.hidden = false; return; }
         v.report = { link: r.link, token: r.token, released: Date.now() };
         try { localStorage.setItem("visit|" + id, JSON.stringify(v)); } catch (e) {}
         showLink(v, r.link, false);
-      }).catch(function () { b.disabled = false; b.textContent = "Release report"; err.textContent = "No connection. Try again with signal."; err.hidden = false; });
+      }).catch(function () { b.disabled = false; b.textContent = "Ready for the quote"; err.textContent = "No connection. Try again with signal."; err.hidden = false; });
     };
     return;
   }
   function showLink(v, link, before) {
     $("pv-out").hidden = false; $("pv-link").value = link;
-    $("pv-t").textContent = before ? "Released. Changes show once you release again" : "Released";
-    $("pv-go").textContent = "Release again";
-    var m = String(v.mobile || "").replace(/[^0-9+]/g, "").replace(/^0/, "44").replace(/^\+/, "");
-    var text = "Hi " + (first(v.name) || "there") + ", thank you for showing me round today. Here's your feasibility report: " + link;
-    $("pv-wa").href = "https://wa.me/" + (m || "") + "?text=" + encodeURIComponent(text);
-    $("pv-copy").onclick = function () { var i = $("pv-link"); i.select(); try { navigator.clipboard.writeText(link); } catch (e) { document.execCommand("copy"); } this.textContent = "Copied"; };
+    $("pv-t").textContent = before ? "Ready for the quote. Changes show once you update it" : "Ready for the quote";
+    $("pv-go").textContent = "Update the report";
+    $("pv-copy").onclick = function () { try { navigator.clipboard.writeText(link); } catch (e) {} this.textContent = "Copied"; };
   }
   if (!tok) { $("msg").innerHTML = 'This link is incomplete. Please <a href="https://wa.me/447515334455">message Carl on WhatsApp</a> and he&rsquo;ll resend it.'; return; }
   RA.api({ action: "report-get", r: tok }).then(function (res) {
