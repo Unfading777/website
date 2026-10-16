@@ -168,7 +168,7 @@ details.alt .bank { margin-top:.9rem; }
       <div class="kstart noprint" id="kstart" hidden><span class="kh" id="kstart-head">Get started today for only</span><b class="kamt" id="kstart-amt"></b><span class="ksub">using Klarna to split your 50% deposit into 3 interest-free payments. Klarna can also cover your full fee.</span><span class="fine">Klarna Pay in 3. 18+, UK residents only. T&amp;Cs apply, credit subject to status. Borrowing more than you can afford or paying late may negatively impact your financial status and ability to obtain credit.</span></div>
       <ul class="terms">
         <li id="lump">One fixed price for everything listed below. No hourly rates.</li>
-        <li>50% deposit payable on instruction: <b id="dep"></b>.</li>
+        <li>50% deposit payable on instruction: <span id="dep"></span><span id="dep-kl"></span>.</li>
         <li>Remaining 50% charged to the card you pay your deposit with when I issue your first draft. If you pay with Klarna, I send you a payment link instead.</li>
         <li>Your first draft, and all drawings after it, are released once the balance has been paid.</li>
         <li>Prefer to pay everything at once? You can pay in full when you sign.</li>
@@ -315,7 +315,7 @@ details.alt .bank { margin-top:.9rem; }
     var ks = $("kstart");
     if (ks) {
       var okK = !CALC && !BAL && depNow >= 1 && depNow <= 2000;
-      ks.hidden = !okK;
+      ks.hidden = !okK; if ($("dep-kl")) $("dep-kl").textContent = okK ? ", or 3 payments of " + RA.money(Math.round(depNow / 3 * 100) / 100) + " with Klarna" : "";
       if (okK) {
         $("kstart-amt").textContent = RA.money(Math.round(depNow / 3 * 100) / 100);
         $("kstart-head").textContent = ends ? "Get started today while your discount is open for only" : "Get started today for only";
