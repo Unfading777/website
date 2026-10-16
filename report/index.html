@@ -453,6 +453,27 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     $("pv-go").textContent = "Update the report";
     $("pv-copy").onclick = function () { try { navigator.clipboard.writeText(link); } catch (e) {} this.textContent = "Copied"; };
   }
+  if (qs.get("demo")) {
+    var demo = { v: 1, name: "Sarah", address: "8 Example Road, Maidenhead", postcode: "SL6 4ET", council: "Windsor and Maidenhead", date: "2026-10-15",
+      title: "Single-storey rear extension", types: ["Rear extension"], words: "The kitchen feels dark and cut off from the garden. We want one big space where the kids can play while we cook.",
+      wants: ["Open-plan kitchen", "Dining space", "Bi-folds or sliders", "Roof lantern"], wantsOther: "", size: "About 4m deep, full width", roof: "Flat roof",
+      extDepth: "4", extWidth: "", sideWidth: "", houseDepth: "8.2", distL: "", distR: "1.2", houseType: "Semi-detached", age: "1970s\u201380s", width: "7.5", depth: "22",
+      earlier: "Small rear extension", earlierPlan: "Comes down for the new one", ground: "Level", attached: "Left (from the garden)",
+      site: [{ k: "boundary", note: "The wall to no. 6 sits on the boundary" }],
+      photos: [{ url: "/img/sample-rear.jpg", caption: "The back of the house. The small existing extension comes down to make way for the new one." }, { url: "/img/sample-front.jpg", caption: "The front of the house, with the garage to the side." }],
+      checks: { conservation: "None found", article4: "None found", listed: "None found", greenBelt: "None found", aonb: "None found", flood: "Zone 1", trees: "None found", pdRights: "Intact", history: "Only the small rear extension" },
+      route: "Prior approval", risk: "Low",
+      things: ["Up to 3m deep is permitted development, so no planning application, but I'd still get a Lawful Development Certificate to prove it. Your 4m design uses prior approval, where the council writes to your neighbours and has 42 days to decide.", "The wall to no. 6 is on the boundary, so Party Wall notices will be needed. Serve them early.", "Wide glazing across the back will probably need an energy calculation at Building Regulations stage."],
+      materials: "Red brick, concrete roof tiles", character: "Uniform: houses look alike", designNotes: "A flat roof with a low parapet keeps the extension well below the first-floor windows next door, and brick to match keeps it in character with the street.",
+      design: { d45: { a: "Clear", note: "Single storey, so the line from next door's kitchen window is clear" }, privacy: { a: "Fine", note: "" }, scale: { a: "Fine", note: "" }, precedent: { a: "Yes", note: "Two similar extensions in the road" }, parking: { a: "Fine", note: "Driveway for two cars kept" } },
+      nearby: [{ what: "4m rear extension, same road", decision: "Approved", note: "4m next to an attached neighbour is accepted here." }, { what: "6m rear extension, two streets away", decision: "Refused", note: "Too close to a neighbour's kitchen window. 4m stays clear of that." }],
+      data: { epc: { band: "D", potential: "B", age: "E", area: 92, walls: "Cavity wall, as built, partial insulation (assumed)", roof: "Pitched, 100 mm loft insulation", floor: "Solid, no insulation (assumed)", windows: "Fully double glazed", heating: "Boiler and radiators, mains gas", date: "2019-05-02" },
+        sales: [{ date: Date.parse("2025-03-21"), price: 615000, type: "semi-detached", num: "14", street: "EXAMPLE ROAD" }, { date: Date.parse("2024-10-02"), price: 590000, type: "semi-detached", num: "3", street: "EXAMPLE ROAD" }, { date: Date.parse("2023-06-16"), price: 642500, type: "semi-detached", num: "21", street: "EXAMPLE ROAD" }, { date: Date.parse("2022-01-28"), price: 560000, type: "semi-detached", num: "9", street: "EXAMPLE ROAD" }],
+        hpi: { month: "2026-06", all: 580299, semi: 607297, change: -1.6, changeSemi: -0.4 } } };
+    render(demo, "");
+    var b = document.createElement("div"); b.className = "pv"; b.innerHTML = '<div class="wrap"><b>Sample report: the house, names and figures are examples</b></div>'; document.body.insertBefore(b, document.body.firstChild);
+    return;
+  }
   if (!tok) { $("msg").innerHTML = 'This link is incomplete. Please <a href="https://wa.me/447515334455">message Carl on WhatsApp</a> and he&rsquo;ll resend it.'; return; }
   RA.api({ action: "report-get", r: tok }).then(function (res) {
     if (!res || !res.ok) { $("msg").innerHTML = 'Sorry, this report could not be opened. Please <a href="https://wa.me/447515334455">message Carl on WhatsApp</a> and he&rsquo;ll resend it.'; return; }
