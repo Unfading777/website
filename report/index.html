@@ -245,6 +245,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
       photos: (v.photos || []).filter(function (p) { return p.report; }).slice(0, 4).map(function (p) { return { url: p.url || "", k: p.k, caption: p.caption || "" }; }),
       checks: (function () { var c = {}; Object.keys(v.checks || {}).forEach(function (k) { if (k.charAt(0) !== "_") c[k] = v.checks[k]; }); return c; })(),
       route: v.route || "", risk: v.risk || "", things: things,
+      faces: v.faces || "", glazLost: v.glazLost || "", lat: (v.checks && v.checks._lat) || v.lat || "", lng: (v.checks && v.checks._lng) || v.lng || "",
       materials: v.materials || "", character: v.character || "", designNotes: v.designNotes || "",
       design: (function () { var o = {}; Object.keys(v.design || {}).forEach(function (k) { if (v.design[k] && v.design[k].a) o[k] = { a: v.design[k].a, note: v.design[k].note || "" }; }); return o; })(),
       data: (function () { var d = v.data || {}, e = d.epc && d.epc.band ? d.epc : null; return {
@@ -288,12 +289,14 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     var sec = 0;
     var meas = [["House width", r.width ? r.width + "m" : ""], ["Garden depth", r.depth ? "About " + r.depth + "m" : ""], ["Earlier extensions", r.earlier], ["Ground", r.ground]].filter(function (m) { return m[1]; });
     var showPlan = ((r.extDepth && has(r.types, /Rear|Wrap/)) || (r.sideWidth && has(r.types, /Side|Wrap/))) && r.houseType && !/Flat/.test(r.houseType);
-    if (r.photos.length || meas.length || showPlan || (r.data && r.data.epc)) {
+    if (r.photos.length || meas.length || showPlan || (r.data && r.data.epc) || r.lat) {
       sec++;
       H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Your house</h2></div>');
+      H.push(map(r));
       if (r.photos.length) H.push('<div class="photos' + (r.photos.length === 1 ? " n1" : "") + '">' + r.photos.map(function (p, i) { return '<figure><img class="ph" data-k="' + esc(p.k) + '" ' + (p.url ? 'src="' + esc(p.url) + '"' : "") + ' alt="' + esc(p.caption || "Photo from the visit") + '" loading="lazy"><figcaption>' + esc(p.caption) + '</figcaption></figure>'; }).join("") + '</div>');
       if (meas.length) H.push('<div class="measures">' + meas.map(function (m) { return '<div>' + m[0] + '<b>' + esc(m[1]) + '</b></div>'; }).join("") + '</div>');
       if (showPlan) H.push(plan(r, lim1, lim2));
+      H.push(extNumbers(r)); H.push(sun(r));
       H.push(numbers(r));
       H.push('</div></article>');
     }
@@ -325,7 +328,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     H.push('<div class="box"><h3>Other things to budget for</h3><ul class="dash one"><li>Structural engineer</li><li>Party Wall surveyor, if a neighbour appoints one</li><li>Thames Water build-over agreement, if needed</li><li>A contingency: I suggest keeping 10–15% aside</li></ul></div>');
     var site = {}; r.site.forEach(function (s) { site[s.k] = s.note || true; });
     var other = [];
-    if (site.boundary || /Semi|terrace/.test(r.houseType)) other.push(["Party Wall Act", (typeof site.boundary === "string" ? esc(site.boundary) + ". " : "") + "Work on or near the boundary needs notices to the neighbours at least one month before work starts."]);
+    if (site.boundary || /Semi|terrace/.test(r.houseType) || Number(r.distL) < 3 || Number(r.distR) < 3) other.push(["Party Wall Act", partyWall(r, site)]);
     other.push(["Building Regulations", "Needed whichever planning route you take. I recommend Full Plans approval."]);
     if (site.drains) other.push(["Drainage", (typeof site.drains === "string" ? esc(site.drains) + ". " : "") + "A public sewer under or near the new work needs a build-over agreement with Thames Water. A CCTV survey answers it."]);
     if (site.trees) other.push(["Trees", (typeof site.trees === "string" ? esc(site.trees) + ". " : "") + "Trees close to the work can mean deeper foundations."]);
@@ -361,6 +364,70 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
   function cap(t) { t = String(t || ""); return t.charAt(0).toUpperCase() + t.slice(1); }
   var AGE = { A: "Before 1900", B: "1900 to 1929", C: "1930 to 1949", D: "1950 to 1966", E: "1967 to 1975", F: "1976 to 1982", G: "1983 to 1990", H: "1991 to 1995", I: "1996 to 2002", J: "2003 to 2006", K: "2007 to 2011", L: "2012 to 2022", M: "2023 or later" };
   function ageBand(a) { a = String(a || "").replace(/^England and Wales:\s*/i, "").trim(); return AGE[a.toUpperCase()] || a.replace(/-/g, " to "); }
+  function extArea(r) {
+    var W = Number(r.width) || 0, E = has(r.types, /Rear|Wrap/) ? Number(r.extDepth) || 0 : 0, EW = Math.min(Number(r.extWidth) || W, W || 99), SW = has(r.types, /Side|Wrap/) ? Number(r.sideWidth) || 0 : 0, D = Number(r.houseDepth) || 0;
+    var a = E * EW + SW * (D || 0) + (has(r.types, /Wrap/) ? SW * E : 0);
+    return Math.round(a * 10) / 10;
+  }
+  function extNumbers(r) {
+    var a = extArea(r); if (!a) return "";
+    var gross = r.data && r.data.epc && Number(r.data.epc.area), tiles = [];
+    var internal = Math.round(a * 0.85);
+    tiles.push(['Space added', 'About ' + internal + ' m\u00b2', 'Inside the new walls, from your ' + (Math.round(a * 10) / 10) + ' m\u00b2 footprint']);
+    if (gross) tiles.push(['Your house after', 'About ' + Math.round(gross + internal) + ' m\u00b2', 'Up from ' + Math.round(gross) + ' m\u00b2, ' + Math.round(internal / gross * 100) + '% more space']);
+    var glaz = Math.round((internal * 0.25 + (Number(r.glazLost) || 0)) * 10) / 10;
+    tiles.push(['Glazing allowance', glaz + ' m\u00b2', 'Windows, glazed doors and rooflights before an energy calculation is needed']);
+    return '<div><h3>Your extension in numbers</h3><div class="tiles' + (tiles.length === 2 ? ' t2' : '') + '">' + tiles.map(function (t) { return '<div class="tile"><span>' + t[0] + '</span><b>' + t[1] + '</b><small>' + t[2] + '</small></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">Building Regulations allow glazing up to a quarter of the new floor area' + (Number(r.glazLost) ? ', plus the ' + esc(r.glazLost) + ' m\u00b2 of windows and doors being removed' : '') + '. Wider glazing is fine; it just needs an energy calculation, which I include in the Building Regulations stage.</p></div>';
+  }
+  function sunTimes(lat, lng, month, day) {
+    var rad = Math.PI / 180, N = Math.floor((Date.UTC(2026, month - 1, day) - Date.UTC(2026, 0, 0)) / 864e5);
+    var decl = 23.44 * Math.sin(rad * 360 / 365 * (N - 81)), cosH = (Math.sin(-0.833 * rad) - Math.sin(lat * rad) * Math.sin(decl * rad)) / (Math.cos(lat * rad) * Math.cos(decl * rad));
+    var H = Math.acos(Math.max(-1, Math.min(1, cosH))) / rad / 15, noon = 12 - lng / 15, bst = month > 3 && month < 11 ? 1 : 0;
+    var f = function (h) { h += bst; var hh = Math.floor(h), mm = Math.round((h - hh) * 60); if (mm === 60) { hh++; mm = 0; } return hh + ":" + ("0" + mm).slice(-2); };
+    return { rise: f(noon - H), set: f(noon + H), noonAlt: Math.round(90 - lat + decl) };
+  }
+  function sun(r) {
+    if (!r.faces) return "";
+    var T = {
+      "North": "Your garden faces north, so the back of the house gets little direct sun. Roof lanterns and rooflights matter most here: they bring daylight deep into the new room.",
+      "North-east": "Your garden faces north-east: gentle early-morning sun, then shade. Rooflights or a lantern will do most of the work bringing light in.",
+      "East": "Your garden faces east: bright morning sun at the back of the house, shade by the afternoon. Good for a kitchen used at breakfast.",
+      "South-east": "Your garden faces south-east: sun from early morning until early afternoon. A lovely aspect for a kitchen-diner.",
+      "South": "Your garden faces south: sun for most of the day. Large glazing works well, but needs shading or solar-control glass so the room doesn\u2019t overheat in summer.",
+      "South-west": "Your garden faces south-west: sun from late morning into the evening, the most sought-after aspect. Big glazing will need solar-control glass or an overhang for summer afternoons.",
+      "West": "Your garden faces west: afternoon and evening sun at the back. Wonderful on summer evenings; plan for low sun glare and heat late in the day.",
+      "North-west": "Your garden faces north-west: shade most of the day, with summer evening sun. Rooflights or a lantern will keep the room bright."
+    };
+    var t = '<p class="lead">' + (T[r.faces] || "") + '</p>';
+    var lat = Number(r.lat), lng = Number(r.lng);
+    if (lat && lng) {
+      var su = sunTimes(lat, lng, 6, 21), wi = sunTimes(lat, lng, 12, 21);
+      t += '<div class="tiles"><div class="tile"><span>Midsummer</span><b>' + su.rise + ' to ' + su.set + '</b><small>Sunrise to sunset on 21 June, sun ' + su.noonAlt + '\u00b0 high at midday</small></div><div class="tile"><span>Midwinter</span><b>' + wi.rise + ' to ' + wi.set + '</b><small>On 21 December the sun is only ' + wi.noonAlt + '\u00b0 high at midday</small></div><div class="tile"><span>Your aspect</span><b>' + esc(r.faces) + '</b><small>Which way the back of the house faces</small></div></div>';
+    }
+    return '<div><h3>Sun and orientation</h3>' + t + '</div>';
+  }
+  function partyWall(r, site) {
+    var near = Math.min(Number(r.distL) || 99, Number(r.distR) || 99), note = typeof site.boundary === "string" ? esc(site.boundary) + ". " : "";
+    if (/Semi|terrace/.test(r.houseType)) return note + "Your house is attached, so the new foundations will be dug within 3m of next door. That needs a Party Wall notice at least one month before work starts.";
+    if (near < 3) return note + "The extension comes within " + near + "m of the boundary. If next door&rsquo;s house is within 3m of the new foundations, a Party Wall notice is needed at least one month before work starts.";
+    return note + "Work on or near the boundary needs notices to the neighbours at least one month before work starts.";
+  }
+  function map(r) {
+    var lat = Number(r.lat), lng = Number(r.lng); if (!lat || !lng) return "";
+    var z = 17, n = Math.pow(2, z), xt = (lng + 180) / 360 * n, lr = lat * Math.PI / 180, yt = (1 - Math.log(Math.tan(lr) + 1 / Math.cos(lr)) / Math.PI) / 2 * n;
+    var tx = Math.floor(xt), ty = Math.floor(yt), px = (xt - tx) * 256, py = (yt - ty) * 256, imgs = [];
+    for (var dx = -2; dx <= 2; dx++) for (var dy = -1; dy <= 1; dy++) imgs.push('<img src="https://tile.openstreetmap.org/' + z + '/' + (tx + dx) + '/' + (ty + dy) + '.png" alt="" style="position:absolute;left:' + ((dx + 2) * 256) + 'px;top:' + ((dy + 1) * 256) + 'px;width:256px;height:256px">');
+    return '<div><div style="position:relative;height:220px;overflow:hidden;border-radius:12px;background:#EEE"><div style="position:absolute;left:calc(50% - ' + Math.round(512 + px) + 'px);top:calc(50% - ' + Math.round(256 + py) + 'px);width:1280px;height:768px">' + imgs.join("") + '</div><span aria-hidden="true" style="position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:#E6007A;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.35)"></span></div><p class="small" style="margin-top:.35rem">Your home. Map &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.</p></div>';
+  }
+  /* Typical heat loss of the existing construction (RdSAP default U-values) against what new work must reach (Approved Document L, 2021) */
+  function uOld(kind, txt) {
+    txt = String(txt || "").toLowerCase(); if (!txt || /another dwelling/.test(txt)) return null;
+    if (kind === "walls") return /solid/.test(txt) && !/insulat(ed|ion)\b(?! \(assumed\))/.test(txt.replace(/no insulation/, "")) ? 2.1 : /cavity/.test(txt) && /filled|insulated/.test(txt) && !/partial/.test(txt) ? 0.5 : /cavity/.test(txt) && /partial/.test(txt) ? 0.7 : /cavity/.test(txt) ? 1.5 : null;
+    if (kind === "roof") { if (/no insulation/.test(txt)) return 2.3; var mm = (/(\d+)\s*mm/.exec(txt) || [])[1]; mm = Number(mm); return mm >= 270 ? 0.16 : mm >= 200 ? 0.21 : mm >= 150 ? 0.29 : mm >= 100 ? 0.4 : mm >= 50 ? 0.68 : mm > 0 ? 1.0 : null; }
+    if (kind === "floor") return /no insulation/.test(txt) ? 0.7 : /insulated/.test(txt) ? 0.25 : null;
+    if (kind === "windows") return /single/.test(txt) ? 4.8 : /triple/.test(txt) ? 1.2 : /double/.test(txt) ? 2.8 : null;
+    return null;
+  }
   function numbers(r) {
     var e = r.data && r.data.epc; if (!e) return "";
     var rows = [["Energy rating", e.band ? e.band + (e.potential && e.potential !== e.band ? " (could reach " + e.potential + ")" : "") : ""], ["Built", ageBand(e.age)], ["Floor area", e.area ? e.area + " m\u00b2" : ""], ["Walls", e.walls], ["Roof", e.roof], ["Floor", e.floor], ["Windows", e.windows], ["Heating", e.heating]].filter(function (x) { return x[1]; });
@@ -368,7 +435,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     var BANDS = [["A", "92+", "#008054", 40], ["B", "81\u201391", "#19B459", 48], ["C", "69\u201380", "#8DCE46", 56], ["D", "55\u201368", "#FFD500", 64], ["E", "39\u201354", "#FCAA65", 72], ["F", "21\u201338", "#EF8023", 80], ["G", "1\u201320", "#E9153B", 88]];
     var cur = String(e.band || "").toUpperCase().charAt(0), pot = String(e.potential || "").toUpperCase().charAt(0);
     var chart = /^[A-G]$/.test(cur) ? '<div class="epcbar" role="img" aria-label="Energy rating ' + cur + (pot ? ', could reach ' + pot : '') + '"><div class="hd"><span>Energy rating</span><span>Now</span><span>Could be</span></div>' + BANDS.map(function (b) { var dark = /[CDE]/.test(b[0]) ? "#1F1E26" : "#fff"; return '<div><i style="width:' + b[3] + '%;background:' + b[2] + ';color:' + dark + '">' + b[0] + ' <small style="font-weight:400">' + b[1] + '</small></i><span>' + (cur === b[0] ? '<b style="background:' + b[2] + ';color:' + dark + '">' + cur + '</b>' : '') + '</span><span>' + (pot === b[0] ? '<b style="background:' + b[2] + ';color:' + dark + '">' + pot + '</b>' : '') + '</span></div>'; }).join("") + '</div>' : '';
-    return '<div><h3>How your house is built</h3><div class="tbl other" style="--cols: 10rem minmax(0, 1fr)"><div class="r h"><span>Element</span><span>Your house</span></div>' + rows.map(function (x) { return '<div class="r"><span class="k">' + x[0] + '</span><span>' + esc(cap(x[1])) + '</span></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">From the government&rsquo;s EPC register' + (e.date ? ", certificate dated " + esc(day(String(e.date).slice(0, 10))) : "") + '. I confirm the construction on site at the measured survey; it shapes the structural design and the Building Regulations details.</p></div>';
+    return '<div><h3>How your house is built</h3><div class="tbl other" style="--cols: 8rem minmax(0, 1fr) 7.5rem"><div class="r h"><span>Element</span><span>Your house</span><span>New extension</span></div>' + rows.map(function (x) { var NEW = { Walls: ["walls", 0.18], Roof: ["roof", 0.15], Floor: ["floor", 0.18], Windows: ["windows", 1.4] }[x[0]], o = NEW ? uOld(NEW[0], x[1]) : null; return '<div class="r"><span class="k">' + x[0] + '</span><span>' + esc(cap(x[1])) + (o ? '<br><small style="color:var(--grey)">Typical heat loss ' + o + ' W/m\u00b2K</small>' : '') + '</span><span>' + (NEW ? '<b style="color:var(--ok)">' + NEW[1] + ' W/m\u00b2K</b>' + (o && o / NEW[1] >= 1.5 ? '<br><small style="color:var(--grey)">' + Math.round(o / NEW[1]) + '\u00d7 better</small>' : '') : '') + '</span></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">From the government&rsquo;s EPC register' + (e.date ? ", certificate dated " + esc(day(String(e.date).slice(0, 10))) : "") + '. New extension figures are the Building Regulations limits for new work; heat loss for your house is typical for its construction. I confirm the construction on site at the measured survey.</p></div>';
   }
   function values(r) {
     var d = r.data || {}, h = d.hpi, sales = d.sales || [];
@@ -474,7 +541,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
       title: "Single-storey rear extension", types: ["Rear extension"], words: "The kitchen feels dark and cut off from the garden. We want one big space where the kids can play while we cook.",
       wants: ["Open-plan kitchen", "Dining space", "Bi-folds or sliders", "Roof lantern"], wantsOther: "", size: "About 4m deep, full width", roof: "Flat roof",
       extDepth: "4", extWidth: "", sideWidth: "", houseDepth: "8.2", distL: "", distR: "1.2", houseType: "Semi-detached", age: "1970s\u201380s", width: "7.5", depth: "22",
-      earlier: "Small rear extension", earlierPlan: "Comes down for the new one", ground: "Level", attached: "Left (from the garden)",
+      earlier: "Small rear extension", earlierPlan: "Comes down for the new one", faces: "South-west", lat: 51.5205, lng: -0.7385, glazLost: "3.5", ground: "Level", attached: "Left (from the garden)",
       site: [{ k: "boundary", note: "The wall to no. 6 sits on the boundary" }],
       photos: [{ url: "/img/sample-rear.jpg", caption: "The back of the house. The small existing extension comes down to make way for the new one." }, { url: "/img/sample-front.jpg", caption: "The front of the house, with the garage to the side." }],
       checks: { conservation: "None found", article4: "None found", listed: "None found", greenBelt: "None found", aonb: "None found", flood: "Zone 1", trees: "None found", pdRights: "Intact", history: "Only the small rear extension" },

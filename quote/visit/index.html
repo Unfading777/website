@@ -186,6 +186,8 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
         <label class="f">Earlier extensions<select data-k="earlier"><option value="">Choose</option><option>None</option><option>Small rear extension</option><option>Rear extension</option><option>Side extension</option><option>Loft conversion</option><option>Conservatory</option><option>Several</option></select></label>
         <label class="f">What happens to it<select data-k="earlierPlan"><option value="">Not applicable</option><option>Stays as it is</option><option>Comes down for the new one</option><option>Gets extended</option></select></label>
         <label class="f">Ground<select data-k="ground"><option value="">Choose</option><option>Level</option><option>Slopes up to the garden</option><option>Slopes down to the garden</option><option>Steps down from the house</option></select></label>
+        <label class="f">Back of the house faces <small>Stand at the back door looking down the garden</small><span style="display:flex;gap:.5rem"><select data-k="faces" style="flex:1"><option value="">Choose</option><option>North</option><option>North-east</option><option>East</option><option>South-east</option><option>South</option><option>South-west</option><option>West</option><option>North-west</option></select><button class="btn ghost small" type="button" id="compass">Use compass</button></span></label>
+        <label class="f">Windows and doors being removed (m&sup2;) <small>Optional. Adds to the glazing allowance</small><input type="number" inputmode="decimal" step="0.1" data-k="glazLost"></label>
         <label class="f">Which side is attached<select data-k="attached"><option value="">Not attached</option><option>Left (from the garden)</option><option>Right (from the garden)</option><option>Both</option></select></label>
       </div>
     </section>
@@ -348,7 +350,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     return list.reduce(function (p, x) {
       return p.then(function () {
         var jobs = Promise.resolve();
-        if (!x.council && x.postcode) jobs = jobs.then(function () { return fetch("https://api.postcodes.io/postcodes/" + String(x.postcode).replace(/\s+/g, "")).then(function (r) { return r.json(); }).then(function (j) { if (j && j.result && j.result.admin_district && !x.council) { x.council = j.result.admin_district; x.updated = Date.now(); x.dirty = true; saveObj(x); if (x === v) { var el = document.querySelector('[data-k="council"]'); if (el) el.value = x.council; } } }).catch(function () {}); });
+        if ((!x.council || !x.lat) && x.postcode) jobs = jobs.then(function () { return fetch("https://api.postcodes.io/postcodes/" + String(x.postcode).replace(/\s+/g, "")).then(function (r) { return r.json(); }).then(function (j) { if (j && j.result && !x.lat) { x.lat = j.result.latitude; x.lng = j.result.longitude; } if (j && j.result && j.result.admin_district && !x.council) { x.council = j.result.admin_district; x.updated = Date.now(); x.dirty = true; saveObj(x); if (x === v) { var el = document.querySelector('[data-k="council"]'); if (el) el.value = x.council; } } }).catch(function () {}); });
         if (x.checks && x.checks._pending) jobs = jobs.then(function () { return runChecks(x, x.checks._pending.lat, x.checks._pending.lng); });
         if ((x.address || x.postcode) && (!x.data || x.data.key !== [x.address, x.postcode, x.council].join("|"))) jobs = jobs.then(function () { return getData(x); });
         if (x.dirty) jobs = jobs.then(function () { return push(x); });
@@ -421,9 +423,11 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function council() {
     var pc = String(v.postcode || "").replace(/\s+/g, "");
-    if (v.council || !/^[A-Za-z]{1,2}[0-9][A-Za-z0-9]?[0-9][A-Za-z]{2}$/.test(pc)) return;
+    if ((v.council && v.lat) || !/^[A-Za-z]{1,2}[0-9][A-Za-z0-9]?[0-9][A-Za-z]{2}$/.test(pc)) return;
     fetch("https://api.postcodes.io/postcodes/" + pc).then(function (r) { return r.json(); }).then(function (j) {
-      if (j && j.result && j.result.admin_district && !v.council) { v.council = j.result.admin_district; var el = document.querySelector('[data-k="council"]'); if (el) el.value = v.council; changed(); }
+      if (j && j.result && !v.lat) { v.lat = j.result.latitude; v.lng = j.result.longitude; }
+      if (j && j.result && j.result.admin_district && !v.council) { v.council = j.result.admin_district; var el = document.querySelector('[data-k="council"]'); if (el) el.value = v.council; }
+      if (j && j.result) changed();
     }).catch(function () {});
   }
   function title() { $("ttl").textContent = v && v.name ? v.name.split(" ")[0] + (v.address ? ", " + v.address.split(",")[0] : "") : "Home visit"; }
@@ -515,6 +519,19 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       return !!(a[1] || a[2]);
     });
   }
+  /* Compass: hold the iPad flat at the back door, top edge pointing down the garden */
+  $("compass").onclick = function () {
+    var b = this, NAMES = ["North", "North-east", "East", "South-east", "South", "South-west", "West", "North-west"];
+    function read(e) {
+      var h = e.webkitCompassHeading != null ? e.webkitCompassHeading : (e.absolute && e.alpha != null ? 360 - e.alpha : null);
+      if (h == null) return;
+      window.removeEventListener("deviceorientation", read); window.removeEventListener("deviceorientationabsolute", read);
+      v.faces = NAMES[Math.round(h / 45) % 8]; v.facesDeg = Math.round(h); document.querySelector('[data-k="faces"]').value = v.faces; b.textContent = "Use compass"; changed();
+    }
+    function listen() { b.textContent = "Hold it flat\u2026"; window.addEventListener("deviceorientation", read); window.addEventListener("deviceorientationabsolute", read); setTimeout(function () { b.textContent = "Use compass"; }, 6000); }
+    if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === "function") DeviceOrientationEvent.requestPermission().then(function (st) { if (st === "granted") listen(); }).catch(function () {});
+    else listen();
+  };
   $("getdata").onclick = function () {
     var b = this, err = $("dataerr"); err.hidden = true; b.disabled = true; b.textContent = "Getting it\u2026";
     getData(v).then(function (ok) { b.disabled = false; b.textContent = "Get the data again"; if (!ok) { err.textContent = navigator.onLine === false ? "No signal. It will fill in on its own when you're back online." : "Add the address with the town after a comma, and the council, then try again."; err.hidden = false; } });
