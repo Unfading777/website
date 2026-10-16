@@ -60,6 +60,7 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
     <div class="grid two" style="margin-top:1rem">
       <div><label for="d">Quick-decision discount</label><select id="d"><option value="25">25% in first 24 hours, again a week later</option><option value="0">No discount</option></select></div>
       <div><label for="r">Quote reference</label><input type="text" id="r" autocomplete="off"></div>
+      <div><label for="rp">Feasibility report <span class="small">(released from a visit)</span></label><select id="rp"><option value="">None</option></select></div>
     </div>
   </div>
   <div class="card" hidden><!-- bank transfer switched off: clients pay by card, Apple Pay, Google Pay or Klarna -->
@@ -211,7 +212,9 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
     if (em && !/^\S+@\S+\.\S+$/.test(em)) { err.textContent = "That client email does not look right. Check it, or leave it blank to send the link yourself."; err.hidden = false; return null; }
     err.hidden = true;
     var i = [].slice.call(document.querySelectorAll("#checks input:checked")).map(function (c) { return +c.value; });
-    return { n: n, a: a, p: p, f: f, s: Date.now(), i: i, d: +$("d").value, r: $("r").value.trim() || autoRef() };
+    var q = { n: n, a: a, p: p, f: f, s: Date.now(), i: i, d: +$("d").value, r: $("r").value.trim() || autoRef() };
+    var rp = ($("rp").value || "").split("|"); if (rp[0]) q.rp = rp[0];
+    return q;
   }
   function view(which) {
     $("form").hidden = which !== "form"; $("form2").hidden = which !== "form"; $("pv").hidden = which !== "pv"; $("out").hidden = which !== "out";
@@ -265,6 +268,7 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
       $("link").value = ""; $("link").placeholder = "Saving your quote\u2026"; $("copy").disabled = true; $("open").href = url;
       RA.api({ action: "create", pass: RA.pass(), quote: { r: q.r, n: q.n, a: q.a, p: q.p, f: q.f, s: q.s, d: q.d, u: url, phone: $("m").value.trim(), email: $("em").value.trim() } }).then(function (r) {
         if (r && r.short) { $("link").value = r.short; $("open").href = r.short; $("copy").disabled = false; } else useLong();
+        var rp = ($("rp").value || "").split("|"); if (rp[1]) RA.api({ action: "visit-quote", pass: RA.pass(), id: rp[1], link: url }).catch(function () {});
       }).catch(useLong);
       setTimeout(useLong, 15000);
     } else {
@@ -272,6 +276,19 @@ ol { padding-left:1.2rem; margin:.4rem 0 0; }
       $("out-who").innerHTML = "This device is not linked to your Google Sheet, so nothing was emailed and no follow-ups started. Open <a href=\"../sent/\">Sent quotes</a> once and enter your passphrase, then make the quote again. Or copy the link below and send it yourself.";
     }
   }
+  /* Released visit reports, newest first, so one can be attached to this quote */
+  if (RA.pass()) RA.api({ action: "visit-list", pass: RA.pass() }).then(function (r) {
+    (r && r.visits || []).filter(function (x) { return x.report === "Released" && x.link; }).slice(0, 30).forEach(function (x) {
+      var m = /r=([A-Za-z0-9]+)/.exec(x.link); if (!m) return;
+      var o = document.createElement("option"); o.value = m[1] + "|" + x.id; o.textContent = (x.name || "No name") + (x.address ? ", " + x.address.split(",")[0] : "") + (x.date ? " (" + x.date + ")" : "");
+      o.dataset.name = x.name || ""; o.dataset.addr = x.address || ""; $("rp").appendChild(o);
+    });
+  }).catch(function () {});
+  $("rp").addEventListener("change", function () {
+    var o = this.options[this.selectedIndex]; if (!o || !o.value) return;
+    if (!$("n").value.trim() && o.dataset.name) $("n").value = o.dataset.name;
+    if (!$("a").value.trim() && o.dataset.addr) $("a").value = o.dataset.addr.split(/,\s*/).join("\n");
+  });
   $("release").addEventListener("click", release); $("release2").addEventListener("click", release);
   function copyFrom(btn, box) { box.select(); (navigator.clipboard ? navigator.clipboard.writeText(box.value) : Promise.reject()).catch(function () { document.execCommand("copy"); }); btn.textContent = "Copied"; }
   $("ro-go").addEventListener("click", function () {

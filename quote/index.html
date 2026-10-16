@@ -31,6 +31,13 @@ a { color:var(--pink); }
 .brand i { width:.8rem; height:.8rem; background:var(--pink); border-radius:3px; transform:rotate(45deg); display:inline-block; }
 .ref { color:var(--grey); font-size:.86rem; text-align:right; }
 .card { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:1.5rem; margin-bottom:1rem; }
+a.rpcard { display:grid; grid-template-columns:9rem minmax(0,1fr); gap:1.1rem; align-items:center; text-decoration:none; color:var(--ink); background:var(--tint); border:1.5px solid var(--pink); }
+a.rpcard[hidden] { display:none; }
+a.rpcard img { width:100%; height:auto; border-radius:10px; display:block; }
+a.rpcard b { display:block; font-size:1.15rem; margin-bottom:.2rem; }
+a.rpcard span span { display:block; color:var(--grey); font-size:.95rem; line-height:1.45; }
+a.rpcard em { display:block; font-style:normal; font-weight:600; color:var(--pink); margin-top:.45rem; }
+@media (max-width:30rem){ a.rpcard { grid-template-columns:minmax(0,1fr); } }
 @media (min-width:40rem){ .card { padding:2rem 2.2rem; } }
 h1 { font-family:var(--display); font-weight:700; font-size:clamp(1.6rem,5vw,2.2rem); line-height:1.15; letter-spacing:-.02em; margin:.2rem 0 .6rem; text-wrap:balance; }
 h2 { font-family:var(--display); font-weight:600; font-size:1.2rem; margin:0 0 .8rem; letter-spacing:-.01em; }
@@ -155,6 +162,11 @@ details.alt .bank { margin-top:.9rem; }
       </div>
     </div>
 
+    <a class="card rpcard noprint" id="rpcard" hidden href="/report/">
+      <img src="/img/report-preview.jpg" width="1200" height="760" alt="" loading="lazy">
+      <span><b>Your feasibility report</b><span>From my visit: the best planning route, the checks on your property, typical costs and next steps.</span><em>Open your report &rarr;</em></span>
+    </a>
+
     <div class="card" id="feecard">
       <h2 id="fee-head">Your fixed fee</h2>
       <div class="lbl" id="fee-lbl">Fixed fee for your project</div>
@@ -278,6 +290,7 @@ details.alt .bank { margin-top:.9rem; }
   $("ref").textContent = "Quote " + q.r;
   document.title = "Your quote for " + A + " | Residential Architecture";
   $("title").textContent = q.p;
+  if (q.rp && /^[A-Za-z0-9]{12,40}$/.test(q.rp)) { $("rpcard").href = "/report/?r=" + q.rp; $("rpcard").hidden = false; }
   $("intro").textContent = "Following my visit to your home, I have pleasure in presenting my fee quotation for architectural services. Below is everything the fee covers, the price, and a button to accept it.";
   $("m-name").textContent = q.n; $("m-addr").textContent = q.n + "\n" + q.a;
   $("m-date").textContent = RA.day(q.s); $("m-valid").textContent = RA.day(q.s + 30 * RA.DAY);
