@@ -87,7 +87,7 @@ blockquote { margin: 0 0 .8rem; padding-left: 1rem; border-left: 3px solid var(-
 
 .photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
 .photos figure { margin: 0; display: flex; flex-direction: column; gap: .35rem; }
-.photos .ph { aspect-ratio: 4 / 3; background: var(--bg); border: 1px dashed #C9C7D4; border-radius: 12px; display: grid; place-items: center; color: var(--grey); }
+.photos .ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; display: block; border-radius: 12px; background: var(--bg); }
 .photos figcaption { font-size: .88rem; color: var(--text); }
 .measures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; background: var(--bg); border-radius: 12px; padding: .8rem 1rem; font-size: .85rem; color: var(--grey); }
 .measures b { display: block; color: var(--ink); font-size: 1rem; }
@@ -199,7 +199,7 @@ footer { text-align: center; color: var(--grey); font-size: .85rem; padding: 0 1
         <div>
           <span class="kick">Feasibility report</span>
           <h2>Single-storey rear extension</h2>
-          <p class="addr">Example property: 1930s semi-detached house, Maidenhead SL6</p>
+          <p class="addr">Example property: 1970s semi-detached house, Maidenhead SL6</p>
         </div>
         <div class="meta">
           <div>Local authority<b>Royal Borough of Windsor &amp; Maidenhead</b></div>
@@ -241,13 +241,13 @@ footer { text-align: center; color: var(--grey); font-size: .85rem; padding: 0 1
       <div class="pad">
         <div class="sec-head"><span>Section 1</span><h2>Your house</h2></div>
         <div class="photos">
-          <figure><div class="ph"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></div><figcaption>Photo from the visit: the back of the house, where the new opening goes</figcaption></figure>
-          <figure><div class="ph"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg></div><figcaption>Photo from the visit: the wall on the boundary with no. 12</figcaption></figure>
+          <figure><img class="ph" src="/img/sample-rear.jpg" width="1200" height="900" alt="The back of the example house, with a small existing rear extension and a patio" loading="lazy"><figcaption>The back of the house. The small existing extension comes down to make way for the new one.</figcaption></figure>
+          <figure><img class="ph" src="/img/sample-front.jpg" width="1200" height="900" alt="The front of the example semi-detached house, with a garage to the side" loading="lazy"><figcaption>The front of the house, with the garage to the side.</figcaption></figure>
         </div>
         <div class="measures">
           <div>House width<b>7.5m</b></div>
           <div>Garden depth<b>About 22m</b></div>
-          <div>Earlier extensions<b>None</b></div>
+          <div>Earlier extensions<b>Small rear extension</b></div>
           <div>Ground<b>Clay</b></div>
         </div>
         <div class="plan">
@@ -303,7 +303,7 @@ footer { text-align: center; color: var(--grey); font-size: .85rem; padding: 0 1
             <div class="r"><span class="k">Flood risk</span><span class="ok">Zone 1</span><span class="src">Environment Agency flood maps</span></div>
             <div class="r"><span class="k">Protected trees</span><span class="ok">None</span><span class="src">Council TPO map, and what I saw on site</span></div>
             <div class="r"><span class="k">Permitted development rights</span><span class="ok">Intact</span><span class="src">No condition removing them on the planning register</span></div>
-            <div class="r"><span class="k">Your home&rsquo;s planning history</span><span class="ok">Nothing</span><span class="src">No earlier extensions on the planning register</span></div>
+            <div class="r"><span class="k">Your home&rsquo;s planning history</span><span class="ok">Checked</span><span class="src">Only the small rear extension, which the new design replaces</span></div>
           </div>
         </div>
         <div>
