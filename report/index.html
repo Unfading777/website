@@ -347,9 +347,11 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
   function money0(n) { return "\u00a3" + Math.round(Number(n) || 0).toLocaleString("en-GB"); }
   function tc(t) { return String(t || "").toLowerCase().replace(/(^|[\s,(-])([a-z])/g, function (m, a, b) { return a + b.toUpperCase(); }); }
   function cap(t) { t = String(t || ""); return t.charAt(0).toUpperCase() + t.slice(1); }
+  var AGE = { A: "Before 1900", B: "1900 to 1929", C: "1930 to 1949", D: "1950 to 1966", E: "1967 to 1975", F: "1976 to 1982", G: "1983 to 1990", H: "1991 to 1995", I: "1996 to 2002", J: "2003 to 2006", K: "2007 to 2011", L: "2012 to 2022", M: "2023 or later" };
+  function ageBand(a) { a = String(a || "").replace(/^England and Wales:\s*/i, "").trim(); return AGE[a.toUpperCase()] || a.replace(/-/g, " to "); }
   function numbers(r) {
     var e = r.data && r.data.epc; if (!e) return "";
-    var rows = [["Energy rating", e.band ? e.band + (e.potential && e.potential !== e.band ? " (could reach " + e.potential + ")" : "") : ""], ["Built", e.age ? String(e.age).replace(/^England and Wales:\s*/i, "") : ""], ["Floor area", e.area ? e.area + " m\u00b2" : ""], ["Walls", e.walls], ["Roof", e.roof], ["Floor", e.floor], ["Windows", e.windows], ["Heating", e.heating]].filter(function (x) { return x[1]; });
+    var rows = [["Energy rating", e.band ? e.band + (e.potential && e.potential !== e.band ? " (could reach " + e.potential + ")" : "") : ""], ["Built", ageBand(e.age)], ["Floor area", e.area ? e.area + " m\u00b2" : ""], ["Walls", e.walls], ["Roof", e.roof], ["Floor", e.floor], ["Windows", e.windows], ["Heating", e.heating]].filter(function (x) { return x[1]; });
     if (!rows.length) return "";
     return '<div><h3>Your home in numbers</h3><div class="tbl other" style="--cols: 10rem minmax(0, 1fr)"><div class="r h"><span>From the EPC</span><span>Your home</span></div>' + rows.map(function (x) { return '<div class="r"><span class="k">' + x[0] + '</span><span>' + esc(cap(x[1])) + '</span></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">From the government&rsquo;s EPC register' + (e.date ? ", certificate dated " + esc(day(String(e.date).slice(0, 10))) : "") + '. The construction matters for the design and for Building Regulations, and the energy rating shows where the new work can help.</p></div>';
   }

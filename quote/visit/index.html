@@ -464,7 +464,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
   function money0(n) { return "\u00a3" + Math.round(Number(n) || 0).toLocaleString("en-GB"); }
   function drawData() {
     var d = v.data || {}, H = [];
-    if (d.epc && d.epc.band) H.push("<b>EPC:</b> " + esc(d.epc.band) + (d.epc.age ? ", built " + esc(d.epc.age) : "") + (d.epc.area ? ", " + esc(d.epc.area) + " m\u00b2" : "") + (d.epc.walls ? ". Walls: " + esc(d.epc.walls) : ""));
+    if (d.epc && d.epc.band) H.push("<b>EPC:</b> " + esc(d.epc.band) + (d.epc.age ? ", age band " + esc(d.epc.age) : "") + (d.epc.area ? ", " + esc(d.epc.area) + " m\u00b2" : "") + (d.epc.walls ? ". Walls: " + esc(d.epc.walls) : ""));
     else if (d.epc && d.epc.missing) H.push("<b>EPC:</b> " + ({ token: "add your EPC access key on the start screen", none: "no certificate found for this postcode", "no-match": "no certificate matched this house number" }[d.epc.missing] || "couldn't load"));
     if (d.hpi) H.push("<b>Area average</b> (" + esc(v.council) + ", " + esc(d.hpi.month) + "): " + money0(d.hpi.all) + ", " + (d.hpi.change > 0 ? "up " : "down ") + Math.abs(d.hpi.change) + "% on a year");
     if (d.sales) H.push("<b>Sales in the street</b> (last 6 years): " + d.sales.length);
