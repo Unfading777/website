@@ -165,7 +165,7 @@ details.alt .bank { margin-top:.9rem; }
         <div class="fee"><span class="now pink" id="fee-now"></span><span class="save"><span id="offer-verb">You save</span> <span id="offer-save"></span></span></div>
         <div class="small" id="offer-small"><span class="count" id="count"></span><span id="offer-after"></span></div>
       </div>
-      <div class="kstart noprint" id="kstart" hidden><span class="kh">Get started today for as little as</span><b class="kamt" id="kstart-amt"></b><span class="ksub">using Klarna to split your 50% deposit into 3 interest-free payments<span id="kstart-lock"></span>. Klarna can also cover your full fee.</span><span class="fine">Klarna Pay in 3. 18+, UK residents only. T&amp;Cs apply, credit subject to status. Borrowing more than you can afford or paying late may negatively impact your financial status and ability to obtain credit.</span></div>
+      <div class="kstart noprint" id="kstart" hidden><span class="kh" id="kstart-head">Get started today for as little as</span><b class="kamt" id="kstart-amt"></b><span class="ksub">using Klarna to split your 50% deposit into 3 interest-free payments. Klarna can also cover your full fee.</span><span class="fine">Klarna Pay in 3. 18+, UK residents only. T&amp;Cs apply, credit subject to status. Borrowing more than you can afford or paying late may negatively impact your financial status and ability to obtain credit.</span></div>
       <ul class="terms">
         <li id="lump">One fixed price for everything listed below. No hourly rates.</li>
         <li>50% deposit payable on instruction: <b id="dep"></b>.</li>
@@ -318,7 +318,7 @@ details.alt .bank { margin-top:.9rem; }
       ks.hidden = !okK;
       if (okK) {
         $("kstart-amt").textContent = RA.money(Math.round(depNow / 3 * 100) / 100);
-        var off = ends ? RA.offer(q, now) || {} : {}; $("kstart-lock").textContent = ends ? (off.short ? ", and secure your 24-hour discount" : ", and secure your " + q.d + "% discount") : "";
+        $("kstart-head").textContent = ends ? "Get started today, while your discount lasts, for as little as" : "Get started today for as little as";
         if (ends) { if (ks.parentNode !== $("offer")) $("offer").appendChild(ks); ks.classList.remove("out"); }
         else { var tm = document.querySelector("#feecard .terms"); if (ks.nextSibling !== tm) tm.parentNode.insertBefore(ks, tm); ks.classList.add("out"); }
       }
