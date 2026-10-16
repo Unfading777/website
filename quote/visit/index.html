@@ -123,6 +123,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     </div>
     <div class="card" id="drafts-card" hidden>
       <h2>Carry on with a visit</h2>
+      <p class="hint" id="waiting" hidden></p>
       <div class="list" id="drafts"></div>
     </div>
   </section>
@@ -138,6 +139,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
         <label class="f">Email<input type="email" data-k="email"></label>
         <label class="f full">Address<input type="text" data-k="address" placeholder="House number and street, town"></label>
         <label class="f">Postcode<input type="text" data-k="postcode" autocapitalize="characters"></label>
+        <label class="f">Council <small>Fills in from the postcode</small><input type="text" data-k="council"></label>
       </div>
     </section>
 
@@ -154,6 +156,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       </div>
       <div class="grid" style="margin-top:1rem">
         <label class="f">Size they have in mind<input type="text" data-k="size" placeholder="About 4m deep, full width"></label>
+        <label class="f">Extension depth (m) <small>Draws the plan in the report</small><input type="number" inputmode="decimal" step="0.1" data-k="extDepth"></label>
         <label class="f">Anything else they want<input type="text" data-k="wantsOther"></label>
         <label class="f">Roof<select data-k="roof"><option value="">Choose</option><option>Flat roof</option><option>Pitched roof</option><option>Lean-to</option><option>Not decided</option></select></label>
         <label class="f">Budget they mentioned<input type="text" data-k="budget" placeholder="Optional, for your notes only"></label>
@@ -202,6 +205,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     <section class="card" id="s-notes">
       <h2>Your notes</h2>
       <div class="grid">
+        <label class="f full">Report title <small>For example: Single-storey rear extension</small><input type="text" data-k="title"></label>
         <label class="f">Best route<select data-k="route"><option value="">Choose</option><option>Permitted development</option><option>Prior approval</option><option>Householder planning</option><option>Lawful Development Certificate</option><option>Not sure yet</option></select></label>
         <label class="f">Planning risk<select data-k="risk"><option value="">Choose</option><option>Low</option><option>Medium</option><option>High</option></select></label>
       </div>
@@ -212,6 +216,18 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
         <label><b>3</b><textarea data-k="t3" aria-label="Thing to know 3"></textarea></label>
         <label><b>4</b><textarea data-k="t4" aria-label="Thing to know 4 (optional)"></textarea></label>
       </div>
+      <p class="q" style="margin-top:1.1rem">Nearby decisions <span class="mic">Optional. Send me the address and I&rsquo;ll look them up</span></p>
+      <div class="grid">
+        <label class="f">Nearby application 1<input type="text" data-k="n1w" placeholder="4m rear extension, same road"></label>
+        <label class="f">Decision<select data-k="n1d"><option value=""></option><option>Approved</option><option>Refused</option><option>Allowed on appeal</option></select></label>
+        <label class="f full">What it tells us<input type="text" data-k="n1n"></label>
+        <label class="f">Nearby application 2<input type="text" data-k="n2w"></label>
+        <label class="f">Decision<select data-k="n2d"><option value=""></option><option>Approved</option><option>Refused</option><option>Allowed on appeal</option></select></label>
+        <label class="f full">What it tells us<input type="text" data-k="n2n"></label>
+        <label class="f">Nearby application 3<input type="text" data-k="n3w"></label>
+        <label class="f">Decision<select data-k="n3d"><option value=""></option><option>Approved</option><option>Refused</option><option>Allowed on appeal</option></select></label>
+        <label class="f full">What it tells us<input type="text" data-k="n3n"></label>
+      </div>
       <label class="f" style="margin-top:1.1rem">Private notes <small>Not shown to the client.</small><textarea data-k="private"></textarea></label>
     </section>
   </form>
@@ -220,7 +236,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
 <div class="bar" id="bar" hidden>
   <div class="wrap">
     <button class="btn ghost" type="button" id="back">All visits</button>
-    <button class="btn" type="button" id="done">Save visit</button>
+    <span style="display:flex;gap:.6rem"><button class="btn ghost" type="button" id="done">Save</button><a class="btn" id="preview" href="/report/">Preview report</a></span>
   </div>
 </div>
 
@@ -258,24 +274,46 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
 
   /* ---------- saving ---------- */
   function key(id) { return "visit|" + id; }
-  function local() { try { localStorage.setItem(key(v.id), JSON.stringify(v)); var ix = JSON.parse(localStorage.getItem("visit-index") || "[]").filter(function (x) { return x.id !== v.id; }); ix.unshift({ id: v.id, name: v.name, address: v.address, t: Date.now() }); localStorage.setItem("visit-index", JSON.stringify(ix.slice(0, 30))); } catch (e) {} }
+  function saveObj(x) { try { localStorage.setItem(key(x.id), JSON.stringify(x)); } catch (e) {} }
+  function local() { saveObj(v); try { var ix = JSON.parse(localStorage.getItem("visit-index") || "[]").filter(function (x) { return x.id !== v.id; }); ix.unshift({ id: v.id, name: v.name, address: v.address, t: Date.now() }); localStorage.setItem("visit-index", JSON.stringify(ix.slice(0, 40))); } catch (e) {} }
   function status(t, c) { var s = $("sync"); s.textContent = t; s.className = "sync " + (c || ""); }
-  function changed() { v.updated = Date.now(); local(); status("Saving&hellip;".replace("&hellip;", "…"), "wait"); clearTimeout(timer); timer = setTimeout(push, 1500); }
-  function push() {
-    if (!pass) { status("Saved on this iPad", "wait"); return Promise.resolve(); }
-    var copy = JSON.parse(JSON.stringify(v));
+  function changed() { v.updated = Date.now(); v.dirty = true; local(); status("Saving\u2026", "wait"); clearTimeout(timer); timer = setTimeout(function () { push(v); }, 1500); }
+  /* Sends one visit to the sheet. Everything is already safe on this iPad; this just copies it across when there is signal. */
+  function push(x) {
+    x = x || v; if (!x) return Promise.resolve();
+    if (!pass) { if (x === v) status("Saved on this iPad", "wait"); return Promise.resolve(); }
+    var stamp = x.updated, copy = JSON.parse(JSON.stringify(x));
     return RA.api({ action: "visit-save", pass: pass, visit: copy }).then(function (r) {
-      if (r && r.ok) { status("Saved to your sheet", "ok"); if (r.folder) v.folder = r.folder; local(); }
-      else status(r && r.error === "unknown" ? "Saved on this iPad (sheet not set up yet)" : "Saved on this iPad, will retry", "err");
-    }).catch(function () { status("Saved on this iPad, no signal", "err"); });
+      if (r && r.ok) { if (x.updated === stamp) x.dirty = false; if (r.folder) x.folder = r.folder; saveObj(x); if (x === v) status(x.dirty ? "Saving\u2026" : "Saved to your sheet", x.dirty ? "wait" : "ok"); }
+      else if (x === v) status("Saved on this iPad, will send later", "err");
+    }).catch(function () { if (x === v) status("Saved on this iPad, no signal", "err"); });
   }
-  window.addEventListener("online", function () { if (v) { push(); uploadPending(); } });
+  function pendingCount() { return drafts().filter(function (d) { return d.dirty || (d.photos || []).some(function (p) { return !p.url && !p.failed; }) || (d.checks && d.checks._pending); }).length; }
+  /* Goes through every visit on this iPad and sends anything still waiting: answers, photos and planning checks. */
+  var syncing = false;
+  function syncAll() {
+    if (syncing || !pass || navigator.onLine === false) return Promise.resolve();
+    syncing = true;
+    var list = drafts().map(function (d) { return v && d.id === v.id ? v : d; });
+    return list.reduce(function (p, x) {
+      return p.then(function () {
+        var jobs = Promise.resolve();
+        if (!x.council && x.postcode) jobs = jobs.then(function () { return fetch("https://api.postcodes.io/postcodes/" + String(x.postcode).replace(/\s+/g, "")).then(function (r) { return r.json(); }).then(function (j) { if (j && j.result && j.result.admin_district && !x.council) { x.council = j.result.admin_district; x.updated = Date.now(); x.dirty = true; saveObj(x); if (x === v) { var el = document.querySelector('[data-k="council"]'); if (el) el.value = x.council; } } }).catch(function () {}); });
+        if (x.checks && x.checks._pending) jobs = jobs.then(function () { return runChecks(x, x.checks._pending.lat, x.checks._pending.lng); });
+        if (x.dirty) jobs = jobs.then(function () { return push(x); });
+        return jobs.then(function () { return uploadFor(x); }).then(function () { if (x.dirty) return push(x); });
+      });
+    }, Promise.resolve()).then(function () { syncing = false; if (!v) showWaiting(); }, function () { syncing = false; });
+  }
+  window.addEventListener("online", syncAll);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) syncAll(); });
+  setInterval(syncAll, 60000);
 
   /* ---------- form binding ---------- */
   function bind() {
     document.querySelectorAll("#visit [data-k]").forEach(function (el) {
       var k = el.getAttribute("data-k"); el.value = v[k] == null ? "" : v[k];
-      el.oninput = el.onchange = function () { v[k] = el.value; if (k === "name" || k === "address") title(); changed(); };
+      el.oninput = el.onchange = function () { v[k] = el.value; if (k === "name" || k === "address") title(); if (k === "postcode") council(); changed(); };
     });
     document.querySelectorAll("#visit [data-multi]").forEach(function (box) {
       var k = box.getAttribute("data-multi"); v[k] = v[k] || [];
@@ -313,6 +351,13 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     drawChecks(); drawPhotos(); title();
   }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function council() {
+    var pc = String(v.postcode || "").replace(/\s+/g, "");
+    if (v.council || !/^[A-Za-z]{1,2}[0-9][A-Za-z0-9]?[0-9][A-Za-z]{2}$/.test(pc)) return;
+    fetch("https://api.postcodes.io/postcodes/" + pc).then(function (r) { return r.json(); }).then(function (j) {
+      if (j && j.result && j.result.admin_district && !v.council) { v.council = j.result.admin_district; var el = document.querySelector('[data-k="council"]'); if (el) el.value = v.council; changed(); }
+    }).catch(function () {});
+  }
   function title() { $("ttl").textContent = v && v.name ? v.name.split(" ")[0] + (v.address ? ", " + v.address.split(",")[0] : "") : "Home visit"; }
 
   /* ---------- planning checks ---------- */
@@ -330,16 +375,32 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     });
     $("checkwhen").textContent = v.checks._when ? "Checked " + new Date(v.checks._when).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) + (v.checks._how === "gps" ? " at the house" : " by postcode") : "";
   }
+  /* Runs the planning checks for a visit. With no signal, the location is kept and the checks run later on their own. */
+  function runChecks(x, lat, lng) {
+    return RA.api({ action: "visit-checks", pass: pass, lat: lat, lng: lng, postcode: x.postcode }).then(function (r) {
+      if (!r || !r.ok) return r || { ok: false };
+      x.checks = x.checks || {};
+      Object.keys(r.checks).forEach(function (k) { if (!x.checks[k] || (x.checks._auto || {})[k] === x.checks[k]) x.checks[k] = r.checks[k]; });
+      x.checks._auto = r.checks; x.checks._when = Date.now(); x.checks._how = r.how; delete x.checks._pending;
+      x.updated = Date.now(); x.dirty = true; saveObj(x);
+      if (x === v) { drawChecks(); changed(); }
+      return r;
+    });
+  }
   $("runchecks").onclick = function () {
-    var b = this, err = $("checkerr"); err.hidden = true; b.disabled = true; b.textContent = "Checking…";
+    var b = this, err = $("checkerr"); err.hidden = true; b.disabled = true; b.textContent = "Checking\u2026";
+    function done() { b.disabled = false; b.textContent = "Run the checks again"; }
     function go(lat, lng) {
-      RA.api({ action: "visit-checks", pass: pass, lat: lat, lng: lng, postcode: v.postcode }).then(function (r) {
-        b.disabled = false; b.textContent = "Run the checks again";
-        if (!r || !r.ok) { err.textContent = r && r.error === "unknown" ? "The planning checks aren't switched on in your Google script yet." : r && r.error === "no-location" ? "Add the postcode, or allow location, then try again." : "The checks didn't work this time. Try again in a moment."; err.hidden = false; return; }
-        Object.keys(r.checks).forEach(function (k) { v.checks[k] = r.checks[k]; });
-        v.checks._when = Date.now(); v.checks._how = r.how; v.checks._lat = r.lat; v.checks._lng = r.lng;
-        drawChecks(); changed();
-      }).catch(function () { b.disabled = false; b.textContent = "Run the checks"; err.textContent = "No connection. Try again when you have signal."; err.hidden = false; });
+      if (navigator.onLine === false) return later(lat, lng);
+      runChecks(v, lat, lng).then(function (r) {
+        done();
+        if (!r || !r.ok) { err.textContent = r && r.error === "no-location" ? "Add the postcode, or allow location, then try again." : "The checks didn't work this time. Try again in a moment."; err.hidden = false; }
+      }).catch(function () { later(lat, lng); });
+    }
+    function later(lat, lng) {
+      done(); v.checks._pending = { lat: lat || 0, lng: lng || 0 }; changed();
+      err.textContent = lat ? "No signal. I've saved your location here, and the checks will run on their own when you're back online." : "No signal. The checks will run from the postcode when you're back online.";
+      err.hidden = false;
     }
     if (navigator.geolocation && confirmLocal()) navigator.geolocation.getCurrentPosition(function (p) { go(p.coords.latitude, p.coords.longitude); }, function () { go(0, 0); }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
     else go(0, 0);
@@ -371,21 +432,20 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       }); });
     }, Promise.resolve()).then(uploadPending);
   };
-  var uploading = false;
-  function uploadPending() {
-    if (uploading || !pass || !v || !v.photos) return;
-    var next = v.photos.filter(function (p) { return !p.url && !p.failed; })[0];
-    if (!next) return;
-    uploading = true;
-    getPhoto(next.k).then(function (data) {
-      if (!data) { next.failed = true; uploading = false; drawPhotos(); return uploadPending(); }
-      return RA.api({ action: "visit-photo", pass: pass, id: v.id, label: (v.date || "") + " " + (v.name || "") + ", " + (v.address || ""), name: next.k + ".jpg", caption: next.caption, data: data.split(",")[1] }).then(function (r) {
-        uploading = false;
-        if (r && r.ok) { next.url = r.url; next.file = r.file; drawPhotos(); changed(); uploadPending(); }
-        else { drawPhotos(r && r.error === "unknown" ? "Waiting for the script update" : "Will retry"); }
+  /* Uploads a visit's photos one at a time. Each photo stays on this iPad until Drive has it. */
+  function uploadFor(x) {
+    if (!pass || !x || !x.photos) return Promise.resolve();
+    var next = x.photos.filter(function (p) { return !p.url && !p.failed; })[0];
+    if (!next) return Promise.resolve();
+    return getPhoto(next.k).then(function (data) {
+      if (!data) { next.failed = true; saveObj(x); if (x === v) drawPhotos(); return uploadFor(x); }
+      return RA.api({ action: "visit-photo", pass: pass, id: x.id, label: (x.date || "") + " " + (x.name || "") + ", " + (x.address || ""), name: next.k + ".jpg", caption: next.caption, data: data.split(",")[1] }).then(function (r) {
+        if (r && r.ok) { next.url = r.url; next.file = r.file; x.updated = Date.now(); x.dirty = true; saveObj(x); if (x === v) { drawPhotos(); changed(); } return uploadFor(x); }
+        if (x === v) drawPhotos("Will retry");
       });
-    }).catch(function () { uploading = false; drawPhotos("No signal, will retry"); });
+    }).catch(function () { if (x === v) drawPhotos("No signal, will send later"); });
   }
+  function uploadPending() { return uploadFor(v); }
   function drawPhotos(note) {
     var box = $("photos"); box.innerHTML = ""; (v.photos || []).forEach(function (p, i) {
       var d = document.createElement("div"); d.className = "ph";
@@ -407,7 +467,8 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
   function today() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
   function open(data) {
     v = data; $("start").hidden = true; $("connect").hidden = true; $("visit").hidden = false; $("tabs").hidden = false; $("bar").hidden = false;
-    bind(); window.scrollTo(0, 0); local(); status(pass ? "Saved to your sheet" : "Saved on this iPad", pass ? "ok" : "wait"); uploadPending();
+    $("preview").href = "/report/?preview=1#" + v.id;
+    bind(); council(); window.scrollTo(0, 0); local(); status(pass ? "Saved to your sheet" : "Saved on this iPad", pass ? "ok" : "wait"); uploadPending();
     try { history.replaceState(null, "", "#" + v.id); } catch (e) {}
   }
   function fromLead(p) {
@@ -419,7 +480,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
   function showStart() {
     v = null; $("visit").hidden = true; $("tabs").hidden = true; $("bar").hidden = true; $("start").hidden = false; title(); status(pass ? "Connected" : "Not connected", pass ? "ok" : "");
     try { history.replaceState(null, "", location.pathname); } catch (e) {}
-    var ds = drafts(); $("drafts-card").hidden = !ds.length; $("drafts").innerHTML = "";
+    var ds = drafts(); $("drafts-card").hidden = !ds.length; $("drafts").innerHTML = ""; showWaiting();
     ds.slice(0, 12).forEach(function (d) {
       var b = document.createElement("button"); b.type = "button"; b.className = "lead";
       b.innerHTML = "<span><b></b><br><small></small></span><span class=\"when\"></span>";
@@ -428,6 +489,10 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       b.onclick = function () { open(d); }; $("drafts").appendChild(b);
     });
     drawLeads();
+  }
+  function showWaiting() {
+    var n = pendingCount(), w = $("waiting"); w.hidden = !n;
+    w.textContent = n ? (n === 1 ? "1 visit" : n + " visits") + " still to send to your sheet. They're safe on this iPad and will go on their own when you have signal." : "";
   }
   function drawLeads() {
     var box = $("leads"), q = $("find").value.trim().toLowerCase(), now = Date.now();
@@ -447,8 +512,8 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
   }
   $("find").oninput = drawLeads;
   $("blank").onclick = function () { open({ id: newId(), created: Date.now(), date: today(), types: [], wants: [], site: {}, checks: {}, photos: [] }); };
-  $("back").onclick = function () { push(); showStart(); };
-  $("done").onclick = function () { var b = this; b.disabled = true; push().then(function () { b.disabled = false; uploadPending(); b.textContent = "Saved"; setTimeout(function () { b.textContent = "Save visit"; }, 1600); }); };
+  $("back").onclick = function () { push(v); showStart(); };
+  $("done").onclick = function () { var b = this; b.disabled = true; push(v).then(function () { b.disabled = false; uploadPending(); b.textContent = "Saved"; setTimeout(function () { b.textContent = "Save"; }, 1600); }); };
 
   /* sections: highlight the one on screen */
   var tabs = Array.prototype.slice.call(document.querySelectorAll("#tabs a"));
@@ -461,8 +526,8 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
   function load() {
     return RA.api({ action: "pipeline", pass: pass }).then(function (r) {
       if (!r || !r.ok) { if (r && r.error === "bad-pass") { pass = ""; try { localStorage.removeItem("ra-pass"); } catch (e) {} $("connect").hidden = false; $("start").hidden = true; } return; }
-      leads = r.people || []; if (!v) drawLeads();
-    }).catch(function () { $("leads").innerHTML = '<p class="muted">No connection, so your leads can&rsquo;t load. Use New visit below; it saves on this iPad.</p>'; });
+      leads = r.people || []; try { localStorage.setItem("visit-leads", JSON.stringify(leads)); } catch (e) {} if (!v) drawLeads(); syncAll();
+    }).catch(function () { if (!leads.length) $("leads").innerHTML = '<p class="muted">No connection, so your leads can&rsquo;t load. Use New visit below; it saves on this iPad.</p>'; });
   }
   $("pwgo").onclick = function () {
     var pw = $("pw").value; $("pwerr").hidden = true;
@@ -476,7 +541,8 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
   var hashId = location.hash.replace("#", ""), saved = null;
   if (hashId) { try { saved = JSON.parse(localStorage.getItem(key(hashId))); } catch (e) {} }
   if (!pass) { $("connect").hidden = false; status("Not connected"); }
-  else { if (saved) open(saved); else showStart(); load(); }
+  else { try { leads = JSON.parse(localStorage.getItem("visit-leads") || "[]"); } catch (e) {} if (saved) open(saved); else showStart(); load(); }
+  if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw-visit.js").catch(function () {});
 })();
 </script>
 </body>

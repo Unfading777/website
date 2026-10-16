@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Your feasibility report | Residential Architecture</title>
+<meta property="og:title" content="Your feasibility report | Residential Architecture">
+<meta property="og:description" content="Your feasibility report from Carl Collins BSc (Hons), following your free home visit.">
+<meta property="og:site_name" content="Residential Architecture">
+<meta property="og:image" content="https://residential-architecture.co.uk/img/report-preview.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='4' transform='rotate(45 16 16)' fill='%23E6007A'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap">
+<style>
+:root {
+  --bg: #F4F4F6; --card: #FFFFFF; --ink: #1F1E26; --text: #3A3944; --grey: #6A6875; --line: #E4E3EA;
+  --pink: #E6007A; --pink-ink: #B8005F; --pink-hover: #C40068; --tint: #FFE3F1; --tint-2: #FFF0F7; --deep: #1F1E26; --ok: #12805C;
+  --display: "Outfit", "Trebuchet MS", "Segoe UI", sans-serif;
+  --body: "DM Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 1.02rem; line-height: 1.55; }
+a { color: var(--pink-ink); }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.wrap { max-width: 50rem; margin-inline: auto; padding-inline: 1rem; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; background: var(--pink); color: #fff; font: 600 1.02rem/1.2 var(--body); text-decoration: none; padding: .8rem 1.3rem; border-radius: 999px; transition: background .15s; }
+.btn:hover { background: var(--pink-hover); }
+.btn.ghost { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 2px var(--line); }
+.btn.ghost:hover { box-shadow: inset 0 0 0 2px var(--pink); }
+
+.top { background: #fff; border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: .8rem; max-width: 74rem; }
+.brand { font-family: var(--display); font-weight: 700; font-size: 1.2rem; text-decoration: none; color: var(--ink); display: inline-flex; align-items: center; gap: .55rem; white-space: nowrap; }
+.brand i { width: .8rem; height: .8rem; background: var(--pink); border-radius: 3px; transform: rotate(45deg); display: inline-block; }
+.top .btn { padding: .6rem 1rem; font-size: .95rem; }
+
+.intro { text-align: center; padding-block: clamp(2rem, 6vw, 3.5rem) 1.5rem; display: flex; flex-direction: column; align-items: center; gap: .9rem; }
+.intro .kicker { display: inline-block; background: var(--tint); color: var(--pink-ink); font-weight: 700; font-size: .9rem; padding: .35rem .9rem; border-radius: 999px; }
+.intro h1 { font-size: clamp(2rem, 6vw, 3rem); font-weight: 700; line-height: 1.05; letter-spacing: -.02em; }
+.intro p { color: var(--grey); max-width: 36rem; font-size: 1.08rem; }
+.intro .note { font-size: .9rem; }
+
+.sheet { background: var(--card); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; margin-bottom: 1rem; }
+.pad { padding: clamp(1.25rem, 4vw, 2.25rem); display: flex; flex-direction: column; gap: 1.4rem; }
+.sec-head { display: flex; flex-direction: column; gap: .2rem; }
+.sec-head span { font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--pink-ink); }
+.sec-head h2 { font-size: clamp(1.5rem, 4vw, 1.9rem); font-weight: 700; }
+h3 { font-size: 1.12rem; font-weight: 600; margin-bottom: .55rem; }
+
+.cover { background: var(--deep); color: #fff; padding: clamp(1.4rem, 4vw, 2.4rem); display: flex; flex-direction: column; gap: 1.3rem; border-bottom: 6px solid var(--pink); }
+.cover .row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.cover .who { display: flex; align-items: center; gap: .7rem; }
+.cover .logo { width: 2.4rem; height: 2.4rem; background: var(--pink); display: grid; place-items: center; border-radius: 6px; }
+.cover .who b { display: block; font-family: var(--display); font-size: 1.05rem; }
+.cover .who small { color: #C9C7D4; }
+.cover .tag { border: 1px solid var(--pink); color: #FF7AB8; font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: .3rem .6rem; border-radius: 6px; }
+.cover .kick { color: #FF7AB8; font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.cover h2 { font-size: clamp(1.9rem, 6vw, 2.8rem); font-weight: 800; line-height: 1.05; margin-top: .3rem; }
+.cover .addr { color: #E3E2E8; margin-top: .4rem; }
+.meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; font-size: .85rem; color: #C9C7D4; }
+.meta b { display: block; color: #fff; font-size: .95rem; font-weight: 600; }
+
+.lead { color: var(--text); }
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; }
+.tile { background: var(--tint); border-radius: 14px; padding: .9rem 1rem; display: flex; flex-direction: column; gap: .15rem; }
+.tile span { font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--grey); }
+.tile b { font-family: var(--display); font-size: 1.4rem; line-height: 1.15; color: var(--pink-ink); }
+.tile small { font-size: .88rem; color: var(--text); line-height: 1.4; }
+
+blockquote { margin: 0 0 .8rem; padding-left: 1rem; border-left: 3px solid var(--pink); font-family: var(--display); font-size: 1.12rem; line-height: 1.45; }
+.dash { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .4rem 1.4rem; color: var(--text); font-size: .97rem; }
+.dash.one { grid-template-columns: minmax(0, 1fr); }
+.dash li { position: relative; padding-left: 1.1rem; }
+.dash li::before { content: "—"; position: absolute; left: 0; color: var(--pink-ink); font-weight: 700; }
+
+.box { background: var(--bg); border-radius: 14px; padding: 1.1rem 1.2rem; }
+.know { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; counter-reset: k; }
+.know li { display: grid; grid-template-columns: 1.5rem minmax(0, 1fr); gap: .5rem; color: var(--text); counter-increment: k; }
+.know li::before { content: counter(k); font-family: var(--display); font-weight: 800; color: var(--pink-ink); font-size: 1.1rem; }
+
+.photos { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+.photos figure { margin: 0; display: flex; flex-direction: column; gap: .35rem; }
+.photos .ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; display: block; border-radius: 12px; background: var(--bg); }
+.photos figcaption { font-size: .88rem; color: var(--text); }
+.measures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; background: var(--bg); border-radius: 12px; padding: .8rem 1rem; font-size: .85rem; color: var(--grey); }
+.measures b { display: block; color: var(--ink); font-size: 1rem; }
+.plan svg { display: block; width: 100%; max-width: 32rem; height: auto; }
+.plan p { font-size: .82rem; color: var(--grey); margin-top: .3rem; }
+
+.tbl { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: .93rem; }
+.tbl .r { display: grid; grid-template-columns: var(--cols); border-top: 1px solid var(--line); }
+.tbl .r:first-child { border-top: 0; }
+.tbl .r:nth-child(even) { background: #FAFAFB; }
+.tbl .r.h { background: var(--deep); color: #fff; font-weight: 700; }
+.tbl .r > * { padding: .55rem .8rem; min-width: 0; }
+.tbl .r.hl { background: var(--tint-2); }
+.tbl .k { font-weight: 600; }
+.tbl .ok { color: var(--ok); font-weight: 700; }
+.tbl .pk { color: var(--pink-ink); font-weight: 700; }
+.tbl .num { text-align: right; font-weight: 700; white-space: nowrap; }
+.tbl .src { color: var(--grey); }
+.tbl .r.h .src { color: #fff; }
+.small { font-size: .85rem; color: var(--grey); }
+
+.routes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; }
+.route { border: 1px solid var(--line); border-radius: 14px; padding: 1rem; display: flex; flex-direction: column; gap: .3rem; }
+.route.on { border: 2px solid var(--pink); }
+.route b { font-family: var(--display); font-size: 1.02rem; }
+.route.on b { color: var(--pink-ink); }
+.route span { font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--grey); }
+.route p { font-size: .92rem; color: var(--text); }
+
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+.steps { list-style: none; margin: 0; padding: 0; counter-reset: s; }
+.steps li { display: grid; grid-template-columns: 2.4rem minmax(0, 1fr); gap: .8rem; padding: .7rem 0; border-bottom: 1px solid var(--line); counter-increment: s; }
+.steps li:last-child { border-bottom: 0; }
+.steps li::before { content: counter(s); width: 2.2rem; height: 2.2rem; border-radius: 8px; background: var(--pink); color: #fff; font-family: var(--display); font-weight: 800; display: grid; place-items: center; }
+.steps b { display: block; }
+.steps p { font-size: .93rem; color: var(--text); }
+.guar { background: var(--deep); color: #fff; border-radius: 14px; padding: 1.2rem 1.3rem; display: flex; flex-direction: column; gap: .7rem; }
+.guar h3 { margin: 0; font-size: 1.25rem; font-weight: 800; }
+.guar .dash { color: #E3E2E8; }
+.guar .dash li::before { color: #FF7AB8; }
+.quote { border: 2px solid var(--pink); border-radius: 14px; padding: 1rem 1.2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+.quote b { font-family: var(--display); font-size: 1.15rem; display: block; }
+.quote p { font-size: .92rem; color: var(--text); }
+
+.cta { text-align: center; padding-block: 2.5rem 3.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.cta h2 { font-size: clamp(1.6rem, 5vw, 2.2rem); font-weight: 700; }
+.cta p { color: var(--grey); max-width: 34rem; }
+.cta .btns { display: flex; flex-wrap: wrap; justify-content: center; gap: .7rem; }
+footer { text-align: center; color: var(--grey); font-size: .85rem; padding: 0 1rem 2.5rem; }
+
+@media (max-width: 40rem) {
+  .tiles, .routes, .two, .photos { grid-template-columns: minmax(0, 1fr); }
+  .dash { grid-template-columns: minmax(0, 1fr); }
+  .meta { grid-template-columns: minmax(0, 1fr); gap: .5rem; }
+  .measures { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .tbl { font-size: .88rem; }
+  .tbl .r > * { padding: .5rem .6rem; }
+  .tbl.checks .r { grid-template-columns: minmax(0, 1fr) auto; }
+  .tbl.checks .src { grid-column: 1 / -1; padding-top: 0; font-size: .82rem; }
+  .tbl.checks .r.h .src { display: none; }
+  .tbl.pd .r { grid-template-columns: minmax(0, 1fr) auto; }
+  .tbl.pd .r > :nth-child(2) { grid-column: 1 / -1; grid-row: 2; padding-top: 0; color: var(--grey); font-size: .85rem; }
+  .tbl.pd .r.h > :nth-child(2) { display: none; }
+  .tbl.near .r, .tbl.other .r { grid-template-columns: minmax(0, 1fr); }
+  .tbl.near .r > :nth-child(3), .tbl.other .r > :nth-child(2) { padding-top: 0; }
+  .tbl.near .r.h > :not(:first-child), .tbl.other .r.h > :nth-child(2) { display: none; }
+  .tbl.near .r > :nth-child(2) { padding-block: 0; }
+  .tbl.cost .r:not(.h) { grid-template-columns: minmax(0, 1fr); }
+  .tbl.cost .r:not(.h) .num { text-align: left; padding-top: 0; }
+  .tbl.cost .r.h .num { display: none; }
+  .top .btn { display: none; }
+}
+@media print {
+  body { background: #fff; }
+  .top, .intro, .cta, footer { display: none; }
+  .wrap { max-width: none; padding: 0; }
+  .sheet { border: 0; border-radius: 0; break-after: page; margin: 0; }
+  .cover, .guar, .tbl .r.h, .tile, .steps li::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+<style>
+.pv { position: sticky; top: 0; z-index: 20; background: var(--deep); color: #fff; }
+.pv .wrap { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center; justify-content: space-between; padding-block: .7rem; }
+.pv b { font-family: var(--display); }
+.pv .btns { display: flex; flex-wrap: wrap; gap: .5rem; }
+.pv .btn { padding: .6rem 1rem; font-size: .95rem; }
+.pv .btn.ghost { background: #2B2A35; color: #fff; box-shadow: none; }
+.pv .out { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; font-size: .92rem; }
+.pv .out input { flex: 1 1 16rem; min-width: 0; font: inherit; padding: .5rem .7rem; border-radius: 10px; border: 0; }
+.pv .err { color: #FCA5A5; font-weight: 600; flex-basis: 100%; }
+.pv [hidden] { display: none !important; }
+.msg { text-align: center; padding: 4rem 1rem; color: var(--grey); }
+.sheet .pad > .lead:first-child { margin-top: 0; }
+.photos.n1 { grid-template-columns: minmax(0, 1fr); }
+img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; display: block; border-radius: 12px; background: var(--bg); }
+.tiles.t2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 40rem) { .tiles.t2 { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<div class="pv" id="pv" hidden>
+  <div class="wrap">
+    <b id="pv-t">Preview: only you can see this</b>
+    <div class="btns">
+      <a class="btn ghost" id="pv-edit" href="/quote/visit/">Edit the visit</a>
+      <button class="btn" type="button" id="pv-go">Release report</button>
+    </div>
+    <div class="out" id="pv-out" hidden>
+      <input type="text" id="pv-link" readonly aria-label="Report link">
+      <button class="btn ghost" type="button" id="pv-copy">Copy link</button>
+      <a class="btn" id="pv-wa" target="_blank" rel="noopener">Send on WhatsApp</a>
+    </div>
+    <p class="err" id="pv-err" hidden></p>
+  </div>
+</div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/"><i aria-hidden="true"></i>Residential Architecture</a>
+    <a class="btn" href="https://wa.me/447515334455" target="_blank" rel="noopener">WhatsApp Carl</a>
+  </div>
+</header>
+
+<main class="wrap" id="main" style="padding-top:1rem"><p class="msg" id="msg">Opening your report&hellip;</p></main>
+<footer>© 2026 Residential Architecture, Maidenhead, Berkshire. Carl Collins BSc (Hons). <a href="/">Home</a></footer>
+
+<script src="/quote/q.js?v=40"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function first(n) { return String(n || "").trim().split(/\s+/)[0] || ""; }
+  function day(d) { return d ? new Date(d + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : ""; }
+  function has(list, re) { return (list || []).some(function (x) { return re.test(x); }); }
+  var CAM = '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+
+  /* ---------- public part of a visit (no phone, email, budget or private notes) ---------- */
+  function toReport(v) {
+    var things = ["t1", "t2", "t3", "t4"].map(function (k) { return String(v[k] || "").trim(); }).filter(Boolean);
+    return {
+      v: 1, id: v.id, name: first(v.name), address: v.address || "", postcode: v.postcode || "", council: v.council || "", date: v.date || "",
+      title: v.title || (v.types || []).join(" and ") || "Your project", types: v.types || [], words: v.words || "", wants: v.wants || [], wantsOther: v.wantsOther || "",
+      size: v.size || "", roof: v.roof || "", extDepth: v.extDepth || "", houseType: v.houseType || "", age: v.age || "", width: v.width || "", depth: v.depth || "",
+      earlier: v.earlier || "", earlierPlan: v.earlierPlan || "", ground: v.ground || "", attached: v.attached || "",
+      site: Object.keys(v.site || {}).filter(function (k) { return v.site[k] && v.site[k].a === "Yes"; }).map(function (k) { return { k: k, note: v.site[k].note || "" }; }),
+      photos: (v.photos || []).filter(function (p) { return p.report; }).slice(0, 4).map(function (p) { return { url: p.url || "", k: p.k, caption: p.caption || "" }; }),
+      checks: (function () { var c = {}; Object.keys(v.checks || {}).forEach(function (k) { if (k.charAt(0) !== "_") c[k] = v.checks[k]; }); return c; })(),
+      route: v.route || "", risk: v.risk || "", things: things,
+      nearby: [1, 2, 3].map(function (i) { return { what: v["n" + i + "w"] || "", decision: v["n" + i + "d"] || "", note: v["n" + i + "n"] || "" }; }).filter(function (n) { return n.what; })
+    };
+  }
+  window.RAreport = toReport;
+
+  /* ---------- render ---------- */
+  function render(r, quote) {
+    var detached = /Detached|Bungalow/.test(r.houseType), lim1 = detached ? 4 : 3, lim2 = detached ? 8 : 6;
+    var route = r.route, pd = /Permitted/.test(route), pa = /Prior/.test(route), hh = /Householder/.test(route), ldc = /Lawful/.test(route);
+    var H = [];
+    /* cover */
+    H.push('<article class="sheet"><div class="cover"><div class="row"><div class="who"><span class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span><div><b>Residential Architecture</b><small>Carl Collins BSc (Hons)</small></div></div></div>');
+    H.push('<div><span class="kick">Feasibility report</span><h2>' + esc(r.title) + '</h2><p class="addr">' + esc([r.address, r.postcode].filter(Boolean).join(", ")) + '</p></div>');
+    H.push('<div class="meta"><div>Local authority<b>' + esc(r.council || "To confirm") + '</b></div><div>Based on<b>My visit and the public records for your home</b></div><div>Visit date<b>' + esc(day(r.date)) + '</b></div></div></div>');
+    /* summary */
+    var hello = (r.name ? "Thank you for showing me round, " + esc(r.name) + ". " : "Thank you for showing me round. ") + "Here&rsquo;s what I found from my visit and the public records for your home.";
+    H.push('<div class="pad"><div class="sec-head"><h2>The answer on one page</h2></div><p class="lead">' + hello + '</p>');
+    var tiles = [];
+    if (route && !/Not sure/.test(route)) {
+      var rsub = pd ? "No planning application needed. I recommend a Lawful Development Certificate to prove it." : pa ? "A simpler application than full planning, for extensions over " + lim1 + "m and up to " + lim2 + "m deep." : hh ? "A householder planning application to the council." : "The council&rsquo;s written confirmation that your project is lawful.";
+      tiles.push(['Best route', esc(route), rsub]);
+    }
+    if (r.risk) tiles.push(['Planning risk', esc(r.risk), r.risk === "Low" ? "No restrictions found on your property. Neighbours can still comment." : r.risk === "Medium" ? "Some points need care in the design, set out below." : "There are real hurdles here, set out below."]);
+    if (pa) tiles.push(['Decision time', '42 days', 'If the council doesn&rsquo;t decide in time, it&rsquo;s approved by default.']);
+    else if (hh) tiles.push(['Decision time', '8 weeks', 'The council&rsquo;s target for a householder application.']);
+    else if (pd || ldc) tiles.push(['Decision time', '8 weeks', 'The council&rsquo;s target for a Lawful Development Certificate.']);
+    if (tiles.length) H.push('<div class="tiles' + (tiles.length === 2 ? " t2" : "") + '">' + tiles.map(function (t) { return '<div class="tile"><span>' + t[0] + '</span><b>' + t[1] + '</b><small>' + t[2] + '</small></div>'; }).join("") + '</div>');
+    var wants = r.wants.slice(); if (r.wantsOther) wants.push(r.wantsOther); if (r.size) wants.unshift(r.size); if (r.roof && !/Not decided/.test(r.roof)) wants.push(r.roof);
+    if (r.words || wants.length) {
+      H.push('<div><h3>What you told me</h3>' + (r.words ? '<blockquote>&ldquo;' + esc(r.words.replace(/^["“]|["”]$/g, "")) + '&rdquo;</blockquote>' : '') + (wants.length ? '<ul class="dash">' + wants.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join("") + '</ul>' : '') + '</div>');
+    }
+    if (r.things.length) H.push('<div class="box"><h3>' + (["", "One thing", "Two things", "Three things", "Four things"][r.things.length]) + ' to know first</h3><ol class="know">' + r.things.map(function (t) { return '<li><span>' + esc(t) + '</span></li>'; }).join("") + '</ol></div>');
+    H.push('</div></article>');
+
+    /* your house */
+    var sec = 0;
+    var meas = [["House width", r.width ? r.width + "m" : ""], ["Garden depth", r.depth ? "About " + r.depth + "m" : ""], ["Earlier extensions", r.earlier], ["Ground", r.ground]].filter(function (m) { return m[1]; });
+    var showPlan = r.extDepth && has(r.types, /Rear|Wrap/) && r.houseType && !/Flat/.test(r.houseType);
+    if (r.photos.length || meas.length || showPlan) {
+      sec++;
+      H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Your house</h2></div>');
+      if (r.photos.length) H.push('<div class="photos' + (r.photos.length === 1 ? " n1" : "") + '">' + r.photos.map(function (p, i) { return '<figure><img class="ph" data-k="' + esc(p.k) + '" ' + (p.url ? 'src="' + esc(p.url) + '"' : "") + ' alt="' + esc(p.caption || "Photo from the visit") + '" loading="lazy"><figcaption>' + esc(p.caption) + '</figcaption></figure>'; }).join("") + '</div>');
+      if (meas.length) H.push('<div class="measures">' + meas.map(function (m) { return '<div>' + m[0] + '<b>' + esc(m[1]) + '</b></div>'; }).join("") + '</div>');
+      if (showPlan) H.push(plan(Number(r.extDepth), lim1, lim2, /Semi|terrace/.test(r.houseType), r.attached));
+      H.push('</div></article>');
+    }
+
+    /* planning */
+    sec++;
+    var CH = [["conservation", "Conservation area", "Council conservation area maps"], ["article4", "Article 4 direction", "Council&rsquo;s Article 4 schedules"], ["listed", "Listed building", "Historic England list"], ["greenBelt", "Green Belt", "Local Plan policies map"], ["aonb", "National Landscape", "Natural England maps"], ["flood", "Flood risk", "Environment Agency flood maps"], ["trees", "Protected trees", "Council TPO map, and what I saw on site"], ["pdRights", "Permitted development rights", "Planning register"], ["history", "Your home&rsquo;s planning history", "Planning register"]];
+    var rows = CH.filter(function (c) { return r.checks[c[0]]; });
+    H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Planning</h2></div>');
+    if (rows.length) H.push('<div><h3>Checks on your property</h3><div class="tbl checks" style="--cols: 13rem 7rem minmax(0, 1fr)"><div class="r h"><span>Check</span><span>Result</span><span class="src">Where I checked</span></div>' + rows.map(function (c) { var val = String(r.checks[c[0]]), ok = /^(No|None|Zone 1|Intact|Nothing|Checked)/i.test(val); return '<div class="r"><span class="k">' + c[1] + '</span><span class="' + (ok ? "ok" : "pk") + '">' + esc(val) + '</span><span class="src">' + c[2] + '</span></div>'; }).join("") + '</div></div>');
+    if (has(r.types, /Rear|Wrap|Side/) && !/Flat/.test(r.houseType)) {
+      H.push('<div><h3>Your three routes</h3><div class="routes">' +
+        '<div class="route' + (pd ? " on" : "") + '"><b>Permitted development' + (pd ? " · recommended" : "") + '</b><span>Up to ' + lim1 + 'm deep</span><p>No planning application. I recommend a Lawful Development Certificate to prove it.</p></div>' +
+        '<div class="route' + (pa ? " on" : "") + '"><b>Prior approval' + (pa ? " · recommended" : "") + '</b><span>Over ' + lim1 + 'm, up to ' + lim2 + 'm</span><p>The council writes to your neighbours and has 42 days to decide.</p></div>' +
+        '<div class="route' + (hh ? " on" : "") + '"><b>Householder planning' + (hh ? " · recommended" : "") + '</b><span>Anything beyond these</span><p>Full application, 8-week target. Needed if the design goes outside the limits.</p></div></div></div>');
+    }
+    if (pd || pa || ldc) H.push('<div class="box"><h3>Why I recommend a Lawful Development Certificate</h3><ul class="dash one"><li>It&rsquo;s the council&rsquo;s written confirmation that the extension is lawful, before you build.</li><li>Buyers&rsquo; solicitors often ask for proof when you sell. Without it, a sale can stall.</li><li>The rules are easy to get wrong, such as where the depth is measured from. The certificate settles it.</li><li>Building Regulations approval is still needed, whichever route you take.</li></ul></div>');
+    if (r.nearby.length) H.push('<div><h3>Nearby decisions</h3><p class="lead" style="margin-bottom:.7rem">I read the council&rsquo;s decisions on similar projects near you, and what they tell us.</p><div class="tbl near" style="--cols: 15rem 6rem minmax(0, 1fr)"><div class="r h"><span>Nearby application</span><span>Decision</span><span>What it tells us</span></div>' + r.nearby.map(function (n) { return '<div class="r"><span class="k">' + esc(n.what) + '</span><span class="' + (/Refused/i.test(n.decision) ? "pk" : "ok") + '">' + esc(n.decision) + '</span><span>' + esc(n.note) + '</span></div>'; }).join("") + '</div></div>');
+    H.push('</div></article>');
+
+    /* costs and other approvals */
+    sec++;
+    var hl = has(r.types, /Wrap/) ? 1 : has(r.types, /Two-storey/) ? 2 : has(r.types, /Loft/) ? 3 : has(r.types, /Garage/) ? 4 : has(r.types, /Rear|Side/) ? 0 : -1;
+    var COST = [["Single-storey extension", "£2,200 – £3,000 per m²"], ["Wrap-around extension", "£2,500 – £3,250 per m²"], ["Two-storey extension", "£1,950 – £2,700 per m²"], ["Loft conversion", "£1,800 – £2,400 per m²"], ["Garage conversion (single garage)", "£10,000 – £22,500 in total"]];
+    H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Costs and other approvals</h2></div>');
+    H.push('<div><h3>Typical build costs in the South East</h3><p class="lead" style="margin-bottom:.7rem">Published averages for 2026, to help you plan. They&rsquo;re a guide, not a quote. Your builder&rsquo;s price against the drawings is the real test.</p><div class="tbl cost" style="--cols: minmax(0, 1fr) auto"><div class="r h"><span>Type of project</span><span class="num">Typical cost</span></div>' + COST.map(function (c, i) { return '<div class="r' + (i === hl ? " hl" : "") + '"><span class="k">' + c[0] + '</span><span class="num"' + (i === hl ? ' style="color:var(--pink-ink)"' : "") + '>' + c[1] + '</span></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">Your kitchen, fees and a contingency are on top. A garage conversion is usually the cheapest way to add space.</p></div>');
+    H.push('<div class="box"><h3>Other things to budget for</h3><ul class="dash one"><li>Structural engineer</li><li>Party Wall surveyor, if a neighbour appoints one</li><li>Thames Water build-over agreement, if needed</li><li>A contingency: I suggest keeping 10–15% aside</li></ul></div>');
+    var site = {}; r.site.forEach(function (s) { site[s.k] = s.note || true; });
+    var other = [];
+    if (site.boundary || /Semi|terrace/.test(r.houseType)) other.push(["Party Wall Act", (typeof site.boundary === "string" ? esc(site.boundary) + ". " : "") + "Work on or near the boundary needs notices to the neighbours at least one month before work starts."]);
+    other.push(["Building Regulations", "Needed whichever planning route you take. I recommend Full Plans approval."]);
+    if (site.drains) other.push(["Drainage", (typeof site.drains === "string" ? esc(site.drains) + ". " : "") + "A public sewer under or near the new work needs a build-over agreement with Thames Water. A CCTV survey answers it."]);
+    if (site.trees) other.push(["Trees", (typeof site.trees === "string" ? esc(site.trees) + ". " : "") + "Trees close to the work can mean deeper foundations."]);
+    if (site.levels) other.push(["Levels", (typeof site.levels === "string" ? esc(site.levels) + ". " : "") + "The change in level affects steps, drainage and foundations."]);
+    if (!has(r.types, /^Porch$/) || r.types.length > 1) other.push(["Structure", "Steel beams and foundations, sized by the structural engineer."]);
+    H.push('<div><h3>Beyond planning</h3><div class="tbl other" style="--cols: 12rem minmax(0, 1fr)"><div class="r h"><span>Item</span><span>What it means for you</span></div>' + other.map(function (o) { return '<div class="r"><span class="k">' + o[0] + '</span><span>' + o[1] + '</span></div>'; }).join("") + '</div></div>');
+    H.push('</div></article>');
+
+    /* next steps */
+    sec++;
+    var step3 = pa ? ["Prior approval application", "Submitted and followed up for you. The council has 42 days to decide."] : hh ? ["Planning application", "Submitted and followed up for you. The council&rsquo;s target is 8 weeks."] : (pd || ldc) ? ["Lawful Development Certificate", "Submitted and followed up for you. The council&rsquo;s target is 8 weeks."] : ["The right application", "Submitted and followed up for you."];
+    H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Next steps</h2></div><ol class="steps">' +
+      '<li><div><b>Measured survey and full brief</b><p>I come back to measure everything and write up your full design brief.</p></div></li>' +
+      '<li><div><b>Your design in 3D</b><p>Drawings modelled in 3D with photo-real images, so you can see the space before it&rsquo;s built.</p></div></li>' +
+      '<li><div><b>' + step3[0] + '</b><p>' + step3[1] + '</p></div></li>' +
+      '<li><div><b>Building Regulations and structure</b><p>Construction drawings and structural calculations, so builders can price like for like.</p></div></li>' +
+      '<li><div><b>Builders</b><p>Introductions to local builders I&rsquo;ve worked with.</p></div></li></ol>');
+    H.push('<div class="guar"><h3>Fixed price. Planning guarantee.</h3><ul class="dash"><li>One fixed price, agreed up front</li><li>Unlimited revisions up to submission</li><li>If planning is refused, I revise the design and resubmit at no extra cost</li><li>Every project in 3D with photo-real images</li></ul></div>');
+    if (quote) H.push('<div class="quote"><div><b>Your fixed-price quote is ready</b><p>Everything in this report, designed and submitted for one fixed price.</p></div><a class="btn" href="' + esc(quote) + '">View your quote</a></div>');
+    H.push('<div><h3 style="font-size:1rem">Where this information comes from</h3><p class="small">planning.data.gov.uk · ' + esc(r.council ? r.council + " planning register" : "Council planning register") + ' · Historic England National Heritage List · Environment Agency flood maps · The Town and Country Planning (General Permitted Development) (England) Order 2015 · Party Wall etc. Act 1996</p></div>');
+    H.push('<p class="lead" style="font-size:.93rem">This report is based on a 30-minute visit and the public records for your address on the date shown. It&rsquo;s a first look at what&rsquo;s possible, not a full planning appraisal, a survey or a builder&rsquo;s quote. Once you go ahead, I check everything in detail as part of the design.</p>');
+    H.push('<p class="lead" style="font-size:.93rem">Any questions, just message me.<br><b>Carl Collins BSc (Hons)</b></p></div></article>');
+    $("main").innerHTML = H.join("");
+    document.title = "Feasibility report" + (r.address ? ", " + r.address.split(",")[0] : "") + " | Residential Architecture";
+  }
+
+  function plan(ext, l1, l2, attached, side) {
+    var top = 78, bottom = 292, s = (bottom - top - 6) / (Math.max(l2, ext) + 0.6), y = function (m) { return Math.round(top + m * s); };
+    var left = /Right/.test(side) ? false : attached, right = /Right/.test(side) || /Both/.test(side);
+    var g = [];
+    if (attached && (left || !right)) g.push('<rect x="4" y="8" width="66" height="70" fill="#EDEDF0" stroke="#9A9DA4"/><text x="37" y="47" text-anchor="middle" font-size="13" fill="#6A6875">Next door</text>');
+    g.push('<rect x="70" y="8" width="220" height="70" fill="#D5D7DB" stroke="#1F1E26" stroke-width="2"/><text x="180" y="48" text-anchor="middle" font-size="16" font-weight="700" fill="#1F1E26">Your house</text>');
+    g.push('<rect x="70" y="78" width="220" height="' + (y(ext) - 78) + '" fill="#FFD6EA" stroke="#B8005F" stroke-width="2"/><text x="180" y="' + (78 + Math.min(34, (y(ext) - 78) / 2 + 6)) + '" text-anchor="middle" font-size="16" font-weight="700" fill="#8A0047">Your ' + ext + 'm extension</text>');
+    g.push('<line x1="70" y1="8" x2="70" y2="292" stroke="#1F1E26" stroke-width="1.5"/><line x1="318" y1="8" x2="318" y2="292" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="2 4"/><text x="324" y="290" font-size="13" fill="#6A6875">Boundary</text>');
+    g.push('<line x1="4" y1="' + y(l1) + '" x2="318" y2="' + y(l1) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="7 5"/><text x="78" y="' + (y(l1) - 7) + '" font-size="14" font-weight="700" fill="#1F1E26">' + l1 + 'm · permitted development</text>');
+    g.push('<line x1="4" y1="' + y(l2) + '" x2="318" y2="' + y(l2) + '" stroke="#B8005F" stroke-width="1.5" stroke-dasharray="7 5"/><text x="78" y="' + (y(l2) - 7) + '" font-size="14" font-weight="700" fill="#B8005F">' + l2 + 'm · limit with prior approval</text>');
+    g.push('<line x1="304" y1="80" x2="304" y2="' + (y(ext) - 2) + '" stroke="#8A0047" stroke-width="1.2"/><line x1="298" y1="78" x2="310" y2="78" stroke="#8A0047" stroke-width="1.2"/><line x1="298" y1="' + y(ext) + '" x2="310" y2="' + y(ext) + '" stroke="#8A0047" stroke-width="1.2"/><text x="324" y="' + Math.round((78 + y(ext)) / 2 + 5) + '" font-size="15" font-weight="700" fill="#8A0047">' + ext + 'm deep</text>');
+    return '<div class="plan"><h3>What you can build, and how</h3><svg viewBox="0 0 420 300" role="img" aria-label="Plan showing your ' + ext + 'm extension against the ' + l1 + 'm and ' + l2 + 'm limits" style="font-family: \'DM Sans\', sans-serif">' + g.join("") + '</svg><p>Not to scale. Measured from the back of the original house.</p></div>';
+  }
+
+  /* ---------- load ---------- */
+  var qs = new URLSearchParams(location.search), tok = qs.get("r"), id = location.hash.replace("#", "");
+  if (qs.get("preview") && id) {
+    var v = null; try { v = JSON.parse(localStorage.getItem("visit|" + id)); } catch (e) {}
+    if (!v) { $("msg").textContent = "This visit isn't saved on this device."; return; }
+    var rep = toReport(v);
+    render(rep, v.quoteLink || "");
+    /* photos still waiting to upload: show them from this iPad */
+    var open = indexedDB.open("ra-visit", 1);
+    open.onupgradeneeded = function () { open.result.createObjectStore("photos"); };
+    open.onsuccess = function () {
+      document.querySelectorAll("img.ph[data-k]").forEach(function (img) {
+        if (img.getAttribute("src")) return;
+        var g = open.result.transaction("photos").objectStore("photos").get(img.getAttribute("data-k"));
+        g.onsuccess = function () { if (g.result) img.src = g.result; };
+      });
+    };
+    $("pv").hidden = false; $("pv-edit").href = "/quote/visit/#" + id;
+    if (v.report && v.report.link) showLink(v, v.report.link, true);
+    $("pv-go").onclick = function () {
+      var b = this, err = $("pv-err"); err.hidden = true;
+      if (rep.photos.some(function (p) { return !p.url; })) { err.textContent = "Some photos haven't uploaded yet. Open the visit with signal and wait for them to say Uploaded."; err.hidden = false; return; }
+      if (!RA.pass()) { err.textContent = "Connect on the visit page first."; err.hidden = false; return; }
+      b.disabled = true; b.textContent = "Releasing…";
+      RA.api({ action: "visit-release", pass: RA.pass(), id: v.id, report: rep }).then(function (r) {
+        b.disabled = false; b.textContent = "Release again";
+        if (!r || !r.ok) { err.textContent = r && r.error === "not-found" ? "Save the visit to your sheet first (open the visit with signal)." : r && r.error === "unknown" ? "Releasing isn't switched on in your Google script yet." : "Couldn't release. Try again."; err.hidden = false; return; }
+        v.report = { link: r.link, token: r.token, released: Date.now() };
+        try { localStorage.setItem("visit|" + id, JSON.stringify(v)); } catch (e) {}
+        showLink(v, r.link, false);
+      }).catch(function () { b.disabled = false; b.textContent = "Release report"; err.textContent = "No connection. Try again with signal."; err.hidden = false; });
+    };
+    return;
+  }
+  function showLink(v, link, before) {
+    $("pv-out").hidden = false; $("pv-link").value = link;
+    $("pv-t").textContent = before ? "Released. Changes show once you release again" : "Released";
+    $("pv-go").textContent = "Release again";
+    var m = String(v.mobile || "").replace(/[^0-9+]/g, "").replace(/^0/, "44").replace(/^\+/, "");
+    var text = "Hi " + (first(v.name) || "there") + ", thank you for showing me round today. Here's your feasibility report: " + link;
+    $("pv-wa").href = "https://wa.me/" + (m || "") + "?text=" + encodeURIComponent(text);
+    $("pv-copy").onclick = function () { var i = $("pv-link"); i.select(); try { navigator.clipboard.writeText(link); } catch (e) { document.execCommand("copy"); } this.textContent = "Copied"; };
+  }
+  if (!tok) { $("msg").innerHTML = 'This link is incomplete. Please <a href="https://wa.me/447515334455">message Carl on WhatsApp</a> and he&rsquo;ll resend it.'; return; }
+  RA.api({ action: "report-get", r: tok }).then(function (res) {
+    if (!res || !res.ok) { $("msg").innerHTML = 'Sorry, this report could not be opened. Please <a href="https://wa.me/447515334455">message Carl on WhatsApp</a> and he&rsquo;ll resend it.'; return; }
+    render(res.report, res.quote || "");
+  }).catch(function () { $("msg").innerHTML = 'Sorry, this report could not be opened right now. Please try again in a moment.'; });
+})();
+</script>
+</body>
+</html>
