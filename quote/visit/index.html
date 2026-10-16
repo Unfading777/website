@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Home visit">
+<meta name="theme-color" content="#1F1E26">
+<title>Home visit | Residential Architecture</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='4' transform='rotate(45 16 16)' fill='%23E6007A'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="/img/visit-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600;700&display=swap">
+<style>
+:root { --bg:#F4F4F6; --card:#fff; --ink:#1F1E26; --text:#3A3944; --grey:#6A6875; --line:#E4E3EA; --pink:#E6007A; --pink-ink:#B8005F; --tint:#FFE3F1; --deep:#1F1E26; --ok:#12805C; --warn:#B45309;
+  --display:"Outfit","Trebuchet MS",sans-serif; --body:"DM Sans","Segoe UI",Helvetica,Arial,sans-serif; color-scheme: light; }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.5 var(--body); padding-bottom: calc(6rem + env(safe-area-inset-bottom)); }
+h1, h2, h3 { font-family: var(--display); margin: 0; }
+.wrap { max-width: 52rem; margin: 0 auto; padding: 0 1rem; }
+.top { position: sticky; top: 0; z-index: 10; background: var(--deep); color: #fff; padding-top: env(safe-area-inset-top); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.6rem; }
+.top b { font-family: var(--display); font-size: 1.1rem; display: inline-flex; align-items: center; gap: .5rem; }
+.top b i { width: .7rem; height: .7rem; background: var(--pink); border-radius: 2px; transform: rotate(45deg); display: inline-block; }
+.sync { font-size: .85rem; color: #C9C7D4; display: inline-flex; align-items: center; gap: .4rem; }
+.sync::before { content: ""; width: .55rem; height: .55rem; border-radius: 50%; background: #8B8997; }
+.sync.ok::before { background: #34D399; } .sync.wait::before { background: #FBBF24; } .sync.err::before { background: #F87171; }
+.tabs { display: flex; gap: .4rem; overflow-x: auto; padding: .5rem 1rem .7rem; max-width: 52rem; margin: 0 auto; scrollbar-width: none; }
+.tabs::-webkit-scrollbar { display: none; }
+.tabs a { flex: none; color: #fff; text-decoration: none; font-weight: 600; font-size: .92rem; padding: .45rem .9rem; border-radius: 999px; background: #2B2A35; }
+.tabs a.on { background: var(--pink); }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 1.25rem; margin: 1rem 0; scroll-margin-top: 7.5rem; }
+.card > h2 { font-size: 1.35rem; margin-bottom: .2rem; }
+.card > .hint { color: var(--grey); font-size: .92rem; margin: 0 0 1rem; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem 1rem; }
+.grid .full { grid-column: 1 / -1; }
+@media (max-width: 34rem) { .grid { grid-template-columns: minmax(0, 1fr); } }
+label.f { display: flex; flex-direction: column; gap: .3rem; font-weight: 600; font-size: .95rem; }
+label.f small { font-weight: 400; color: var(--grey); }
+input[type=text], input[type=email], input[type=tel], input[type=number], input[type=date], input[type=password], input[type=search], textarea, select {
+  font: inherit; font-weight: 400; color: var(--ink); background: #fff; border: 1.5px solid #CFCDD8; border-radius: 12px; padding: .7rem .85rem; width: 100%; min-height: 3rem; }
+textarea { min-height: 6.5rem; resize: vertical; }
+input:focus, textarea:focus, select:focus { outline: none; border-color: var(--pink); box-shadow: 0 0 0 3px var(--tint); }
+.q { font-weight: 600; font-size: .95rem; margin: 0 0 .45rem; }
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.chip { font: 600 .95rem/1.2 var(--body); color: var(--ink); background: #fff; border: 1.5px solid #CFCDD8; border-radius: 999px; padding: .7rem 1rem; min-height: 2.9rem; cursor: pointer; }
+.chip[aria-pressed=true] { background: var(--pink); border-color: var(--pink); color: #fff; }
+.seg { display: inline-flex; border: 1.5px solid #CFCDD8; border-radius: 12px; overflow: hidden; }
+.seg button { font: 600 .95rem/1 var(--body); border: 0; background: #fff; color: var(--ink); padding: .75rem 1rem; min-height: 2.9rem; min-width: 4.2rem; cursor: pointer; }
+.seg button + button { border-left: 1.5px solid #CFCDD8; }
+.seg button[aria-pressed=true] { background: var(--deep); color: #fff; }
+.seg button.y[aria-pressed=true] { background: var(--warn); }
+.seg button.n[aria-pressed=true] { background: var(--ok); }
+.rowq { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem 1rem; align-items: center; padding: .75rem 0; border-top: 1px solid var(--line); }
+.rowq:first-of-type { border-top: 0; }
+.rowq span { font-weight: 600; }
+.rowq small { display: block; font-weight: 400; color: var(--grey); font-size: .85rem; }
+.rowq input { grid-column: 1 / -1; display: none; }
+.rowq.yes input { display: block; }
+@media (max-width: 34rem) { .rowq { grid-template-columns: minmax(0, 1fr); } }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; font: 600 1rem/1.2 var(--body); color: #fff; background: var(--pink); border: 0; border-radius: 999px; padding: .85rem 1.3rem; min-height: 3rem; cursor: pointer; text-decoration: none; }
+.btn.ghost { background: #fff; color: var(--ink); box-shadow: inset 0 0 0 1.5px #CFCDD8; }
+.btn.small { padding: .55rem .9rem; min-height: 2.5rem; font-size: .92rem; }
+.btn[disabled] { opacity: .5; cursor: default; }
+.err { color: #B91C1C; font-weight: 600; }
+.muted { color: var(--grey); font-size: .92rem; }
+.list { display: flex; flex-direction: column; gap: .5rem; margin-top: .8rem; }
+.lead { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .2rem 1rem; align-items: center; text-align: left; width: 100%; font: inherit; color: inherit; background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: .85rem 1rem; cursor: pointer; }
+.lead:hover { border-color: var(--pink); }
+.lead b { font-size: 1.02rem; }
+.lead small { color: var(--grey); }
+.lead .when { font-weight: 700; color: var(--pink-ink); font-size: .9rem; text-align: right; }
+.photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr)); gap: .8rem; margin-top: 1rem; }
+.ph { border: 1.5px solid var(--line); border-radius: 14px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+.ph img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: var(--bg); }
+.ph .pb { padding: .55rem; display: flex; flex-direction: column; gap: .45rem; }
+.ph input[type=text] { min-height: 2.6rem; padding: .5rem .65rem; font-size: .92rem; }
+.ph .pr { display: flex; justify-content: space-between; align-items: center; gap: .4rem; font-size: .85rem; }
+.ph .st { font-size: .8rem; color: var(--grey); }
+.ph .st.ok { color: var(--ok); } .ph .st.err { color: #B91C1C; }
+.ph label { display: inline-flex; align-items: center; gap: .35rem; font-weight: 600; }
+.ph input[type=checkbox] { width: 1.3rem; height: 1.3rem; accent-color: var(--pink); }
+.ph .del { background: none; border: 0; color: var(--grey); font: 600 .85rem var(--body); padding: .3rem; cursor: pointer; }
+.checks .rowq select { width: auto; min-width: 9rem; }
+.things { display: flex; flex-direction: column; gap: .7rem; }
+.things label { display: grid; grid-template-columns: 1.6rem minmax(0, 1fr); gap: .5rem; align-items: start; }
+.things label b { font-family: var(--display); color: var(--pink-ink); font-size: 1.2rem; padding-top: .55rem; }
+.things textarea { min-height: 4.5rem; }
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: #fff; border-top: 1px solid var(--line); padding: .7rem 1rem calc(.7rem + env(safe-area-inset-bottom)); }
+.bar .wrap { display: flex; gap: .7rem; justify-content: space-between; align-items: center; padding: 0; }
+.mic { display: inline-flex; gap: .35rem; align-items: center; color: var(--grey); font-size: .85rem; font-weight: 400; }
+[hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap"><b><i aria-hidden="true"></i><span id="ttl">Home visit</span></b><span class="sync" id="sync">Not saved yet</span></div>
+  <nav class="tabs" id="tabs" hidden aria-label="Sections">
+    <a href="#s-client">Client</a><a href="#s-project">Project</a><a href="#s-house">House</a><a href="#s-site">On site</a><a href="#s-photos">Photos</a><a href="#s-planning">Planning</a><a href="#s-notes">Your notes</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <!-- Passphrase -->
+  <section class="card" id="connect" hidden>
+    <h2>Connect to your Google Sheet</h2>
+    <p class="hint">Enter the passphrase you use on your quote pages. You only need to do this once on this iPad.</p>
+    <label class="f">Passphrase<input type="password" id="pw" autocomplete="current-password"></label>
+    <p style="margin:.9rem 0 0"><button class="btn" type="button" id="pwgo">Connect</button></p>
+    <p class="err" id="pwerr" hidden></p>
+  </section>
+
+  <!-- Start -->
+  <section id="start" hidden>
+    <div class="card">
+      <h2>Start a visit</h2>
+      <p class="hint">Pick the client. Their details fill in for you.</p>
+      <input type="search" id="find" placeholder="Search by name or postcode" aria-label="Search leads">
+      <div class="list" id="leads"><p class="muted">Loading your leads&hellip;</p></div>
+      <p style="margin:1rem 0 0"><button class="btn ghost" type="button" id="blank">New visit, not in the list</button></p>
+    </div>
+    <div class="card" id="drafts-card" hidden>
+      <h2>Carry on with a visit</h2>
+      <div class="list" id="drafts"></div>
+    </div>
+  </section>
+
+  <!-- Visit form -->
+  <form id="visit" hidden autocomplete="off">
+    <section class="card" id="s-client">
+      <h2>Client</h2>
+      <div class="grid">
+        <label class="f">First and last name<input type="text" data-k="name"></label>
+        <label class="f">Visit date<input type="date" data-k="date"></label>
+        <label class="f">Mobile<input type="tel" data-k="mobile"></label>
+        <label class="f">Email<input type="email" data-k="email"></label>
+        <label class="f full">Address<input type="text" data-k="address" placeholder="House number and street, town"></label>
+        <label class="f">Postcode<input type="text" data-k="postcode" autocapitalize="characters"></label>
+      </div>
+    </section>
+
+    <section class="card" id="s-project">
+      <h2>Project</h2>
+      <p class="q">What are they planning?</p>
+      <div class="chips" data-multi="types">
+        <button type="button" class="chip">Rear extension</button><button type="button" class="chip">Side extension</button><button type="button" class="chip">Wrap-around</button><button type="button" class="chip">Two-storey extension</button><button type="button" class="chip">Loft conversion</button><button type="button" class="chip">Garage conversion</button><button type="button" class="chip">Porch</button><button type="button" class="chip">Internal changes</button>
+      </div>
+      <label class="f" style="margin-top:1.1rem">In their words <small>Tap the microphone on the keyboard and let them talk. This goes in the report as a quote.</small><textarea data-k="words" placeholder="&ldquo;The kitchen feels dark and cut off from the garden&hellip;&rdquo;"></textarea></label>
+      <p class="q" style="margin-top:1.1rem">What do they want?</p>
+      <div class="chips" data-multi="wants">
+        <button type="button" class="chip">Open-plan kitchen</button><button type="button" class="chip">Dining space</button><button type="button" class="chip">Family room</button><button type="button" class="chip">Bi-folds or sliders</button><button type="button" class="chip">Roof lantern</button><button type="button" class="chip">Rooflights</button><button type="button" class="chip">Utility room</button><button type="button" class="chip">Downstairs WC</button><button type="button" class="chip">Extra bedroom</button><button type="button" class="chip">En suite</button><button type="button" class="chip">Home office</button><button type="button" class="chip">More light</button>
+      </div>
+      <div class="grid" style="margin-top:1rem">
+        <label class="f">Size they have in mind<input type="text" data-k="size" placeholder="About 4m deep, full width"></label>
+        <label class="f">Anything else they want<input type="text" data-k="wantsOther"></label>
+        <label class="f">Roof<select data-k="roof"><option value="">Choose</option><option>Flat roof</option><option>Pitched roof</option><option>Lean-to</option><option>Not decided</option></select></label>
+        <label class="f">Budget they mentioned<input type="text" data-k="budget" placeholder="Optional, for your notes only"></label>
+      </div>
+    </section>
+
+    <section class="card" id="s-house">
+      <h2>House</h2>
+      <p class="q">Type</p>
+      <div class="chips" data-one="houseType"><button type="button" class="chip">Detached</button><button type="button" class="chip">Semi-detached</button><button type="button" class="chip">End of terrace</button><button type="button" class="chip">Mid terrace</button><button type="button" class="chip">Bungalow</button><button type="button" class="chip">Flat or maisonette</button></div>
+      <p class="q" style="margin-top:1rem">Roughly built</p>
+      <div class="chips" data-one="age"><button type="button" class="chip">Before 1919</button><button type="button" class="chip">1920s&ndash;30s</button><button type="button" class="chip">1940s&ndash;60s</button><button type="button" class="chip">1970s&ndash;80s</button><button type="button" class="chip">1990s or newer</button></div>
+      <div class="grid" style="margin-top:1rem">
+        <label class="f">House width (m)<input type="number" inputmode="decimal" step="0.1" data-k="width"></label>
+        <label class="f">Garden depth (m)<input type="number" inputmode="decimal" step="0.5" data-k="depth"></label>
+        <label class="f">To left boundary (m)<input type="number" inputmode="decimal" step="0.1" data-k="distL"></label>
+        <label class="f">To right boundary (m)<input type="number" inputmode="decimal" step="0.1" data-k="distR"></label>
+        <label class="f">Earlier extensions<select data-k="earlier"><option value="">Choose</option><option>None</option><option>Small rear extension</option><option>Rear extension</option><option>Side extension</option><option>Loft conversion</option><option>Conservatory</option><option>Several</option></select></label>
+        <label class="f">What happens to it<select data-k="earlierPlan"><option value="">Not applicable</option><option>Stays as it is</option><option>Comes down for the new one</option><option>Gets extended</option></select></label>
+        <label class="f">Ground<select data-k="ground"><option value="">Choose</option><option>Level</option><option>Slopes up to the garden</option><option>Slopes down to the garden</option><option>Steps down from the house</option></select></label>
+        <label class="f">Which side is attached<select data-k="attached"><option value="">Not attached</option><option>Left (from the garden)</option><option>Right (from the garden)</option><option>Both</option></select></label>
+      </div>
+    </section>
+
+    <section class="card" id="s-site">
+      <h2>On site</h2>
+      <p class="hint">Yes means it needs attention. Add a word or two if it does.</p>
+      <div id="siteq"></div>
+    </section>
+
+    <section class="card" id="s-photos">
+      <h2>Photos</h2>
+      <p class="hint">Take them straight from here. Give each a short caption and tick the ones for the report. Avoid people, house numbers and number plates in the ones you tick.</p>
+      <label class="btn" style="width:fit-content"><input type="file" id="camera" accept="image/*" capture="environment" multiple hidden>Take or add photos</label>
+      <div class="photos" id="photos"></div>
+    </section>
+
+    <section class="card" id="s-planning">
+      <h2>Planning checks</h2>
+      <p class="hint">Uses your location here at the house, or the postcode if you&rsquo;re elsewhere. It reads the national planning data, so always confirm on the council&rsquo;s own maps before the report goes out.</p>
+      <p style="margin:0 0 .6rem"><button class="btn" type="button" id="runchecks">Run the checks</button> <span class="muted" id="checkwhen"></span></p>
+      <p class="err" id="checkerr" hidden></p>
+      <div class="checks" id="checks"></div>
+    </section>
+
+    <section class="card" id="s-notes">
+      <h2>Your notes</h2>
+      <div class="grid">
+        <label class="f">Best route<select data-k="route"><option value="">Choose</option><option>Permitted development</option><option>Prior approval</option><option>Householder planning</option><option>Lawful Development Certificate</option><option>Not sure yet</option></select></label>
+        <label class="f">Planning risk<select data-k="risk"><option value="">Choose</option><option>Low</option><option>Medium</option><option>High</option></select></label>
+      </div>
+      <p class="q" style="margin-top:1.1rem">Things to know <span class="mic">Dictate them while it&rsquo;s fresh</span></p>
+      <div class="things">
+        <label><b>1</b><textarea data-k="t1" aria-label="Thing to know 1"></textarea></label>
+        <label><b>2</b><textarea data-k="t2" aria-label="Thing to know 2"></textarea></label>
+        <label><b>3</b><textarea data-k="t3" aria-label="Thing to know 3"></textarea></label>
+        <label><b>4</b><textarea data-k="t4" aria-label="Thing to know 4 (optional)"></textarea></label>
+      </div>
+      <label class="f" style="margin-top:1.1rem">Private notes <small>Not shown to the client.</small><textarea data-k="private"></textarea></label>
+    </section>
+  </form>
+</main>
+
+<div class="bar" id="bar" hidden>
+  <div class="wrap">
+    <button class="btn ghost" type="button" id="back">All visits</button>
+    <button class="btn" type="button" id="done">Save visit</button>
+  </div>
+</div>
+
+<script src="/quote/q.js?v=40"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var SITE = [
+    ["boundary", "Wall or fence on the boundary", "Party Wall notices likely"],
+    ["drains", "Drains or a manhole in the way", "Build-over agreement or a diversion"],
+    ["trees", "Trees within 10m of the new work", "Deeper foundations, check protection"],
+    ["windows", "Neighbours' windows close by", "Light and outlook for planning"],
+    ["levels", "Change in level", "Steps, retaining or deeper footings"],
+    ["access", "No side access", "Everything through the house"],
+    ["services", "Gas, electric or water meters on the wall", "May need moving"],
+    ["cables", "Overhead cables over the work", "Check clearances"]
+  ];
+  var CHECKS = [
+    ["conservation", "Conservation area"], ["article4", "Article 4 direction"], ["listed", "Listed building"], ["greenBelt", "Green Belt"],
+    ["aonb", "National Landscape (AONB)"], ["flood", "Flood risk"], ["trees", "Protected trees"], ["pdRights", "Permitted development rights"], ["history", "Planning history"]
+  ];
+  var v = null, timer = null, leads = [], pass = RA.pass();
+  var dbp = null;
+
+  /* ---------- small IndexedDB store for photos waiting to upload ---------- */
+  function db() {
+    if (dbp) return dbp;
+    dbp = new Promise(function (ok, no) { var r = indexedDB.open("ra-visit", 1); r.onupgradeneeded = function () { r.result.createObjectStore("photos"); }; r.onsuccess = function () { ok(r.result); }; r.onerror = function () { no(r.error); }; });
+    return dbp;
+  }
+  function idb(mode, fn) { return db().then(function (d) { return new Promise(function (ok, no) { var t = d.transaction("photos", mode), s = t.objectStore("photos"), r = fn(s); t.oncomplete = function () { ok(r && r.result); }; t.onerror = function () { no(t.error); }; }); }); }
+  function putPhoto(k, data) { return idb("readwrite", function (s) { return s.put(data, k); }).catch(function () {}); }
+  function getPhoto(k) { return idb("readonly", function (s) { return s.get(k); }).catch(function () { return null; }); }
+  function delPhoto(k) { return idb("readwrite", function (s) { return s.delete(k); }).catch(function () {}); }
+
+  /* ---------- saving ---------- */
+  function key(id) { return "visit|" + id; }
+  function local() { try { localStorage.setItem(key(v.id), JSON.stringify(v)); var ix = JSON.parse(localStorage.getItem("visit-index") || "[]").filter(function (x) { return x.id !== v.id; }); ix.unshift({ id: v.id, name: v.name, address: v.address, t: Date.now() }); localStorage.setItem("visit-index", JSON.stringify(ix.slice(0, 30))); } catch (e) {} }
+  function status(t, c) { var s = $("sync"); s.textContent = t; s.className = "sync " + (c || ""); }
+  function changed() { v.updated = Date.now(); local(); status("Saving&hellip;".replace("&hellip;", "…"), "wait"); clearTimeout(timer); timer = setTimeout(push, 1500); }
+  function push() {
+    if (!pass) { status("Saved on this iPad", "wait"); return Promise.resolve(); }
+    var copy = JSON.parse(JSON.stringify(v));
+    return RA.api({ action: "visit-save", pass: pass, visit: copy }).then(function (r) {
+      if (r && r.ok) { status("Saved to your sheet", "ok"); if (r.folder) v.folder = r.folder; local(); }
+      else status(r && r.error === "unknown" ? "Saved on this iPad (sheet not set up yet)" : "Saved on this iPad, will retry", "err");
+    }).catch(function () { status("Saved on this iPad, no signal", "err"); });
+  }
+  window.addEventListener("online", function () { if (v) { push(); uploadPending(); } });
+
+  /* ---------- form binding ---------- */
+  function bind() {
+    document.querySelectorAll("#visit [data-k]").forEach(function (el) {
+      var k = el.getAttribute("data-k"); el.value = v[k] == null ? "" : v[k];
+      el.oninput = el.onchange = function () { v[k] = el.value; if (k === "name" || k === "address") title(); changed(); };
+    });
+    document.querySelectorAll("#visit [data-multi]").forEach(function (box) {
+      var k = box.getAttribute("data-multi"); v[k] = v[k] || [];
+      box.querySelectorAll(".chip").forEach(function (b) {
+        var t = b.textContent; b.setAttribute("aria-pressed", v[k].indexOf(t) >= 0);
+        b.onclick = function () { var i = v[k].indexOf(t); if (i >= 0) v[k].splice(i, 1); else v[k].push(t); b.setAttribute("aria-pressed", i < 0); changed(); };
+      });
+    });
+    document.querySelectorAll("#visit [data-one]").forEach(function (box) {
+      var k = box.getAttribute("data-one");
+      box.querySelectorAll(".chip").forEach(function (b) {
+        var t = b.textContent; b.setAttribute("aria-pressed", v[k] === t);
+        b.onclick = function () { v[k] = v[k] === t ? "" : t; box.querySelectorAll(".chip").forEach(function (x) { x.setAttribute("aria-pressed", v[k] === x.textContent); }); changed(); };
+      });
+    });
+    /* on-site questions */
+    v.site = v.site || {};
+    $("siteq").innerHTML = "";
+    SITE.forEach(function (q) {
+      var cur = v.site[q[0]] || {}, row = document.createElement("div");
+      row.className = "rowq" + (cur.a === "Yes" ? " yes" : "");
+      row.innerHTML = '<span></span><div class="seg" role="group"></div><input type="text" placeholder="Details">';
+      row.firstChild.innerHTML = esc(q[1]) + "<small>" + esc(q[2]) + "</small>";
+      var seg = row.querySelector(".seg"), inp = row.querySelector("input");
+      inp.setAttribute("aria-label", q[1] + " details"); inp.value = cur.note || "";
+      seg.setAttribute("aria-label", q[1]);
+      [["Yes", "y"], ["No", "n"], ["Unsure", ""]].forEach(function (o) {
+        var b = document.createElement("button"); b.type = "button"; b.textContent = o[0]; b.className = o[1]; b.setAttribute("aria-pressed", cur.a === o[0]);
+        b.onclick = function () { var s = v.site[q[0]] = v.site[q[0]] || {}; s.a = s.a === o[0] ? "" : o[0]; seg.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", s.a === x.textContent); }); row.classList.toggle("yes", s.a === "Yes"); changed(); };
+        seg.appendChild(b);
+      });
+      inp.oninput = function () { (v.site[q[0]] = v.site[q[0]] || {}).note = inp.value; changed(); };
+      $("siteq").appendChild(row);
+    });
+    drawChecks(); drawPhotos(); title();
+  }
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function title() { $("ttl").textContent = v && v.name ? v.name.split(" ")[0] + (v.address ? ", " + v.address.split(",")[0] : "") : "Home visit"; }
+
+  /* ---------- planning checks ---------- */
+  function drawChecks() {
+    v.checks = v.checks || {};
+    var box = $("checks"); box.innerHTML = "";
+    CHECKS.forEach(function (c) {
+      var row = document.createElement("div"); row.className = "rowq";
+      row.innerHTML = "<span>" + esc(c[1]) + "</span>";
+      var inp = document.createElement("input"); inp.type = "text"; inp.style.display = "block"; inp.style.gridColumn = "auto"; inp.style.maxWidth = "16rem";
+      inp.value = v.checks[c[0]] || ""; inp.placeholder = c[0] === "pdRights" ? "Intact?" : c[0] === "history" ? "Earlier applications" : "Run the checks";
+      inp.setAttribute("aria-label", c[1]);
+      inp.oninput = function () { v.checks[c[0]] = inp.value; changed(); };
+      row.appendChild(inp); box.appendChild(row);
+    });
+    $("checkwhen").textContent = v.checks._when ? "Checked " + new Date(v.checks._when).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) + (v.checks._how === "gps" ? " at the house" : " by postcode") : "";
+  }
+  $("runchecks").onclick = function () {
+    var b = this, err = $("checkerr"); err.hidden = true; b.disabled = true; b.textContent = "Checking…";
+    function go(lat, lng) {
+      RA.api({ action: "visit-checks", pass: pass, lat: lat, lng: lng, postcode: v.postcode }).then(function (r) {
+        b.disabled = false; b.textContent = "Run the checks again";
+        if (!r || !r.ok) { err.textContent = r && r.error === "unknown" ? "The planning checks aren't switched on in your Google script yet." : r && r.error === "no-location" ? "Add the postcode, or allow location, then try again." : "The checks didn't work this time. Try again in a moment."; err.hidden = false; return; }
+        Object.keys(r.checks).forEach(function (k) { v.checks[k] = r.checks[k]; });
+        v.checks._when = Date.now(); v.checks._how = r.how; v.checks._lat = r.lat; v.checks._lng = r.lng;
+        drawChecks(); changed();
+      }).catch(function () { b.disabled = false; b.textContent = "Run the checks"; err.textContent = "No connection. Try again when you have signal."; err.hidden = false; });
+    }
+    if (navigator.geolocation && confirmLocal()) navigator.geolocation.getCurrentPosition(function (p) { go(p.coords.latitude, p.coords.longitude); }, function () { go(0, 0); }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
+    else go(0, 0);
+  };
+  function confirmLocal() { var t = v.date ? new Date(v.date + "T12:00:00") : new Date(); return Math.abs(Date.now() - t.getTime()) < 36 * 3600000; } /* only use GPS on the day of the visit */
+
+  /* ---------- photos ---------- */
+  function resize(file) {
+    return new Promise(function (ok, no) {
+      var img = new Image(), url = URL.createObjectURL(file);
+      img.onload = function () {
+        var m = 1600, w = img.naturalWidth, h = img.naturalHeight, s = Math.min(1, m / Math.max(w, h));
+        var c = document.createElement("canvas"); c.width = Math.round(w * s); c.height = Math.round(h * s);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height); URL.revokeObjectURL(url);
+        ok(c.toDataURL("image/jpeg", 0.82));
+      };
+      img.onerror = function () { URL.revokeObjectURL(url); no(new Error("bad image")); };
+      img.src = url;
+    });
+  }
+  $("camera").onchange = function () {
+    var files = Array.prototype.slice.call(this.files || []); this.value = "";
+    v.photos = v.photos || [];
+    files.reduce(function (p, f) {
+      return p.then(function () { return resize(f).then(function (data) {
+        var k = v.id + "-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+        var ph = { k: k, caption: "", report: v.photos.filter(function (x) { return x.report; }).length < 2, url: "" };
+        v.photos.push(ph); return putPhoto(k, data).then(function () { drawPhotos(); changed(); });
+      }); });
+    }, Promise.resolve()).then(uploadPending);
+  };
+  var uploading = false;
+  function uploadPending() {
+    if (uploading || !pass || !v || !v.photos) return;
+    var next = v.photos.filter(function (p) { return !p.url && !p.failed; })[0];
+    if (!next) return;
+    uploading = true;
+    getPhoto(next.k).then(function (data) {
+      if (!data) { next.failed = true; uploading = false; drawPhotos(); return uploadPending(); }
+      return RA.api({ action: "visit-photo", pass: pass, id: v.id, label: (v.date || "") + " " + (v.name || "") + ", " + (v.address || ""), name: next.k + ".jpg", caption: next.caption, data: data.split(",")[1] }).then(function (r) {
+        uploading = false;
+        if (r && r.ok) { next.url = r.url; next.file = r.file; drawPhotos(); changed(); uploadPending(); }
+        else { drawPhotos(r && r.error === "unknown" ? "Waiting for the script update" : "Will retry"); }
+      });
+    }).catch(function () { uploading = false; drawPhotos("No signal, will retry"); });
+  }
+  function drawPhotos(note) {
+    var box = $("photos"); box.innerHTML = ""; (v.photos || []).forEach(function (p, i) {
+      var d = document.createElement("div"); d.className = "ph";
+      d.innerHTML = '<img alt=""><div class="pb"><input type="text" placeholder="Caption"><div class="pr"><label><input type="checkbox"> Report</label><button type="button" class="del">Remove</button></div><span class="st"></span></div>';
+      var img = d.querySelector("img"), cap = d.querySelector("input[type=text]"), chk = d.querySelector("input[type=checkbox]"), st = d.querySelector(".st");
+      if (p.url) img.src = p.url; else getPhoto(p.k).then(function (x) { if (x) img.src = x; });
+      img.alt = p.caption || "Photo " + (i + 1);
+      cap.value = p.caption || ""; cap.setAttribute("aria-label", "Caption for photo " + (i + 1));
+      cap.oninput = function () { p.caption = cap.value; changed(); };
+      chk.checked = !!p.report; chk.onchange = function () { p.report = chk.checked; changed(); };
+      st.textContent = p.url ? "Uploaded" : p.failed ? "Couldn't read this photo" : (note || "Waiting to upload"); st.className = "st " + (p.url ? "ok" : p.failed ? "err" : "");
+      d.querySelector(".del").onclick = function () { if (!window.confirm("Remove this photo?")) return; v.photos.splice(i, 1); delPhoto(p.k); drawPhotos(); changed(); };
+      box.appendChild(d);
+    });
+  }
+
+  /* ---------- start screen ---------- */
+  function newId() { return "v" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+  function today() { var d = new Date(); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2) + "-" + ("0" + d.getDate()).slice(-2); }
+  function open(data) {
+    v = data; $("start").hidden = true; $("connect").hidden = true; $("visit").hidden = false; $("tabs").hidden = false; $("bar").hidden = false;
+    bind(); window.scrollTo(0, 0); local(); status(pass ? "Saved to your sheet" : "Saved on this iPad", pass ? "ok" : "wait"); uploadPending();
+    try { history.replaceState(null, "", "#" + v.id); } catch (e) {}
+  }
+  function fromLead(p) {
+    var cur = drafts().filter(function (x) { return x.leadKey === p.k; })[0];
+    if (cur) return open(cur);
+    open({ id: newId(), leadKey: p.k, created: Date.now(), date: today(), name: p.n || "", email: p.e || "", mobile: p.m || "", postcode: p.pc || "", address: p.a || "", types: [], wants: [], site: {}, checks: {}, photos: [] });
+  }
+  function drafts() { try { return JSON.parse(localStorage.getItem("visit-index") || "[]").map(function (x) { try { return JSON.parse(localStorage.getItem(key(x.id))); } catch (e) { return null; } }).filter(Boolean); } catch (e) { return []; } }
+  function showStart() {
+    v = null; $("visit").hidden = true; $("tabs").hidden = true; $("bar").hidden = true; $("start").hidden = false; title(); status(pass ? "Connected" : "Not connected", pass ? "ok" : "");
+    try { history.replaceState(null, "", location.pathname); } catch (e) {}
+    var ds = drafts(); $("drafts-card").hidden = !ds.length; $("drafts").innerHTML = "";
+    ds.slice(0, 12).forEach(function (d) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "lead";
+      b.innerHTML = "<span><b></b><br><small></small></span><span class=\"when\"></span>";
+      b.querySelector("b").textContent = d.name || "No name yet"; b.querySelector("small").textContent = d.address || d.postcode || "";
+      b.querySelector(".when").textContent = d.date ? new Date(d.date + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "short" }) : "";
+      b.onclick = function () { open(d); }; $("drafts").appendChild(b);
+    });
+    drawLeads();
+  }
+  function drawLeads() {
+    var box = $("leads"), q = $("find").value.trim().toLowerCase(), now = Date.now();
+    var list = leads.filter(function (p) { return !p.lost && (p.vd || p.vb || p.st === "lead" || /visit/i.test(p.st || "")); });
+    if (q) list = leads.filter(function (p) { return ((p.n || "") + " " + (p.pc || "") + " " + (p.a || "")).toLowerCase().indexOf(q) >= 0; });
+    list.sort(function (a, b) { return Math.abs((a.vd || a.f || 0) - now) - Math.abs((b.vd || b.f || 0) - now); });
+    box.innerHTML = "";
+    if (!list.length) { box.innerHTML = '<p class="muted">' + (leads.length ? "No match. Use New visit below." : "No leads loaded.") + "</p>"; return; }
+    list.slice(0, 25).forEach(function (p) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "lead";
+      b.innerHTML = "<span><b></b><br><small></small></span><span class=\"when\"></span>";
+      b.querySelector("b").textContent = p.n || "No name";
+      b.querySelector("small").textContent = [p.svc, p.pc || p.a].filter(Boolean).join(" · ");
+      b.querySelector(".when").textContent = p.vd ? "Visit " + new Date(p.vd).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short" }) : "";
+      b.onclick = function () { fromLead(p); }; box.appendChild(b);
+    });
+  }
+  $("find").oninput = drawLeads;
+  $("blank").onclick = function () { open({ id: newId(), created: Date.now(), date: today(), types: [], wants: [], site: {}, checks: {}, photos: [] }); };
+  $("back").onclick = function () { push(); showStart(); };
+  $("done").onclick = function () { var b = this; b.disabled = true; push().then(function () { b.disabled = false; uploadPending(); b.textContent = "Saved"; setTimeout(function () { b.textContent = "Save visit"; }, 1600); }); };
+
+  /* sections: highlight the one on screen */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll("#tabs a"));
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) tabs.forEach(function (a) { var on = a.getAttribute("href") === "#" + e.target.id; a.classList.toggle("on", on); if (on && a.scrollIntoView) a.scrollIntoView({ block: "nearest", inline: "center" }); }); }); }, { rootMargin: "-40% 0px -55% 0px" });
+    document.querySelectorAll("#visit .card").forEach(function (s) { io.observe(s); });
+  }
+
+  /* ---------- connect ---------- */
+  function load() {
+    return RA.api({ action: "pipeline", pass: pass }).then(function (r) {
+      if (!r || !r.ok) { if (r && r.error === "bad-pass") { pass = ""; try { localStorage.removeItem("ra-pass"); } catch (e) {} $("connect").hidden = false; $("start").hidden = true; } return; }
+      leads = r.people || []; if (!v) drawLeads();
+    }).catch(function () { $("leads").innerHTML = '<p class="muted">No connection, so your leads can&rsquo;t load. Use New visit below; it saves on this iPad.</p>'; });
+  }
+  $("pwgo").onclick = function () {
+    var pw = $("pw").value; $("pwerr").hidden = true;
+    RA.api({ action: "pipeline", pass: pw }).then(function (r) {
+      if (!r || !r.ok) { $("pwerr").textContent = r && r.error === "bad-pass" ? "That passphrase is not right." : "Could not connect. Try again."; $("pwerr").hidden = false; return; }
+      pass = pw; try { localStorage.setItem("ra-pass", pw); } catch (e) {}
+      leads = r.people || []; $("connect").hidden = true; showStart();
+    }).catch(function () { $("pwerr").textContent = "No connection. Try again when you have signal."; $("pwerr").hidden = false; });
+  };
+
+  var hashId = location.hash.replace("#", ""), saved = null;
+  if (hashId) { try { saved = JSON.parse(localStorage.getItem(key(hashId))); } catch (e) {} }
+  if (!pass) { $("connect").hidden = false; status("Not connected"); }
+  else { if (saved) open(saved); else showStart(); load(); }
+})();
+</script>
+</body>
+</html>
