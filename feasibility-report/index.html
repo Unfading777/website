@@ -1,17 +1,19 @@
 <!doctype html>
+<!-- Generated from /report/index.html (sample mode). Re-copy it after changing the report page. -->
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sample feasibility report | Residential Architecture</title>
 <meta name="description" content="Every free home visit comes with a written feasibility report on your home: planning route, property checks, typical costs and next steps. See a sample.">
-<meta name="color-scheme" content="light">
 <link rel="canonical" href="https://residential-architecture.co.uk/feasibility-report/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Your free feasibility report | Residential Architecture">
 <meta property="og:description" content="Every free home visit comes with a written feasibility report on your home. See a sample.">
 <meta property="og:url" content="https://residential-architecture.co.uk/feasibility-report/">
+<meta property="og:site_name" content="Residential Architecture">
 <meta property="og:image" content="https://residential-architecture.co.uk/img/report-preview.jpg">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='4' transform='rotate(45 16 16)' fill='%23E6007A'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -91,7 +93,8 @@ blockquote { margin: 0 0 .8rem; padding-left: 1rem; border-left: 3px solid var(-
 .photos figcaption { font-size: .88rem; color: var(--text); }
 .measures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; background: var(--bg); border-radius: 12px; padding: .8rem 1rem; font-size: .85rem; color: var(--grey); }
 .measures b { display: block; color: var(--ink); font-size: 1rem; }
-.plan svg { display: block; width: 100%; max-width: 32rem; height: auto; }
+.plan svg { display: block; width: 100%; max-width: 34rem; height: auto; margin: 0 auto; }
+.plan p { text-align: center; }
 .plan p { font-size: .82rem; color: var(--grey); margin-top: .3rem; }
 
 .tbl { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: .93rem; }
@@ -168,266 +171,402 @@ footer { text-align: center; color: var(--grey); font-size: .85rem; padding: 0 1
   .cover, .guar, .tbl .r.h, .tile, .steps li::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 </style>
+<style>
+.pv { position: sticky; top: 0; z-index: 20; background: var(--deep); color: #fff; }
+.pv .wrap { display: flex; flex-wrap: wrap; gap: .6rem 1rem; align-items: center; justify-content: space-between; padding-block: .7rem; }
+.pv b { font-family: var(--display); }
+.pv .btns { display: flex; flex-wrap: wrap; gap: .5rem; }
+.pv .btn { padding: .6rem 1rem; font-size: .95rem; }
+.pv .btn.ghost { background: #2B2A35; color: #fff; box-shadow: none; }
+.pv .out { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; font-size: .92rem; }
+.pv .out input { flex: 1 1 16rem; min-width: 0; font: inherit; padding: .5rem .7rem; border-radius: 10px; border: 0; }
+.pv .err { color: #FCA5A5; font-weight: 600; flex-basis: 100%; }
+.pv [hidden] { display: none !important; }
+.box.pink { background: var(--tint); border: 1.5px solid var(--pink); }
+.box.pink h3 { color: var(--pink-ink); }
+.epcbar { display: grid; gap: 4px; margin: .2rem 0 .9rem; max-width: 26rem; }
+.epcbar div { display: grid; grid-template-columns: minmax(0, 1fr) 4.6rem 4.6rem; gap: .4rem; align-items: center; font-size: .82rem; }
+.epcbar i { display: block; height: 1.55rem; border-radius: 0 4px 4px 0; color: #fff; font-style: normal; font-weight: 700; padding-left: .5rem; line-height: 1.55rem; }
+.epcbar b { display: block; text-align: center; border-radius: 4px; color: #fff; font-size: .8rem; line-height: 1.55rem; }
+.epcbar .hd { font-weight: 700; color: var(--grey); }
+.epcbar .hd span:not(:first-child) { text-align: center; }
+.msg { text-align: center; padding: 4rem 1rem; color: var(--grey); }
+.sheet .pad > .lead:first-child { margin-top: 0; }
+.photos.n1 { grid-template-columns: minmax(0, 1fr); }
+img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; display: block; border-radius: 12px; background: var(--bg); }
+.tiles.t2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 40rem) { .tiles.t2 { grid-template-columns: minmax(0, 1fr); } }
+</style>
 </head>
 <body>
+<div class="pv" id="pv" hidden>
+  <div class="wrap">
+    <b id="pv-t">Preview: only you can see this</b>
+    <div class="btns">
+      <a class="btn ghost" id="pv-edit" href="/quote/visit/">Edit the visit</a>
+      <button class="btn" type="button" id="pv-go">Ready for the quote</button>
+    </div>
+    <div class="out" id="pv-out" hidden>
+      <span id="pv-note">Now make their quote and pick this report under <b>Feasibility report</b>. It appears on their quote, so they only get one link.</span>
+      <input type="text" id="pv-link" readonly aria-label="Report link" hidden>
+      <button class="btn ghost" type="button" id="pv-copy">Copy report link</button>
+      <a class="btn" id="pv-quote" href="/quote/new/">Make the quote</a>
+    </div>
+    <p class="err" id="pv-err" hidden></p>
+  </div>
+</div>
+
 <header class="top">
   <div class="wrap">
     <a class="brand" href="/"><i aria-hidden="true"></i>Residential Architecture</a>
-    <a class="btn" href="https://calendly.com/residential-architecture/free-home-visit" target="_blank" rel="noopener">Book a free home visit</a>
+    <a class="btn" href="https://wa.me/447515334455" target="_blank" rel="noopener">WhatsApp Carl</a>
   </div>
 </header>
 
-<main>
-  <div class="wrap intro">
-    <span class="kicker">Free with every home visit</span>
-    <h1>Your free feasibility report</h1>
-    <p>After every free visit, I send you a written report on your home: the best planning route, the checks on your property, typical costs and what happens next.</p>
-    <p class="note grey">This is a sample. The house, names and details are examples.</p>
-  </div>
-
-  <div class="wrap">
-    <!-- 1. Cover and summary -->
-    <article class="sheet">
-      <div class="cover">
-        <div class="row">
-          <div class="who">
-            <span class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span>
-            <div><b>Residential Architecture</b><small>Carl Collins BSc (Hons)</small></div>
-          </div>
-          <span class="tag">Sample report</span>
-        </div>
-        <div>
-          <span class="kick">Feasibility report</span>
-          <h2>Single-storey rear extension</h2>
-          <p class="addr">Example property: 1970s semi-detached house, Maidenhead SL6</p>
-        </div>
-        <div class="meta">
-          <div>Local authority<b>Royal Borough of Windsor &amp; Maidenhead</b></div>
-          <div>Based on<b>My visit and the public records for your home</b></div>
-          <div>Visit date<b>15 October 2026</b></div>
-        </div>
-      </div>
-      <div class="pad">
-        <div class="sec-head"><h2>The answer on one page</h2></div>
-        <p class="lead">Thank you for showing me round, Sarah. You asked whether a kitchen-diner across the back of the house is possible and which route it needs. Here&rsquo;s what I found from my visit and the public records for your home.</p>
-        <div class="tiles">
-          <div class="tile"><span>Best route</span><b>Prior approval</b><small>A simpler application than full planning, for extensions over 3m and up to 6m deep.</small></div>
-          <div class="tile"><span>Planning risk</span><b>Low</b><small>No conservation area, listing or Article 4 found. Neighbours can still comment.</small></div>
-          <div class="tile"><span>Decision time</span><b>42 days</b><small>If the council doesn&rsquo;t decide in time, it&rsquo;s approved by default.</small></div>
-        </div>
-        <div>
-          <h3>What you told me</h3>
-          <blockquote>&ldquo;The kitchen feels dark and cut off from the garden. We want one big space where the kids can play while we cook.&rdquo;</blockquote>
-          <ul class="dash">
-            <li>Single-storey rear extension, about 4m deep and the full width of the house</li>
-            <li>Open-plan kitchen, dining and family space</li>
-            <li>Flat roof with a roof lantern over the dining table</li>
-            <li>Wide sliding or bi-fold doors to the garden</li>
-          </ul>
-        </div>
-        <div class="box">
-          <h3>Three things to know first</h3>
-          <ol class="know">
-            <li><span>Up to 3m deep is permitted development, so no planning application, but I&rsquo;d still get a Lawful Development Certificate to prove it. Your 4m design uses prior approval, where the council writes to your neighbours and has 42 days to decide.</span></li>
-            <li><span>The wall on the attached side is on the boundary, so Party Wall notices will be needed. Serve them early.</span></li>
-            <li><span>Building Regulations approval is needed whichever route you take. Wide glazing across the back will probably need an energy calculation at that stage.</span></li>
-          </ol>
-        </div>
-      </div>
-    </article>
-
-    <!-- 2. Your house -->
-    <article class="sheet">
-      <div class="pad">
-        <div class="sec-head"><span>Section 1</span><h2>Your house</h2></div>
-        <div class="photos">
-          <figure><img class="ph" src="/img/sample-rear.jpg" width="1200" height="900" alt="The back of the example house, with a small existing rear extension and a patio" loading="lazy"><figcaption>The back of the house. The small existing extension comes down to make way for the new one.</figcaption></figure>
-          <figure><img class="ph" src="/img/sample-front.jpg" width="1200" height="900" alt="The front of the example semi-detached house, with a garage to the side" loading="lazy"><figcaption>The front of the house, with the garage to the side.</figcaption></figure>
-        </div>
-        <div class="measures">
-          <div>House width<b>7.5m</b></div>
-          <div>Garden depth<b>About 22m</b></div>
-          <div>Earlier extensions<b>Small rear extension</b></div>
-          <div>Ground<b>Clay</b></div>
-        </div>
-        <div class="plan">
-          <h3>What you can build, and how</h3>
-          <svg viewBox="0 0 420 300" role="img" aria-label="Plan of the house showing the 3m permitted development line, the 6m prior approval line and the proposed 4m extension" style="font-family: 'DM Sans', sans-serif">
-            <rect x="4" y="8" width="66" height="70" fill="#EDEDF0" stroke="#9A9DA4"/>
-            <text x="37" y="47" text-anchor="middle" font-size="13" fill="#6A6875">No. 12</text>
-            <rect x="70" y="8" width="220" height="70" fill="#D5D7DB" stroke="#1F1E26" stroke-width="2"/>
-            <text x="180" y="48" text-anchor="middle" font-size="16" font-weight="700" fill="#1F1E26">Your house</text>
-            <rect x="70" y="78" width="220" height="120" fill="#FFD6EA" stroke="#B8005F" stroke-width="2"/>
-            <text x="180" y="112" text-anchor="middle" font-size="16" font-weight="700" fill="#8A0047">Your 4m extension</text>
-            <line x1="70" y1="8" x2="70" y2="292" stroke="#1F1E26" stroke-width="1.5"/>
-            <line x1="318" y1="8" x2="318" y2="292" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="2 4"/>
-            <text x="324" y="290" font-size="13" fill="#6A6875">Boundary</text>
-            <line x1="4" y1="168" x2="318" y2="168" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="7 5"/>
-            <text x="78" y="161" font-size="14" font-weight="700" fill="#1F1E26">3m · permitted development</text>
-            <line x1="4" y1="258" x2="318" y2="258" stroke="#B8005F" stroke-width="1.5" stroke-dasharray="7 5"/>
-            <text x="78" y="251" font-size="14" font-weight="700" fill="#B8005F">6m · limit with prior approval</text>
-            <line x1="304" y1="80" x2="304" y2="196" stroke="#8A0047" stroke-width="1.2"/>
-            <line x1="298" y1="78" x2="310" y2="78" stroke="#8A0047" stroke-width="1.2"/>
-            <line x1="298" y1="198" x2="310" y2="198" stroke="#8A0047" stroke-width="1.2"/>
-            <text x="324" y="143" font-size="15" font-weight="700" fill="#8A0047">4m deep</text>
-            <text x="180" y="228" text-anchor="middle" font-size="14" fill="#6A6875">Garden</text>
-          </svg>
-          <p>Not to scale. Measured from the back of the original house.</p>
-        </div>
-        <div>
-          <h3>Permitted development check</h3>
-          <div class="tbl pd" style="--cols: minmax(0, 1fr) 11rem 7.5rem">
-            <div class="r h"><span>Limit (GPDO 2015, Class A)</span><span>Your scheme</span><span>Result</span></div>
-            <div class="r"><span>Depth: 3m (semi), or 6m with prior approval</span><span>About 4m</span><span class="pk">Prior approval</span></div>
-            <div class="r"><span>Height no more than 4m</span><span>To confirm in design</span><span class="ok">Achievable</span></div>
-            <div class="r"><span>Eaves no more than 3m within 2m of a boundary</span><span>Flat roof, parapet kept low</span><span class="ok">Achievable</span></div>
-            <div class="r"><span>Extensions cover no more than half the land around the original house</span><span>Well under half</span><span class="ok">Pass</span></div>
-            <div class="r"><span>Materials similar in appearance to the house</span><span>Brick to match</span><span class="ok">Pass</span></div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- 3. Planning -->
-    <article class="sheet">
-      <div class="pad">
-        <div class="sec-head"><span>Section 2</span><h2>Planning</h2></div>
-        <div>
-          <h3>Checks on your property</h3>
-          <div class="tbl checks" style="--cols: 13rem 6rem minmax(0, 1fr)">
-            <div class="r h"><span>Check</span><span>Result</span><span class="src">Where I checked</span></div>
-            <div class="r"><span class="k">Conservation area</span><span class="ok">No</span><span class="src">Council conservation area maps</span></div>
-            <div class="r"><span class="k">Article 4 direction</span><span class="ok">No</span><span class="src">Council&rsquo;s Article 4 schedules</span></div>
-            <div class="r"><span class="k">Listed building</span><span class="ok">No</span><span class="src">Historic England list</span></div>
-            <div class="r"><span class="k">Green Belt</span><span class="ok">No</span><span class="src">Local Plan policies map</span></div>
-            <div class="r"><span class="k">Flood risk</span><span class="ok">Zone 1</span><span class="src">Environment Agency flood maps</span></div>
-            <div class="r"><span class="k">Protected trees</span><span class="ok">None</span><span class="src">Council TPO map, and what I saw on site</span></div>
-            <div class="r"><span class="k">Permitted development rights</span><span class="ok">Intact</span><span class="src">No condition removing them on the planning register</span></div>
-            <div class="r"><span class="k">Your home&rsquo;s planning history</span><span class="ok">Checked</span><span class="src">Only the small rear extension, which the new design replaces</span></div>
-          </div>
-        </div>
-        <div>
-          <h3>Your three routes</h3>
-          <div class="routes">
-            <div class="route"><b>Permitted development</b><span>Up to 3m deep</span><p>No planning application. I recommend a Lawful Development Certificate to prove it.</p></div>
-            <div class="route on"><b>Prior approval · recommended</b><span>Over 3m, up to 6m</span><p>The council writes to your neighbours and has 42 days to decide.</p></div>
-            <div class="route"><b>Householder planning</b><span>Anything beyond these</span><p>Full application, 8-week target. Needed if the design goes outside the limits.</p></div>
-          </div>
-        </div>
-        <div class="box">
-          <h3>Why I recommend a Lawful Development Certificate</h3>
-          <ul class="dash one">
-            <li>It&rsquo;s the council&rsquo;s written confirmation that the extension is lawful, before you build.</li>
-            <li>Buyers&rsquo; solicitors often ask for proof when you sell. Without it, a sale can stall.</li>
-            <li>The rules are easy to get wrong, such as where the depth is measured from. The certificate settles it.</li>
-            <li>Building Regulations approval is still needed, whichever route you take.</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Nearby decisions</h3>
-          <p class="lead" style="margin-bottom:.7rem">I read the council&rsquo;s decisions on similar extensions near you, including the case officer&rsquo;s reports. Examples for this sample:</p>
-          <div class="tbl near" style="--cols: 15rem 6rem minmax(0, 1fr)">
-            <div class="r h"><span>Nearby application</span><span>Decision</span><span>What it tells us</span></div>
-            <div class="r"><span class="k">4m rear extension, same road</span><span class="ok">Approved</span><span>4m next to an attached neighbour is accepted here.</span></div>
-            <div class="r"><span class="k">6m rear extension, two streets away</span><span class="pk">Refused</span><span>Too close to a neighbour&rsquo;s kitchen window. 4m stays clear of that.</span></div>
-            <div class="r"><span class="k">Flat roof with lantern, nearby</span><span class="ok">Approved</span><span>Roof lanterns and low parapets are accepted locally.</span></div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- 4. Costs and other approvals -->
-    <article class="sheet">
-      <div class="pad">
-        <div class="sec-head"><span>Section 3</span><h2>Costs and other approvals</h2></div>
-        <div>
-          <h3>Typical build costs in the South East</h3>
-          <p class="lead" style="margin-bottom:.7rem">Published averages for 2026, to help you plan. They&rsquo;re a guide, not a quote. Your builder&rsquo;s price against the drawings is the real test.</p>
-          <div class="tbl cost" style="--cols: minmax(0, 1fr) auto">
-            <div class="r h"><span>Type of project</span><span class="num">Typical cost</span></div>
-            <div class="r hl"><span class="k">Single-storey extension</span><span class="num" style="color:var(--pink-ink)">£2,200 – £3,000 per m²</span></div>
-            <div class="r"><span class="k">Wrap-around extension</span><span class="num">£2,500 – £3,250 per m²</span></div>
-            <div class="r"><span class="k">Two-storey extension</span><span class="num">£1,950 – £2,700 per m²</span></div>
-            <div class="r"><span class="k">Loft conversion</span><span class="num">£1,800 – £2,400 per m²</span></div>
-            <div class="r"><span class="k">Garage conversion (single garage)</span><span class="num">£10,000 – £22,500 in total</span></div>
-          </div>
-          <p class="small" style="margin-top:.5rem">Your kitchen, fees and a contingency are on top. A two-storey extension costs less per m² because it shares one set of foundations and one roof. A garage conversion is usually the cheapest way to add space.</p>
-        </div>
-        <div class="two">
-          <div class="box">
-            <h3>What moves the price most</h3>
-            <ul class="dash one">
-              <li>The width of the glazing to the garden</li>
-              <li>How deep the foundations need to go</li>
-              <li>Your choice of kitchen and finishes</li>
-              <li>The builder&rsquo;s own workload and rates</li>
-            </ul>
-          </div>
-          <div class="box">
-            <h3>Other things to budget for</h3>
-            <ul class="dash one">
-              <li>Structural engineer</li>
-              <li>Party Wall surveyor, if a neighbour appoints one</li>
-              <li>Thames Water build-over agreement, if needed</li>
-              <li>A contingency: I suggest keeping 10–15% aside</li>
-            </ul>
-          </div>
-        </div>
-        <div>
-          <h3>Beyond planning</h3>
-          <div class="tbl other" style="--cols: 12rem minmax(0, 1fr)">
-            <div class="r h"><span>Item</span><span>What it means for you</span></div>
-            <div class="r"><span class="k">Party Wall Act</span><span>New wall at the boundary and digging near the neighbour&rsquo;s house. Notices at least one month before work starts.</span></div>
-            <div class="r"><span class="k">Building Regulations</span><span>Needed whichever planning route you take. I recommend Full Plans approval. Large glazing usually needs an energy (SAP) calculation.</span></div>
-            <div class="r"><span class="k">Drainage</span><span>A public sewer under or near the new floor needs a build-over agreement with Thames Water. A CCTV survey answers it.</span></div>
-            <div class="r"><span class="k">Structure</span><span>Steel beam over the new opening, sized by the structural engineer.</span></div>
-          </div>
-        </div>
-      </div>
-    </article>
-
-    <!-- 5. Next steps -->
-    <article class="sheet">
-      <div class="pad">
-        <div class="sec-head"><span>Section 4</span><h2>Next steps</h2></div>
-        <ol class="steps">
-          <li><div><b>Measured survey and full brief</b><p>I come back to measure everything and write up your full design brief.</p></div></li>
-          <li><div><b>Your design in 3D</b><p>Drawings modelled in 3D with photo-real images, so you can see the space before it&rsquo;s built.</p></div></li>
-          <li><div><b>Prior approval application</b><p>Submitted and followed up for you. The council has 42 days to decide.</p></div></li>
-          <li><div><b>Building Regulations and structure</b><p>Construction drawings and structural calculations, so builders can price like for like.</p></div></li>
-          <li><div><b>Builders</b><p>Introductions to local builders I&rsquo;ve worked with.</p></div></li>
-        </ol>
-        <div class="guar">
-          <h3>Fixed price. Planning guarantee.</h3>
-          <ul class="dash">
-            <li>One fixed price, agreed up front</li>
-            <li>Unlimited revisions up to submission</li>
-            <li>If planning is refused, I revise the design and resubmit at no extra cost</li>
-            <li>Every project in 3D with photo-real images</li>
-          </ul>
-        </div>
-        <div class="quote">
-          <div><b>Your fixed-price quote is ready</b><p>Everything in this report, designed and submitted for one fixed price.</p></div>
-          <span class="btn" aria-disabled="true">View your quote</span>
-        </div>
-        <div>
-          <h3 style="font-size:1rem">Where this information comes from</h3>
-          <p class="small">planning.data.gov.uk · Royal Borough of Windsor &amp; Maidenhead planning register and Local Plan · Historic England National Heritage List · Environment Agency flood maps · British Geological Survey GeoIndex · The Town and Country Planning (General Permitted Development) (England) Order 2015 · Party Wall etc. Act 1996</p>
-        </div>
-        <p class="lead" style="font-size:.93rem">This report is based on a 30-minute visit and the public records for your address on the date shown. It&rsquo;s a first look at what&rsquo;s possible, not a full planning appraisal, a survey or a builder&rsquo;s quote. Once you go ahead, I check everything in detail as part of the design.</p>
-      </div>
-    </article>
-  </div>
-
-  <div class="wrap cta">
-    <h2>Get a report on your own home</h2>
-    <p>Book a free 30-minute visit. I&rsquo;ll look round with you, then send you your own feasibility report, free and with no obligation.</p>
-    <div class="btns">
-      <a class="btn" href="https://calendly.com/residential-architecture/free-home-visit" target="_blank" rel="noopener">Book a free home visit</a>
-      <a class="btn ghost" href="https://wa.me/447515334455?text=Hi%20Carl%2C%20I%27d%20like%20to%20book%20a%20free%20home%20visit." target="_blank" rel="noopener">WhatsApp Carl</a>
-    </div>
-  </div>
-</main>
+<main class="wrap" id="main" style="padding-top:1rem"><p class="msg" id="msg">Opening your report&hellip;</p></main>
 <footer>© 2026 Residential Architecture, Maidenhead, Berkshire. Carl Collins BSc (Hons). <a href="/">Home</a></footer>
+
+<script src="/quote/q.js?v=40"></script>
+<script src="/report/policy.js?v=1"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function first(n) { return String(n || "").trim().split(/\s+/)[0] || ""; }
+  function day(d) { return d ? new Date(d + "T12:00:00").toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : ""; }
+  function has(list, re) { return (list || []).some(function (x) { return re.test(x); }); }
+  var CAM = '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>';
+
+  /* ---------- public part of a visit (no phone, email, budget or private notes) ---------- */
+  function toReport(v) {
+    var things = ["t1", "t2", "t3", "t4"].map(function (k) { return String(v[k] || "").trim(); }).filter(Boolean);
+    return {
+      v: 1, id: v.id, name: first(v.name), fullName: String(v.name || "").trim(), address: v.address || "", postcode: v.postcode || "", council: v.council || "", date: v.date || "",
+      title: v.title || (v.types || []).join(" and ") || "Your project", types: v.types || [], words: v.words || "", wants: v.wants || [], wantsOther: v.wantsOther || "",
+      size: v.size || "", roof: v.roof || "", extDepth: v.extDepth || "", extWidth: v.extWidth || "", sideWidth: v.sideWidth || "", houseDepth: v.houseDepth || "", distL: v.distL || "", distR: v.distR || "", houseType: v.houseType || "", age: v.age || "", width: v.width || "", depth: v.depth || "",
+      earlier: v.earlier || "", earlierPlan: v.earlierPlan || "", ground: v.ground || "", attached: v.attached || "",
+      site: Object.keys(v.site || {}).filter(function (k) { return v.site[k] && v.site[k].a === "Yes"; }).map(function (k) { return { k: k, note: v.site[k].note || "" }; }),
+      photos: (v.photos || []).filter(function (p) { return p.report; }).slice(0, 4).map(function (p) { return { url: p.url || "", k: p.k, caption: p.caption || "" }; }),
+      checks: (function () { var c = {}; Object.keys(v.checks || {}).forEach(function (k) { if (k.charAt(0) !== "_") c[k] = v.checks[k]; }); return c; })(),
+      route: v.route || "", risk: v.risk || "", things: things,
+      faces: v.faces || "", glazLost: v.glazLost || "", lat: (v.checks && v.checks._lat) || v.lat || "", lng: (v.checks && v.checks._lng) || v.lng || "",
+      materials: v.materials || "", character: v.character || "", designNotes: v.designNotes || "",
+      design: (function () { var o = {}; Object.keys(v.design || {}).forEach(function (k) { if (v.design[k] && v.design[k].a) o[k] = { a: v.design[k].a, note: v.design[k].note || "" }; }); return o; })(),
+      data: (function () { var d = v.data || {}, e = d.epc && d.epc.band ? d.epc : null; return {
+        epc: e ? { band: e.band, potential: e.potential, age: e.age, area: e.area, walls: e.walls, roof: e.roof, floor: e.floor, windows: e.windows, heating: e.heating, date: e.date } : null,
+        sales: (d.sales || []).slice(0, 8), hpi: d.hpi || null }; })(),
+      nearby: [1, 2, 3, 4, 5, 6, 7, 8].map(function (i) { return { what: v["n" + i + "w"] || "", decision: v["n" + i + "d"] || "", note: v["n" + i + "n"] || "" }; }).filter(function (n) { return n.what; })
+    };
+  }
+  window.RAreport = toReport;
+
+  /* ---------- render ---------- */
+  function render(r, quote) {
+    var detached = /Detached|Bungalow/.test(r.houseType), lim1 = detached ? 4 : 3, lim2 = detached ? 8 : 6;
+    var route = r.route, pd = /Permitted/.test(route), pa = /Prior/.test(route), hh = /Householder/.test(route), ldc = /Lawful/.test(route);
+    var H = [];
+    /* cover */
+    H.push('<article class="sheet"><div class="cover"><div class="row"><div class="who"><span class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span><div><b>Residential Architecture</b><small>Carl Collins BSc (Hons)</small></div></div></div>');
+    H.push('<div><span class="kick">Feasibility report</span><h2>' + esc(r.title) + '</h2><p class="addr">' + esc([r.address, r.postcode].filter(Boolean).join(", ")) + '</p></div>');
+    H.push('<div class="meta">' + (r.fullName ? '<div>Prepared for<b>' + esc(r.fullName) + '</b></div>' : '<div>Based on<b>My visit and the public records for your home</b></div>') + '<div>Local authority<b>' + esc(r.council || "To confirm") + '</b></div><div>Visit date<b>' + esc(day(r.date)) + '</b></div></div></div>');
+    /* summary */
+    var hello = (r.name ? "Thank you for showing me round, " + esc(r.name) + ". " : "Thank you for showing me round. ") + "Here&rsquo;s what I found from my visit and the public records for your home.";
+    H.push('<div class="pad"><div class="sec-head"><h2>The answer on one page</h2></div><p class="lead">' + hello + '</p>');
+    var tiles = [];
+    if (route && !/Not sure/.test(route)) {
+      var rsub = pd ? "No planning application needed. I recommend a Lawful Development Certificate to prove it." : pa ? "A simpler application than full planning, for extensions over " + lim1 + "m and up to " + lim2 + "m deep." : hh ? "A householder planning application to the council." : "The council&rsquo;s written confirmation that your project is lawful.";
+      tiles.push(['Best route', esc(route), rsub]);
+    }
+    if (r.risk) tiles.push(['Planning risk', esc(r.risk), r.risk === "Low" ? "No restrictions found on your property. Neighbours can still comment." : r.risk === "Medium" ? "Some points need care in the design, set out below." : "There are real hurdles here, set out below."]);
+    if (pa) tiles.push(['Decision time', '42 days', 'If the council doesn&rsquo;t decide in time, it&rsquo;s approved by default.']);
+    else if (hh) tiles.push(['Decision time', '8 weeks', 'The council&rsquo;s target for a householder application.']);
+    else if (pd || ldc) tiles.push(['Decision time', '8 weeks', 'The council&rsquo;s target for a Lawful Development Certificate.']);
+    if (tiles.length) H.push('<div class="tiles' + (tiles.length === 2 ? " t2" : "") + '">' + tiles.map(function (t) { return '<div class="tile"><span>' + t[0] + '</span><b>' + t[1] + '</b><small>' + t[2] + '</small></div>'; }).join("") + '</div>');
+    var wants = r.wants.slice(); if (r.wantsOther) wants.push(r.wantsOther); if (r.size) wants.unshift(r.size); if (r.roof && !/Not decided/.test(r.roof)) wants.push(r.roof);
+    if (r.words || wants.length) {
+      H.push('<div><h3>What you told me</h3>' + (r.words ? '<blockquote>&ldquo;' + esc(r.words.replace(/^["“]|["”]$/g, "")) + '&rdquo;</blockquote>' : '') + (wants.length ? '<ul class="dash">' + wants.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join("") + '</ul>' : '') + '</div>');
+    }
+    if (r.things.length) H.push('<div class="box"><h3>' + (["", "One thing", "Two things", "Three things", "Four things"][r.things.length]) + ' to know first</h3><ol class="know">' + r.things.map(function (t) { return '<li><span>' + esc(t) + '</span></li>'; }).join("") + '</ol></div>');
+    H.push('</div></article>');
+
+    /* your house */
+    var sec = 0;
+    var meas = [["House width", r.width ? r.width + "m" : ""], ["Garden depth", r.depth ? "About " + r.depth + "m" : ""], ["Earlier extensions", r.earlier], ["Ground", r.ground]].filter(function (m) { return m[1]; });
+    var showPlan = ((r.extDepth && has(r.types, /Rear|Wrap/)) || (r.sideWidth && has(r.types, /Side|Wrap/))) && r.houseType && !/Flat/.test(r.houseType);
+    if (r.photos.length || meas.length || showPlan || (r.data && r.data.epc) || r.lat) {
+      sec++;
+      H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Your house</h2></div>');
+      H.push(map(r));
+      if (r.photos.length) H.push('<div class="photos' + (r.photos.length === 1 ? " n1" : "") + '">' + r.photos.map(function (p, i) { return '<figure><img class="ph" data-k="' + esc(p.k) + '" ' + (p.url ? 'src="' + esc(p.url) + '"' : "") + ' alt="' + esc(p.caption || "Photo from the visit") + '" loading="lazy"><figcaption>' + esc(p.caption) + '</figcaption></figure>'; }).join("") + '</div>');
+      if (meas.length) H.push('<div class="measures">' + meas.map(function (m) { return '<div>' + m[0] + '<b>' + esc(m[1]) + '</b></div>'; }).join("") + '</div>');
+      if (showPlan) H.push(plan(r, lim1, lim2));
+      H.push(extNumbers(r)); H.push(sun(r));
+      H.push(numbers(r));
+      H.push('</div></article>');
+    }
+
+
+    /* planning */
+    sec++;
+    var CH = [["conservation", "Conservation area", "Council conservation area maps"], ["article4", "Article 4 direction", "Council&rsquo;s Article 4 schedules"], ["listed", "Listed building", "Historic England list"], ["greenBelt", "Green Belt", "Local Plan policies map"], ["aonb", "National Landscape", "Natural England maps"], ["flood", "Flood risk", "Environment Agency flood maps"], ["trees", "Protected trees", "Council TPO map, and what I saw on site"], ["pdRights", "Permitted development rights", "Planning register"], ["history", "Your home&rsquo;s planning history", "Planning register"]];
+    var rows = CH.filter(function (c) { return r.checks[c[0]]; });
+    H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Planning</h2></div>');
+    if (rows.length) H.push('<div><h3>Checks on your property</h3><div class="tbl checks" style="--cols: 13rem 7rem minmax(0, 1fr)"><div class="r h"><span>Check</span><span>Result</span><span class="src">Where I checked</span></div>' + rows.map(function (c) { var val = String(r.checks[c[0]]), ok = /^(No|None|Zone 1|Intact|Nothing|Checked)/i.test(val); return '<div class="r"><span class="k">' + c[1] + '</span><span class="' + (ok ? "ok" : "pk") + '">' + esc(val) + '</span><span class="src">' + c[2] + '</span></div>'; }).join("") + '</div></div>');
+    if (has(r.types, /Rear|Wrap|Side/) && !/Flat/.test(r.houseType)) {
+      H.push('<div><h3>Your three routes</h3><div class="routes">' +
+        '<div class="route' + (pd ? " on" : "") + '"><b>Permitted development' + (pd ? " · recommended" : "") + '</b><span>Up to ' + lim1 + 'm deep</span><p>No planning application. I recommend a Lawful Development Certificate to prove it.</p></div>' +
+        '<div class="route' + (pa ? " on" : "") + '"><b>Prior approval' + (pa ? " · recommended" : "") + '</b><span>Over ' + lim1 + 'm, up to ' + lim2 + 'm</span><p>The council writes to your neighbours and has 42 days to decide.</p></div>' +
+        '<div class="route' + (hh ? " on" : "") + '"><b>Householder planning' + (hh ? " · recommended" : "") + '</b><span>Anything beyond these</span><p>Full application, 8-week target. Needed if the design goes outside the limits.</p></div></div></div>');
+    }
+    if (pd || pa || ldc) H.push('<div class="box pink"><h3>Why I recommend a Lawful Development Certificate</h3><ul class="dash one"><li>It&rsquo;s the council&rsquo;s written confirmation that the extension is lawful, before you build.</li><li>Buyers&rsquo; solicitors often ask for proof when you sell. Without it, a sale can stall.</li><li>The rules are easy to get wrong, such as where the depth is measured from. The certificate settles it.</li><li>Building Regulations approval is still needed, whichever route you take.</li></ul></div>');
+    H.push(design(r));
+    if (r.nearby.length) H.push('<div><h3>Nearby decisions</h3><p class="lead" style="margin-bottom:.7rem">I read the council&rsquo;s decisions on similar projects near you, and what they tell us.</p><div class="tbl near" style="--cols: 15rem 6rem minmax(0, 1fr)"><div class="r h"><span>Nearby application</span><span>Decision</span><span>What it tells us</span></div>' + r.nearby.map(function (n) { return '<div class="r"><span class="k">' + esc(n.what) + '</span><span class="' + (/Refused/i.test(n.decision) ? "pk" : "ok") + '">' + esc(n.decision) + '</span><span>' + esc(n.note) + '</span></div>'; }).join("") + '</div></div>');
+    H.push('</div></article>');
+
+    /* costs and other approvals */
+    sec++;
+    var hl = has(r.types, /Wrap/) ? 1 : has(r.types, /Two-storey/) ? 2 : has(r.types, /Loft/) ? 3 : has(r.types, /Garage/) ? 4 : has(r.types, /Rear|Side/) ? 0 : -1;
+    var COST = [["Single-storey extension", "£2,200 – £3,000 per m²"], ["Wrap-around extension", "£2,500 – £3,250 per m²"], ["Two-storey extension", "£1,950 – £2,700 per m²"], ["Loft conversion", "£1,800 – £2,400 per m²"], ["Garage conversion (single garage)", "£10,000 – £22,500 in total"]];
+    H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Costs and other approvals</h2></div>');
+    H.push('<div><h3>Typical build costs in the South East</h3><p class="lead" style="margin-bottom:.7rem">Published averages for 2026, to help you plan. They&rsquo;re a guide, not a quote. Your builder&rsquo;s price against the drawings is the real test.</p><div class="tbl cost" style="--cols: minmax(0, 1fr) auto"><div class="r h"><span>Type of project</span><span class="num">Typical cost</span></div>' + COST.map(function (c, i) { return '<div class="r' + (i === hl ? " hl" : "") + '"><span class="k">' + c[0] + '</span><span class="num"' + (i === hl ? ' style="color:var(--pink-ink)"' : "") + '>' + c[1] + '</span></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">Your kitchen, fees and a contingency are on top. A garage conversion is usually the cheapest way to add space.</p></div>');
+    H.push('<div class="box"><h3>Other things to budget for</h3><ul class="dash one"><li>Structural engineer</li><li>Party Wall surveyor, if a neighbour appoints one</li><li>Thames Water build-over agreement, if needed</li><li>A contingency: I suggest keeping 10–15% aside</li></ul></div>');
+    var site = {}; r.site.forEach(function (s) { site[s.k] = s.note || true; });
+    var other = [];
+    if (site.boundary || /Semi|terrace/.test(r.houseType) || Number(r.distL) < 3 || Number(r.distR) < 3) other.push(["Party Wall Act", partyWall(r, site)]);
+    other.push(["Building Regulations", "Needed whichever planning route you take. I recommend Full Plans approval."]);
+    if (site.drains) other.push(["Drainage", (typeof site.drains === "string" ? esc(site.drains) + ". " : "") + "A public sewer under or near the new work needs a build-over agreement with Thames Water. A CCTV survey answers it."]);
+    if (site.trees) other.push(["Trees", (typeof site.trees === "string" ? esc(site.trees) + ". " : "") + "Trees close to the work can mean deeper foundations."]);
+    if (site.levels) other.push(["Levels", (typeof site.levels === "string" ? esc(site.levels) + ". " : "") + "The change in level affects steps, drainage and foundations."]);
+    if (!has(r.types, /^Porch$/) || r.types.length > 1) other.push(["Structure", "Steel beams and foundations, sized by the structural engineer."]);
+    H.push('<div><h3>Beyond planning</h3><div class="tbl other" style="--cols: 12rem minmax(0, 1fr)"><div class="r h"><span>Item</span><span>What it means for you</span></div>' + other.map(function (o) { return '<div class="r"><span class="k">' + o[0] + '</span><span>' + o[1] + '</span></div>'; }).join("") + '</div></div>');
+    H.push('</div></article>');
+
+    /* local values */
+    var vals = values(r);
+    if (vals) { sec++; H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Local values</h2></div>' + vals + '</div></article>'); }
+
+    /* next steps */
+    sec++;
+    var step3 = pa ? ["Prior approval application", "Submitted and followed up for you. The council has 42 days to decide."] : hh ? ["Planning application", "Submitted and followed up for you. The council&rsquo;s target is 8 weeks."] : (pd || ldc) ? ["Lawful Development Certificate", "Submitted and followed up for you. The council&rsquo;s target is 8 weeks."] : ["The right application", "Submitted and followed up for you."];
+    H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Next steps</h2></div><ol class="steps">' +
+      '<li><div><b>Measured survey and full brief</b><p>I come back to measure everything and write up your full design brief.</p></div></li>' +
+      '<li><div><b>Your design in 3D</b><p>Drawings modelled in 3D with photo-real images, so you can see the space before it&rsquo;s built.</p></div></li>' +
+      '<li><div><b>' + step3[0] + '</b><p>' + step3[1] + '</p></div></li>' +
+      '<li><div><b>Building Regulations and structure</b><p>Construction drawings and structural calculations, so builders can price like for like.</p></div></li>' +
+      '<li><div><b>Builders</b><p>Introductions to local builders I&rsquo;ve worked with.</p></div></li></ol>');
+    H.push('<div class="guar"><h3>Fixed price. Planning guarantee.</h3><ul class="dash"><li>One fixed price, agreed up front</li><li>Unlimited revisions up to submission</li><li>If planning is refused, I revise the design and resubmit at no extra cost</li><li>Every project in 3D with photo-real images</li></ul></div>');
+    if (quote) H.push('<div class="quote"><div><b>Your fixed-price quote is ready</b><p>Everything in this report, designed and submitted for one fixed price.</p></div><a class="btn" href="' + esc(quote) + '">View your quote</a></div>');
+    H.push('<div><h3 style="font-size:1rem">Where this information comes from</h3><p class="small">planning.data.gov.uk · ' + esc(r.council ? r.council + " planning register" : "Council planning register") + ' · Historic England National Heritage List · Environment Agency flood maps · The Town and Country Planning (General Permitted Development) (England) Order 2015 · Party Wall etc. Act 1996</p></div>');
+    H.push('<p class="lead" style="font-size:.93rem">This report is based on a 30-minute visit and the public records for your address on the date shown. It&rsquo;s a first look at what&rsquo;s possible, not a full planning appraisal, a survey or a builder&rsquo;s quote. Once you go ahead, I check everything in detail as part of the design.</p>');
+    H.push('<p class="lead" style="font-size:.93rem">Any questions, just message me.<br><b>Carl Collins BSc (Hons)</b></p></div></article>');
+    $("main").innerHTML = H.join("");
+    document.title = "Feasibility report" + (r.address ? ", " + r.address.split(",")[0] : "") + " | Residential Architecture";
+  }
+
+  function money0(n) { return "\u00a3" + Math.round(Number(n) || 0).toLocaleString("en-GB"); }
+  function tc(t) { return String(t || "").toLowerCase().replace(/(^|[\s,(-])([a-z])/g, function (m, a, b) { return a + b.toUpperCase(); }); }
+  function cap(t) { t = String(t || ""); return t.charAt(0).toUpperCase() + t.slice(1); }
+  var AGE = { A: "Before 1900", B: "1900 to 1929", C: "1930 to 1949", D: "1950 to 1966", E: "1967 to 1975", F: "1976 to 1982", G: "1983 to 1990", H: "1991 to 1995", I: "1996 to 2002", J: "2003 to 2006", K: "2007 to 2011", L: "2012 to 2022", M: "2023 or later" };
+  function ageBand(a) { a = String(a || "").replace(/^England and Wales:\s*/i, "").trim(); return AGE[a.toUpperCase()] || a.replace(/-/g, " to "); }
+  function extArea(r) {
+    var W = Number(r.width) || 0, E = has(r.types, /Rear|Wrap/) ? Number(r.extDepth) || 0 : 0, EW = Math.min(Number(r.extWidth) || W, W || 99), SW = has(r.types, /Side|Wrap/) ? Number(r.sideWidth) || 0 : 0, D = Number(r.houseDepth) || 0;
+    var a = E * EW + SW * (D || 0) + (has(r.types, /Wrap/) ? SW * E : 0);
+    return Math.round(a * 10) / 10;
+  }
+  function extNumbers(r) {
+    var a = extArea(r); if (!a) return "";
+    var gross = r.data && r.data.epc && Number(r.data.epc.area), tiles = [];
+    var internal = Math.round(a * 0.85);
+    tiles.push(['Space added', 'About ' + internal + ' m\u00b2', 'Inside the new walls, from your ' + (Math.round(a * 10) / 10) + ' m\u00b2 footprint']);
+    if (gross) tiles.push(['Your house after', 'About ' + Math.round(gross + internal) + ' m\u00b2', 'Up from ' + Math.round(gross) + ' m\u00b2, ' + Math.round(internal / gross * 100) + '% more space']);
+    var glaz = Math.round((internal * 0.25 + (Number(r.glazLost) || 0)) * 10) / 10;
+    tiles.push(['Glazing allowance', glaz + ' m\u00b2', 'Windows, glazed doors and rooflights before an energy calculation is needed']);
+    return '<div><h3>Your extension in numbers</h3><div class="tiles' + (tiles.length === 2 ? ' t2' : '') + '">' + tiles.map(function (t) { return '<div class="tile"><span>' + t[0] + '</span><b>' + t[1] + '</b><small>' + t[2] + '</small></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">Building Regulations allow glazing up to a quarter of the new floor area' + (Number(r.glazLost) ? ', plus the ' + esc(r.glazLost) + ' m\u00b2 of windows and doors being removed' : '') + '. Wider glazing is fine; it just needs an energy calculation, which I include in the Building Regulations stage.</p></div>';
+  }
+  function sunTimes(lat, lng, month, day) {
+    var rad = Math.PI / 180, N = Math.floor((Date.UTC(2026, month - 1, day) - Date.UTC(2026, 0, 0)) / 864e5);
+    var decl = 23.44 * Math.sin(rad * 360 / 365 * (N - 81)), cosH = (Math.sin(-0.833 * rad) - Math.sin(lat * rad) * Math.sin(decl * rad)) / (Math.cos(lat * rad) * Math.cos(decl * rad));
+    var H = Math.acos(Math.max(-1, Math.min(1, cosH))) / rad / 15, noon = 12 - lng / 15, bst = month > 3 && month < 11 ? 1 : 0;
+    var f = function (h) { h += bst; var hh = Math.floor(h), mm = Math.round((h - hh) * 60); if (mm === 60) { hh++; mm = 0; } return hh + ":" + ("0" + mm).slice(-2); };
+    return { rise: f(noon - H), set: f(noon + H), noonAlt: Math.round(90 - lat + decl) };
+  }
+  function sun(r) {
+    if (!r.faces) return "";
+    var T = {
+      "North": "Your garden faces north, so the back of the house gets little direct sun. Roof lanterns and rooflights matter most here: they bring daylight deep into the new room.",
+      "North-east": "Your garden faces north-east: gentle early-morning sun, then shade. Rooflights or a lantern will do most of the work bringing light in.",
+      "East": "Your garden faces east: bright morning sun at the back of the house, shade by the afternoon. Good for a kitchen used at breakfast.",
+      "South-east": "Your garden faces south-east: sun from early morning until early afternoon. A lovely aspect for a kitchen-diner.",
+      "South": "Your garden faces south: sun for most of the day. Large glazing works well, but needs shading or solar-control glass so the room doesn\u2019t overheat in summer.",
+      "South-west": "Your garden faces south-west: sun from late morning into the evening, the most sought-after aspect. Big glazing will need solar-control glass or an overhang for summer afternoons.",
+      "West": "Your garden faces west: afternoon and evening sun at the back. Wonderful on summer evenings; plan for low sun glare and heat late in the day.",
+      "North-west": "Your garden faces north-west: shade most of the day, with summer evening sun. Rooflights or a lantern will keep the room bright."
+    };
+    var t = '<p class="lead">' + (T[r.faces] || "") + '</p>';
+    var lat = Number(r.lat), lng = Number(r.lng);
+    if (lat && lng) {
+      var su = sunTimes(lat, lng, 6, 21), wi = sunTimes(lat, lng, 12, 21);
+      t += '<div class="tiles"><div class="tile"><span>Midsummer</span><b>' + su.rise + ' to ' + su.set + '</b><small>Sunrise to sunset on 21 June, sun ' + su.noonAlt + '\u00b0 high at midday</small></div><div class="tile"><span>Midwinter</span><b>' + wi.rise + ' to ' + wi.set + '</b><small>On 21 December the sun is only ' + wi.noonAlt + '\u00b0 high at midday</small></div><div class="tile"><span>Your aspect</span><b>' + esc(r.faces) + '</b><small>Which way the back of the house faces</small></div></div>';
+    }
+    return '<div><h3>Sun and orientation</h3>' + t + '</div>';
+  }
+  function partyWall(r, site) {
+    var near = Math.min(Number(r.distL) || 99, Number(r.distR) || 99), note = typeof site.boundary === "string" ? esc(site.boundary) + ". " : "";
+    if (/Semi|terrace/.test(r.houseType)) return note + "Your house is attached, so the new foundations will be dug within 3m of next door. That needs a Party Wall notice at least one month before work starts.";
+    if (near < 3) return note + "The extension comes within " + near + "m of the boundary. If next door&rsquo;s house is within 3m of the new foundations, a Party Wall notice is needed at least one month before work starts.";
+    return note + "Work on or near the boundary needs notices to the neighbours at least one month before work starts.";
+  }
+  function map(r) {
+    var lat = Number(r.lat), lng = Number(r.lng); if (!lat || !lng) return "";
+    var z = 17, n = Math.pow(2, z), xt = (lng + 180) / 360 * n, lr = lat * Math.PI / 180, yt = (1 - Math.log(Math.tan(lr) + 1 / Math.cos(lr)) / Math.PI) / 2 * n;
+    var tx = Math.floor(xt), ty = Math.floor(yt), px = (xt - tx) * 256, py = (yt - ty) * 256, imgs = [];
+    for (var dx = -2; dx <= 2; dx++) for (var dy = -1; dy <= 1; dy++) imgs.push('<img src="https://tile.openstreetmap.org/' + z + '/' + (tx + dx) + '/' + (ty + dy) + '.png" alt="" style="position:absolute;left:' + ((dx + 2) * 256) + 'px;top:' + ((dy + 1) * 256) + 'px;width:256px;height:256px">');
+    return '<div><div style="position:relative;height:220px;overflow:hidden;border-radius:12px;background:#EEE"><div style="position:absolute;left:calc(50% - ' + Math.round(512 + px) + 'px);top:calc(50% - ' + Math.round(256 + py) + 'px);width:1280px;height:768px">' + imgs.join("") + '</div><span aria-hidden="true" style="position:absolute;left:50%;top:50%;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:#E6007A;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.35)"></span></div><p class="small" style="margin-top:.35rem">Your home. Map &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.</p></div>';
+  }
+  /* Typical heat loss of the existing construction (RdSAP default U-values) against what new work must reach (Approved Document L, 2021) */
+  function uOld(kind, txt) {
+    txt = String(txt || "").toLowerCase(); if (!txt || /another dwelling/.test(txt)) return null;
+    if (kind === "walls") return /solid/.test(txt) && !/insulat(ed|ion)\b(?! \(assumed\))/.test(txt.replace(/no insulation/, "")) ? 2.1 : /cavity/.test(txt) && /filled|insulated/.test(txt) && !/partial/.test(txt) ? 0.5 : /cavity/.test(txt) && /partial/.test(txt) ? 0.7 : /cavity/.test(txt) ? 1.5 : null;
+    if (kind === "roof") { if (/no insulation/.test(txt)) return 2.3; var mm = (/(\d+)\s*mm/.exec(txt) || [])[1]; mm = Number(mm); return mm >= 270 ? 0.16 : mm >= 200 ? 0.21 : mm >= 150 ? 0.29 : mm >= 100 ? 0.4 : mm >= 50 ? 0.68 : mm > 0 ? 1.0 : null; }
+    if (kind === "floor") return /no insulation/.test(txt) ? 0.7 : /insulated/.test(txt) ? 0.25 : null;
+    if (kind === "windows") return /single/.test(txt) ? 4.8 : /triple/.test(txt) ? 1.2 : /double/.test(txt) ? 2.8 : null;
+    return null;
+  }
+  function numbers(r) {
+    var e = r.data && r.data.epc; if (!e) return "";
+    var rows = [["Energy rating", e.band ? e.band + (e.potential && e.potential !== e.band ? " (could reach " + e.potential + ")" : "") : ""], ["Built", ageBand(e.age)], ["Floor area", e.area ? e.area + " m\u00b2" : ""], ["Walls", e.walls], ["Roof", e.roof], ["Floor", e.floor], ["Windows", e.windows], ["Heating", e.heating]].filter(function (x) { return x[1]; });
+    if (!rows.length) return "";
+    var BANDS = [["A", "92+", "#008054", 40], ["B", "81\u201391", "#19B459", 48], ["C", "69\u201380", "#8DCE46", 56], ["D", "55\u201368", "#FFD500", 64], ["E", "39\u201354", "#FCAA65", 72], ["F", "21\u201338", "#EF8023", 80], ["G", "1\u201320", "#E9153B", 88]];
+    var cur = String(e.band || "").toUpperCase().charAt(0), pot = String(e.potential || "").toUpperCase().charAt(0);
+    var chart = /^[A-G]$/.test(cur) ? '<div class="epcbar" role="img" aria-label="Energy rating ' + cur + (pot ? ', could reach ' + pot : '') + '"><div class="hd"><span>Energy rating</span><span>Now</span><span>Could be</span></div>' + BANDS.map(function (b) { var dark = /[CDE]/.test(b[0]) ? "#1F1E26" : "#fff"; return '<div><i style="width:' + b[3] + '%;background:' + b[2] + ';color:' + dark + '">' + b[0] + ' <small style="font-weight:400">' + b[1] + '</small></i><span>' + (cur === b[0] ? '<b style="background:' + b[2] + ';color:' + dark + '">' + cur + '</b>' : '') + '</span><span>' + (pot === b[0] ? '<b style="background:' + b[2] + ';color:' + dark + '">' + pot + '</b>' : '') + '</span></div>'; }).join("") + '</div>' : '';
+    return '<div><h3>How your house is built</h3><div class="tbl other" style="--cols: 8rem minmax(0, 1fr) 7.5rem"><div class="r h"><span>Element</span><span>Your house</span><span>New extension</span></div>' + rows.map(function (x) { var NEW = { Walls: ["walls", 0.18], Roof: ["roof", 0.15], Floor: ["floor", 0.18], Windows: ["windows", 1.4] }[x[0]], o = NEW ? uOld(NEW[0], x[1]) : null; return '<div class="r"><span class="k">' + x[0] + '</span><span>' + esc(cap(x[1])) + (o ? '<br><small style="color:var(--grey)">Typical heat loss ' + o + ' W/m\u00b2K</small>' : '') + '</span><span>' + (NEW ? '<b style="color:var(--ok)">' + NEW[1] + ' W/m\u00b2K</b>' + (o && o / NEW[1] >= 1.5 ? '<br><small style="color:var(--grey)">' + Math.round(o / NEW[1]) + '\u00d7 better</small>' : '') : '') + '</span></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">From the government&rsquo;s EPC register' + (e.date ? ", certificate dated " + esc(day(String(e.date).slice(0, 10))) : "") + '. New extension figures are the Building Regulations limits for new work; heat loss for your house is typical for its construction. I confirm the construction on site at the measured survey.</p></div>';
+  }
+  function values(r) {
+    var d = r.data || {}, h = d.hpi, sales = d.sales || [];
+    if (!h && !sales.length) return "";
+    var type = /Detached|Bungalow/.test(r.houseType) ? ["detached", "Detached homes", h && h.detached, h && h.changeDetached] : /Semi/.test(r.houseType) ? ["semi", "Semi-detached homes", h && h.semi, h && h.changeSemi] : /terrace/.test(r.houseType) ? ["terraced", "Terraced homes", h && h.terraced, h && h.changeTerraced] : ["all", "All homes", h && h.all, h && h.change];
+    var out = [];
+    if (h) {
+      var m = new Date(h.month + "-15").toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+      out.push('<div class="tiles t2"><div class="tile"><span>' + type[1] + ' in ' + esc(r.council) + '</span><b>' + money0(type[2] || h.all) + '</b><small>Average price, ' + m + '</small></div><div class="tile"><span>Change over a year</span><b>' + (Number(type[3]) > 0 ? "+" : "") + esc(type[3] != null ? type[3] : h.change) + '%</b><small>' + type[1] + ' in ' + esc(r.council) + '</small></div></div>');
+    }
+    if (sales.length) out.push('<div><h3>Recent sales in your street</h3><div class="tbl cost" style="--cols: minmax(0, 1fr) auto"><div class="r h"><span>Home and date</span><span class="num">Sold for</span></div>' + sales.map(function (x) { return '<div class="r"><span class="k">' + esc(tc([x.num, x.street].filter(Boolean).join(" "))) + (x.type ? " &middot; " + esc(({ "semi-detached": "Semi-detached", "flat-maisonette": "Flat or maisonette", "terraced": "Terraced", "detached": "Detached", "other": "Other" })[String(x.type).toLowerCase()] || cap(x.type)) : "") + '<br><small style="font-weight:400;color:var(--grey)">' + esc(new Date(x.date).toLocaleDateString("en-GB", { month: "long", year: "numeric" })) + '</small></span><span class="num">' + money0(x.price) + '</span></div>'; }).join("") + '</div></div>');
+    out.push('<p class="small">Sold prices and averages from HM Land Registry. A guide to the local market, not a valuation of your home.</p>');
+    return out.join("");
+  }
+  function design(r) {
+    var P = (window.RA_POLICY || {})[r.council], out = [];
+    var ANS = { d45: "45-degree line to neighbours&rsquo; windows", privacy: "Overlooking and privacy", scale: "Size against the house", precedent: "Similar extensions nearby", parking: "Parking after the work" };
+    var rows = Object.keys(ANS).filter(function (k) { return r.design && r.design[k]; }).map(function (k) { var a = r.design[k]; return '<div class="r"><span class="k">' + ANS[k] + '</span><span class="' + (/Clear|Fine|Yes/.test(a.a) ? "ok" : /N\/A|Not sure/.test(a.a) ? "" : "pk") + '">' + esc(a.a) + (a.note ? '<br><small style="font-weight:400;color:var(--text)">' + esc(a.note) + '</small>' : "") + '</span></div>'; });
+    if (r.materials) rows.push('<div class="r"><span class="k">Materials</span><span>' + esc(r.materials) + '</span></div>');
+    if (r.character) rows.push('<div class="r"><span class="k">Street character</span><span>' + esc(r.character) + '</span></div>');
+    if (rows.length || r.designNotes) out.push('<div><h3>Design assessment</h3>' + (rows.length ? '<div class="tbl other" style="--cols: 13rem minmax(0, 1fr)"><div class="r h"><span>What I checked</span><span>My view</span></div>' + rows.join("") + '</div>' : "") + (r.designNotes ? '<p class="lead" style="margin-top:.7rem">' + esc(r.designNotes) + '</p>' : "") + '</div>');
+    if (P) out.push('<div class="box pink"><h3>' + esc(r.council) + ' planning policy</h3><p class="lead" style="margin-bottom:.6rem">' + P.intro + '</p>' + (P.rules && P.rules.length ? '<ul class="dash one">' + P.rules.map(function (x) { return '<li>' + x + '</li>'; }).join("") + '</ul>' : "") + '</div>');
+    return out.join("");
+  }
+  /* Plan of the house and extension, drawn to scale when the house measurements are known. */
+  function plan(r, l1, l2) {
+    var W = Number(r.width) || 7, D = Number(r.houseDepth) || 0, scaled = !!(Number(r.width) && D);
+    if (!D) D = 6;
+    var E = has(r.types, /Rear|Wrap/) ? Number(r.extDepth) || 0 : 0, EW = Math.min(Number(r.extWidth) || W, W);
+    var SW = has(r.types, /Side|Wrap/) ? Number(r.sideWidth) || 0 : 0;
+    var attached = /Semi|terrace/.test(r.houseType), mid = /Mid terrace/.test(r.houseType), rightAtt = /Right/.test(r.attached);
+    var gapR = Number(rightAtt ? r.distL : r.distR) || 0;
+    var depthM = D + Math.max(l2, E) + 0.8, widthM = W + Math.max(SW, gapR, 1) + 0.5;
+    var s = Math.min(300 / widthM, 360 / depthM), x0 = attached ? 70 : 30, y0 = 10, hx = W * s, hy = D * s, rear = y0 + hy, H = Math.round(rear + Math.max(l2, E) * s + 22);
+    var Y = function (m) { return Math.round(rear + m * s); }, f = function (n) { return Math.round(n * 10) / 10; };
+    var g = [], right = x0 + hx;
+    if (attached) g.push('<rect x="4" y="' + y0 + '" width="' + (x0 - 4) + '" height="' + Math.round(hy) + '" fill="#EDEDF0" stroke="#9A9DA4"/><text x="' + ((x0 + 4) / 2) + '" y="' + Math.round(y0 + hy / 2 + 4) + '" text-anchor="middle" font-size="12" fill="#6A6875">Next door</text>');
+    if (mid) g.push('<rect x="' + right + '" y="' + y0 + '" width="60" height="' + Math.round(hy) + '" fill="#EDEDF0" stroke="#9A9DA4"/>');
+    g.push('<rect x="' + x0 + '" y="' + y0 + '" width="' + Math.round(hx) + '" height="' + Math.round(hy) + '" fill="#D5D7DB" stroke="#1F1E26" stroke-width="2"/><text x="' + Math.round(x0 + hx / 2) + '" y="' + Math.round(y0 + hy / 2) + '" text-anchor="middle" font-size="15" font-weight="700" fill="#1F1E26">Your house</text>' + (scaled ? '<text x="' + Math.round(x0 + hx / 2) + '" y="' + Math.round(y0 + hy / 2 + 18) + '" text-anchor="middle" font-size="12" fill="#3A3944">' + f(W) + 'm wide, ' + f(D) + 'm deep</text>' : ''));
+    if (E) {
+      var ex = rightAtt ? right - EW * s : x0;
+      g.push('<rect x="' + Math.round(ex) + '" y="' + Math.round(rear) + '" width="' + Math.round(EW * s) + '" height="' + (Y(E) - Math.round(rear)) + '" fill="#FFD6EA" stroke="#B8005F" stroke-width="2"/><text x="' + Math.round(ex + EW * s / 2) + '" y="' + Math.round(rear + Math.min(E * s / 2 + 5, 26)) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#8A0047">' + f(E) + 'm extension</text>');
+    }
+    if (SW && !mid) {
+      var sx = rightAtt ? x0 - SW * s : right, sd = has(r.types, /Wrap/) ? D + E : D;
+      g.push('<rect x="' + Math.round(sx) + '" y="' + y0 + '" width="' + Math.round(SW * s) + '" height="' + Math.round(sd * s) + '" fill="#FFD6EA" stroke="#B8005F" stroke-width="2"/><text x="' + Math.round(sx + SW * s / 2) + '" y="' + Math.round(y0 + 18) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#8A0047">' + f(SW) + 'm</text>');
+      if (!rightAtt) right = right + SW * s;
+    }
+    var bx = Math.round((rightAtt ? x0 : x0 + hx) + (gapR ? gapR * s : Math.max(SW * s, 18) + 10) * (rightAtt ? -1 : 1));
+    g.push('<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (H - 4) + '" stroke="#1F1E26" stroke-width="1.2"/>');
+    if (!rightAtt) g.push('<line x1="' + bx + '" y1="' + y0 + '" x2="' + bx + '" y2="' + (H - 4) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="2 4"/><text x="' + (bx + 5) + '" y="' + (y0 + 11) + '" font-size="12" fill="#6A6875">Boundary</text>');
+    var lx = Math.max(bx, right) + 14;
+    if (has(r.types, /Rear|Wrap/)) {
+      g.push('<line x1="4" y1="' + Y(l1) + '" x2="' + lx + '" y2="' + Y(l1) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="7 5"/><text x="' + (lx + 6) + '" y="' + (Y(l1) - 3) + '" font-size="13" font-weight="700" fill="#1F1E26">' + l1 + 'm<tspan x="' + (lx + 6) + '" dy="15" font-weight="400" font-size="12">permitted development</tspan></text>');
+      g.push('<line x1="4" y1="' + Y(l2) + '" x2="' + lx + '" y2="' + Y(l2) + '" stroke="#B8005F" stroke-width="1.5" stroke-dasharray="7 5"/><text x="' + (lx + 6) + '" y="' + (Y(l2) - 3) + '" font-size="13" font-weight="700" fill="#B8005F">' + l2 + 'm<tspan x="' + (lx + 6) + '" dy="15" font-weight="400" font-size="12">limit with prior approval</tspan></text>');
+    }
+    var vbw = Math.round(lx + 165);
+    return '<div class="plan"><h3>What you can build, and how</h3><svg viewBox="0 0 ' + vbw + ' ' + H + '" role="img" aria-label="Plan of your house and the proposed extension" style="font-family: \'DM Sans\', sans-serif">' + g.join("") + '</svg><p>' + (scaled ? "Drawn to scale from my measurements on site. Depths measured from the back of the original house." : "Not to scale. Depths measured from the back of the original house.") + '</p></div>';
+  }
+
+  /* ---------- load ---------- */
+  var qs = new URLSearchParams(location.search), tok = qs.get("r"), id = location.hash.replace("#", "");
+  if (qs.get("preview") && id) {
+    var v = null; try { v = JSON.parse(localStorage.getItem("visit|" + id)); } catch (e) {}
+    if (!v) { $("msg").textContent = "This visit isn't saved on this device."; return; }
+    var rep = toReport(v);
+    render(rep, v.quoteLink || "");
+    /* photos still waiting to upload: show them from this iPad */
+    var open = indexedDB.open("ra-visit", 1);
+    open.onupgradeneeded = function () { open.result.createObjectStore("photos"); };
+    open.onsuccess = function () {
+      document.querySelectorAll("img.ph[data-k]").forEach(function (img) {
+        if (img.getAttribute("src")) return;
+        var g = open.result.transaction("photos").objectStore("photos").get(img.getAttribute("data-k"));
+        g.onsuccess = function () { if (g.result) img.src = g.result; };
+      });
+    };
+    $("pv").hidden = false; $("pv-edit").href = "/quote/visit/#" + id;
+    if (v.report && v.report.link) showLink(v, v.report.link, true);
+    $("pv-go").onclick = function () {
+      var b = this, err = $("pv-err"); err.hidden = true;
+      if (rep.photos.some(function (p) { return !p.url; })) { err.textContent = "Some photos haven't uploaded yet. Open the visit with signal and wait for them to say Uploaded."; err.hidden = false; return; }
+      if (!RA.pass()) { err.textContent = "Connect on the visit page first."; err.hidden = false; return; }
+      b.disabled = true; b.textContent = "Saving…";
+      RA.api({ action: "visit-release", pass: RA.pass(), id: v.id, report: rep }).then(function (r) {
+        b.disabled = false; b.textContent = "Update the report";
+        if (!r || !r.ok) { err.textContent = r && r.error === "not-found" ? "Save the visit to your sheet first (open the visit with signal)." : "Couldn't save the report. Try again."; err.hidden = false; return; }
+        v.report = { link: r.link, token: r.token, released: Date.now() };
+        try { localStorage.setItem("visit|" + id, JSON.stringify(v)); } catch (e) {}
+        showLink(v, r.link, false);
+      }).catch(function () { b.disabled = false; b.textContent = "Ready for the quote"; err.textContent = "No connection. Try again with signal."; err.hidden = false; });
+    };
+    return;
+  }
+  function showLink(v, link, before) {
+    $("pv-out").hidden = false; $("pv-link").value = link;
+    $("pv-t").textContent = before ? "Ready for the quote. Changes show once you update it" : "Ready for the quote";
+    $("pv-go").textContent = "Update the report";
+    $("pv-copy").onclick = function () { try { navigator.clipboard.writeText(link); } catch (e) {} this.textContent = "Copied"; };
+  }
+  if (qs.get("demo") || /^\/feasibility-report\//.test(location.pathname)) {
+    var demo = { v: 1, name: "Sarah", fullName: "Sarah and Tom Jones", address: "8 Example Road, Maidenhead", postcode: "SL6 4ET", council: "Windsor and Maidenhead", date: "2026-10-15",
+      title: "Single-storey rear extension", types: ["Rear extension"], words: "The kitchen feels dark and cut off from the garden. We want one big space where the kids can play while we cook.",
+      wants: ["Open-plan kitchen", "Dining space", "Bi-folds or sliders", "Roof lantern"], wantsOther: "", size: "About 4m deep, full width", roof: "Flat roof",
+      extDepth: "4", extWidth: "", sideWidth: "", houseDepth: "8.2", distL: "", distR: "1.2", houseType: "Semi-detached", age: "1970s\u201380s", width: "7.5", depth: "22",
+      earlier: "Small rear extension", earlierPlan: "Comes down for the new one", faces: "South-west", lat: 51.5228, lng: -0.7196, glazLost: "3.5", ground: "Level", attached: "Left (from the garden)",
+      site: [{ k: "boundary", note: "The wall to no. 6 sits on the boundary" }],
+      photos: [{ url: "/img/sample-rear.jpg", caption: "The back of the house. The small existing extension comes down to make way for the new one." }, { url: "/img/sample-front.jpg", caption: "The front of the house, with the garage to the side." }],
+      checks: { conservation: "None found", article4: "None found", listed: "None found", greenBelt: "None found", aonb: "None found", flood: "Zone 1", trees: "None found", pdRights: "Intact", history: "Only the small rear extension" },
+      route: "Prior approval", risk: "Low",
+      things: ["Up to 3m deep is permitted development, so no planning application, but I'd still get a Lawful Development Certificate to prove it. Your 4m design uses prior approval, where the council writes to your neighbours and has 42 days to decide.", "The wall to no. 6 is on the boundary, so Party Wall notices will be needed. Serve them early.", "Wide glazing across the back will probably need an energy calculation at Building Regulations stage."],
+      materials: "Red brick, concrete roof tiles", character: "Uniform: houses look alike", designNotes: "A flat roof with a low parapet keeps the extension well below the first-floor windows next door, and brick to match keeps it in character with the street.",
+      design: { d45: { a: "Clear", note: "Single storey, so the line from next door's kitchen window is clear" }, privacy: { a: "Fine", note: "" }, scale: { a: "Fine", note: "" }, precedent: { a: "Yes", note: "Two similar extensions in the road" }, parking: { a: "Fine", note: "Driveway for two cars kept" } },
+      nearby: [{ what: "4m rear extension, same road", decision: "Approved", note: "4m next to an attached neighbour is accepted here." }, { what: "6m rear extension, two streets away", decision: "Refused", note: "Too close to a neighbour's kitchen window. 4m stays clear of that." }, { what: "Wrap-around extension, next road", decision: "Approved", note: "Flat roofs with lanterns are accepted locally." }, { what: "4.5m prior approval, same estate", decision: "Approved", note: "No objections from the neighbours, approved in 41 days." }, { what: "Two-storey rear extension, nearby", decision: "Refused", note: "Failed the 45-degree test to next door. Single storey avoids this." }],
+      data: { epc: { band: "D", potential: "B", age: "E", area: 92, walls: "Cavity wall, as built, partial insulation (assumed)", roof: "Pitched, 100 mm loft insulation", floor: "Solid, no insulation (assumed)", windows: "Fully double glazed", heating: "Boiler and radiators, mains gas", date: "2019-05-02" },
+        sales: [{ date: Date.parse("2025-03-21"), price: 615000, type: "semi-detached", num: "14", street: "EXAMPLE ROAD" }, { date: Date.parse("2024-10-02"), price: 590000, type: "semi-detached", num: "3", street: "EXAMPLE ROAD" }, { date: Date.parse("2023-06-16"), price: 642500, type: "semi-detached", num: "21", street: "EXAMPLE ROAD" }, { date: Date.parse("2022-01-28"), price: 560000, type: "semi-detached", num: "9", street: "EXAMPLE ROAD" }],
+        hpi: { month: "2026-06", all: 580299, semi: 607297, change: -1.6, changeSemi: -0.4 } } };
+    render(demo, "");
+    var b = document.createElement("div"); b.className = "pv"; b.innerHTML = '<div class="wrap"><b>Sample report: the house, names and figures are examples</b></div>'; document.body.insertBefore(b, document.body.firstChild);
+    return;
+  }
+  if (!tok) { $("msg").innerHTML = 'This link is incomplete. Please <a href="https://wa.me/447515334455">message Carl on WhatsApp</a> and he&rsquo;ll resend it.'; return; }
+  RA.api({ action: "report-get", r: tok }).then(function (res) {
+    if (!res || !res.ok) { $("msg").innerHTML = 'Sorry, this report could not be opened. Please <a href="https://wa.me/447515334455">message Carl on WhatsApp</a> and he&rsquo;ll resend it.'; return; }
+    render(res.report, res.quote || "");
+  }).catch(function () { $("msg").innerHTML = 'Sorry, this report could not be opened right now. Please try again in a moment.'; });
+})();
+</script>
 </body>
 </html>

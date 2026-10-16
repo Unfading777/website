@@ -536,7 +536,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     $("pv-go").textContent = "Update the report";
     $("pv-copy").onclick = function () { try { navigator.clipboard.writeText(link); } catch (e) {} this.textContent = "Copied"; };
   }
-  if (qs.get("demo")) {
+  if (qs.get("demo") || /^\/feasibility-report\//.test(location.pathname)) {
     var demo = { v: 1, name: "Sarah", fullName: "Sarah and Tom Jones", address: "8 Example Road, Maidenhead", postcode: "SL6 4ET", council: "Windsor and Maidenhead", date: "2026-10-15",
       title: "Single-storey rear extension", types: ["Rear extension"], words: "The kitchen feels dark and cut off from the garden. We want one big space where the kids can play while we cook.",
       wants: ["Open-plan kitchen", "Dining space", "Bi-folds or sliders", "Roof lantern"], wantsOther: "", size: "About 4m deep, full width", roof: "Flat roof",
