@@ -318,7 +318,7 @@ details.alt .bank { margin-top:.9rem; }
       ks.hidden = !okK;
       if (okK) {
         $("kstart-amt").textContent = RA.money(Math.round(depNow / 3 * 100) / 100);
-        $("kstart-head").textContent = ends ? "Get started today, while your discount lasts, for as little as" : "Get started today for as little as";
+        $("kstart-head").textContent = ends ? "Get started today, while your discount is open, for as little as" : "Get started today for as little as";
         if (ends) { if (ks.parentNode !== $("offer")) $("offer").appendChild(ks); ks.classList.remove("out"); }
         else { var tm = document.querySelector("#feecard .terms"); if (ks.nextSibling !== tm) tm.parentNode.insertBefore(ks, tm); ks.classList.add("out"); }
       }
