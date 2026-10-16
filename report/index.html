@@ -237,7 +237,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
   function toReport(v) {
     var things = ["t1", "t2", "t3", "t4"].map(function (k) { return String(v[k] || "").trim(); }).filter(Boolean);
     return {
-      v: 1, id: v.id, name: first(v.name), address: v.address || "", postcode: v.postcode || "", council: v.council || "", date: v.date || "",
+      v: 1, id: v.id, name: first(v.name), fullName: String(v.name || "").trim(), address: v.address || "", postcode: v.postcode || "", council: v.council || "", date: v.date || "",
       title: v.title || (v.types || []).join(" and ") || "Your project", types: v.types || [], words: v.words || "", wants: v.wants || [], wantsOther: v.wantsOther || "",
       size: v.size || "", roof: v.roof || "", extDepth: v.extDepth || "", extWidth: v.extWidth || "", sideWidth: v.sideWidth || "", houseDepth: v.houseDepth || "", distL: v.distL || "", distR: v.distR || "", houseType: v.houseType || "", age: v.age || "", width: v.width || "", depth: v.depth || "",
       earlier: v.earlier || "", earlierPlan: v.earlierPlan || "", ground: v.ground || "", attached: v.attached || "",
@@ -264,7 +264,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     /* cover */
     H.push('<article class="sheet"><div class="cover"><div class="row"><div class="who"><span class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span><div><b>Residential Architecture</b><small>Carl Collins BSc (Hons)</small></div></div></div>');
     H.push('<div><span class="kick">Feasibility report</span><h2>' + esc(r.title) + '</h2><p class="addr">' + esc([r.address, r.postcode].filter(Boolean).join(", ")) + '</p></div>');
-    H.push('<div class="meta"><div>Local authority<b>' + esc(r.council || "To confirm") + '</b></div><div>Based on<b>My visit and the public records for your home</b></div><div>Visit date<b>' + esc(day(r.date)) + '</b></div></div></div>');
+    H.push('<div class="meta">' + (r.fullName ? '<div>Prepared for<b>' + esc(r.fullName) + '</b></div>' : '<div>Based on<b>My visit and the public records for your home</b></div>') + '<div>Local authority<b>' + esc(r.council || "To confirm") + '</b></div><div>Visit date<b>' + esc(day(r.date)) + '</b></div></div><p style="margin:0;color:#C9C7D4;font-size:.9rem">Prepared by Carl Collins BSc (Hons), Residential Architecture</p></div>');
     /* summary */
     var hello = (r.name ? "Thank you for showing me round, " + esc(r.name) + ". " : "Thank you for showing me round. ") + "Here&rsquo;s what I found from my visit and the public records for your home.";
     H.push('<div class="pad"><div class="sec-head"><h2>The answer on one page</h2></div><p class="lead">' + hello + '</p>');
@@ -537,7 +537,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     $("pv-copy").onclick = function () { try { navigator.clipboard.writeText(link); } catch (e) {} this.textContent = "Copied"; };
   }
   if (qs.get("demo")) {
-    var demo = { v: 1, name: "Sarah", address: "8 Example Road, Maidenhead", postcode: "SL6 4ET", council: "Windsor and Maidenhead", date: "2026-10-15",
+    var demo = { v: 1, name: "Sarah", fullName: "Sarah and Tom Jones", address: "8 Example Road, Maidenhead", postcode: "SL6 4ET", council: "Windsor and Maidenhead", date: "2026-10-15",
       title: "Single-storey rear extension", types: ["Rear extension"], words: "The kitchen feels dark and cut off from the garden. We want one big space where the kids can play while we cook.",
       wants: ["Open-plan kitchen", "Dining space", "Bi-folds or sliders", "Roof lantern"], wantsOther: "", size: "About 4m deep, full width", roof: "Flat roof",
       extDepth: "4", extWidth: "", sideWidth: "", houseDepth: "8.2", distL: "", distR: "1.2", houseType: "Semi-detached", age: "1970s\u201380s", width: "7.5", depth: "22",
