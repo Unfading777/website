@@ -328,6 +328,28 @@ details.alt .bank { margin-top:.9rem; }
     $("agree-text").textContent = "I, the person named above, accept this quotation for " + q.p.toLowerCase() + " at " + A + " at a fixed fee of " + RA.money(agreed) + ", and instruct Residential Architecture to proceed on the terms shown on this page.";
   }
   paint(); var timer = setInterval(paint, 30000);
+  /* On phones the saving pill drops under the price: space it evenly between the price above and the line below, measured on the real fonts. */
+  function evenPill() {
+    try {
+      var pill = document.querySelector(".offer .save"), n = $("fee-now"), sm = $("offer-small"), af = $("offer-after");
+      if (!pill || $("offer").hidden || !af.textContent) return;
+      pill.style.marginTop = ""; sm.style.marginTop = "";
+      var nr = n.getBoundingClientRect(), pr = pill.getBoundingClientRect();
+      if (pr.top < nr.bottom - 4) return; /* side by side on wider screens: leave as is */
+      var c = document.createElement("canvas").getContext("2d"), cs = getComputedStyle(n);
+      c.font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily; var m = c.measureText(n.textContent);
+      var base = nr.top + (nr.height - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
+      var above = pr.top - (base + m.actualBoundingBoxDescent);
+      var ac = getComputedStyle(af); c.font = ac.fontWeight + " " + ac.fontSize + " " + ac.fontFamily; var ma = c.measureText("After");
+      var rg = document.createRange(); rg.selectNodeContents(af); var at = Math.min.apply(null, [].map.call(rg.getClientRects(), function (x) { return x.top; }));
+      var lh = parseFloat(ac.lineHeight) || parseFloat(ac.fontSize) * 1.5;
+      var below = at + (lh - (ma.fontBoundingBoxAscent + ma.fontBoundingBoxDescent)) / 2 + ma.fontBoundingBoxAscent - ma.actualBoundingBoxAscent - pr.bottom;
+      var d = (below - above) / 2; if (Math.abs(d) < 1) return;
+      pill.style.marginTop = Math.round(d) + "px";
+      sm.style.marginTop = Math.round(parseFloat(getComputedStyle(sm).marginTop) - d) + "px";
+    } catch (e) {}
+  }
+  evenPill(); if (document.fonts && document.fonts.ready) document.fonts.ready.then(evenPill); window.addEventListener("resize", evenPill); setTimeout(evenPill, 800);
 
   function showDone(name, at, agreed, email) {
     clearInterval(timer);
