@@ -339,7 +339,7 @@ details.alt .bank { margin-top:.9rem; }
       var c = document.createElement("canvas").getContext("2d"), cs = getComputedStyle(n);
       c.font = cs.fontWeight + " " + cs.fontSize + " " + cs.fontFamily; var m = c.measureText(n.textContent);
       var base = nr.top + (nr.height - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
-      var above = pr.top - (base + m.actualBoundingBoxDescent);
+      var above = pr.top - base; /* from the baseline the digits sit on: the comma dips below it and threw the measurement off */
       var ac = getComputedStyle(af); c.font = ac.fontWeight + " " + ac.fontSize + " " + ac.fontFamily; var ma = c.measureText("After");
       var rg = document.createRange(); rg.selectNodeContents(af); var at = Math.min.apply(null, [].map.call(rg.getClientRects(), function (x) { return x.top; }));
       var lh = parseFloat(ac.lineHeight) || parseFloat(ac.fontSize) * 1.5;
