@@ -1,7 +1,7 @@
 /* Keeps the home visit page and report preview working with no signal.
    Only touches the visit page, the report page and the shared quote script; everything else on the site is left alone. */
-var CACHE = "ra-visit-v1";
-var KEEP = ["/quote/visit/", "/report/", "/quote/q.js?v=40", "/img/visit-icon.png"];
+var CACHE = "ra-visit-v2";
+var KEEP = ["/quote/visit/", "/report/", "/quote/q.js?v=40", "/img/visit-icon.png", "/report/policy.js?v=1"];
 
 self.addEventListener("install", function (e) {
   e.waitUntil(caches.open(CACHE).then(function (c) { return c.addAll(KEEP); }).then(function () { return self.skipWaiting(); }));
@@ -22,7 +22,7 @@ self.addEventListener("fetch", function (e) {
     }).catch(function () { return caches.match(page); }));
     return;
   }
-  if (path === "/quote/q.js" || path === "/img/visit-icon.png") {
+  if (path === "/quote/q.js" || path === "/img/visit-icon.png" || path === "/report/policy.js") {
     e.respondWith(fetch(e.request).then(function (r) {
       if (r && r.ok) { var copy = r.clone(); caches.open(CACHE).then(function (c) { c.put(e.request, copy); }); }
       return r;

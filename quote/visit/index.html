@@ -98,7 +98,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
 <header class="top">
   <div class="wrap"><b><i aria-hidden="true"></i><span id="ttl">Home visit</span></b><span class="sync" id="sync">Not saved yet</span></div>
   <nav class="tabs" id="tabs" hidden aria-label="Sections">
-    <a href="#s-client">Client</a><a href="#s-project">Project</a><a href="#s-house">House</a><a href="#s-site">On site</a><a href="#s-photos">Photos</a><a href="#s-planning">Planning</a><a href="#s-notes">Your notes</a>
+    <a href="#s-client">Client</a><a href="#s-project">Project</a><a href="#s-house">House</a><a href="#s-site">On site</a><a href="#s-photos">Photos</a><a href="#s-design">Design</a><a href="#s-planning">Planning</a><a href="#s-data">Data</a><a href="#s-notes">Your notes</a>
   </nav>
 </header>
 
@@ -121,6 +121,12 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       <div class="list" id="leads"><p class="muted">Loading your leads&hellip;</p></div>
       <p style="margin:1rem 0 0"><button class="btn ghost" type="button" id="blank">New visit, not in the list</button></p>
     </div>
+    <details class="card" id="epc-card">
+      <summary style="font-weight:600;cursor:pointer">EPC access</summary>
+      <p class="hint" style="margin-top:.6rem">Paste your access key from the government&rsquo;s Get energy performance data service. You only do this once; it&rsquo;s kept in your Google script, not on this iPad.</p>
+      <label class="f">Access key<input type="password" id="epckey" autocomplete="off"></label>
+      <p style="margin:.8rem 0 0"><button class="btn" type="button" id="epcgo">Save key</button> <span class="muted" id="epcok"></span></p>
+    </details>
     <div class="card" id="drafts-card" hidden>
       <h2>Carry on with a visit</h2>
       <p class="hint" id="waiting" hidden></p>
@@ -156,7 +162,9 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       </div>
       <div class="grid" style="margin-top:1rem">
         <label class="f">Size they have in mind<input type="text" data-k="size" placeholder="About 4m deep, full width"></label>
-        <label class="f">Extension depth (m) <small>Draws the plan in the report</small><input type="number" inputmode="decimal" step="0.1" data-k="extDepth"></label>
+        <label class="f">Rear extension depth (m) <small>Draws the plan in the report</small><input type="number" inputmode="decimal" step="0.1" data-k="extDepth"></label>
+        <label class="f">Rear extension width (m) <small>Leave blank for full width</small><input type="number" inputmode="decimal" step="0.1" data-k="extWidth"></label>
+        <label class="f">Side extension width (m)<input type="number" inputmode="decimal" step="0.1" data-k="sideWidth"></label>
         <label class="f">Anything else they want<input type="text" data-k="wantsOther"></label>
         <label class="f">Roof<select data-k="roof"><option value="">Choose</option><option>Flat roof</option><option>Pitched roof</option><option>Lean-to</option><option>Not decided</option></select></label>
         <label class="f">Budget they mentioned<input type="text" data-k="budget" placeholder="Optional, for your notes only"></label>
@@ -171,6 +179,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       <div class="chips" data-one="age"><button type="button" class="chip">Before 1919</button><button type="button" class="chip">1920s&ndash;30s</button><button type="button" class="chip">1940s&ndash;60s</button><button type="button" class="chip">1970s&ndash;80s</button><button type="button" class="chip">1990s or newer</button></div>
       <div class="grid" style="margin-top:1rem">
         <label class="f">House width (m)<input type="number" inputmode="decimal" step="0.1" data-k="width"></label>
+        <label class="f">House depth, front to back (m)<input type="number" inputmode="decimal" step="0.1" data-k="houseDepth"></label>
         <label class="f">Garden depth (m)<input type="number" inputmode="decimal" step="0.5" data-k="depth"></label>
         <label class="f">To left boundary (m)<input type="number" inputmode="decimal" step="0.1" data-k="distL"></label>
         <label class="f">To right boundary (m)<input type="number" inputmode="decimal" step="0.1" data-k="distR"></label>
@@ -189,9 +198,20 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
 
     <section class="card" id="s-photos">
       <h2>Photos</h2>
-      <p class="hint">Take them straight from here. Give each a short caption and tick the ones for the report. Avoid people, house numbers and number plates in the ones you tick.</p>
+      <p class="hint">Take them straight from here. Give each a short caption and tick the ones for the report. Avoid people, house numbers and number plates in the ones you tick. You can add the estate agent&rsquo;s floor plan with your measurements on it too; leave Report unticked so it stays private.</p>
       <label class="btn" style="width:fit-content"><input type="file" id="camera" accept="image/*" capture="environment" multiple hidden>Take or add photos</label>
       <div class="photos" id="photos"></div>
+    </section>
+
+    <section class="card" id="s-design">
+      <h2>Design</h2>
+      <p class="hint">Your quick design assessment. It appears in the report alongside the council&rsquo;s own design rules.</p>
+      <div id="designq"></div>
+      <div class="grid" style="margin-top:.8rem">
+        <label class="f">Materials of the house<input type="text" data-k="materials" placeholder="Red brick, concrete roof tiles"></label>
+        <label class="f">Street character<select data-k="character"><option value="">Choose</option><option>Uniform: houses look alike</option><option>Mixed: some variety</option><option>Varied: lots of different styles</option></select></label>
+        <label class="f full">Design notes for the report<textarea data-k="designNotes" placeholder="For example: a flat roof keeps the extension low against the boundary"></textarea></label>
+      </div>
     </section>
 
     <section class="card" id="s-planning">
@@ -200,6 +220,14 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       <p style="margin:0 0 .6rem"><button class="btn" type="button" id="runchecks">Run the checks</button> <span class="muted" id="checkwhen"></span></p>
       <p class="err" id="checkerr" hidden></p>
       <div class="checks" id="checks"></div>
+    </section>
+
+    <section class="card" id="s-data">
+      <h2>Your home in numbers</h2>
+      <p class="hint">The EPC from the government register, recent sold prices in the street and the area average from HM Land Registry. It fills in on its own when there&rsquo;s signal.</p>
+      <p style="margin:0 0 .6rem"><button class="btn" type="button" id="getdata">Get the data</button> <span class="muted" id="datawhen"></span></p>
+      <p class="err" id="dataerr" hidden></p>
+      <div id="datashow" class="muted"></div>
     </section>
 
     <section class="card" id="s-notes">
@@ -254,6 +282,13 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     ["services", "Gas, electric or water meters on the wall", "May need moving"],
     ["cables", "Overhead cables over the work", "Check clearances"]
   ];
+  var DESIGN = [
+    ["d45", "45-degree line to neighbours' windows", "From the middle of the nearest habitable-room window", ["Clear", "Breached", "N/A"]],
+    ["privacy", "Overlooking and privacy", "New windows facing neighbours", ["Fine", "Needs care", "N/A"]],
+    ["scale", "Size against the house", "Subordinate to the original house", ["Fine", "Needs care", "N/A"]],
+    ["precedent", "Similar extensions nearby", "Already built in the street", ["Yes", "No", "Not sure"]],
+    ["parking", "Parking after the work", "Spaces kept for the new bedroom count", ["Fine", "Short", "N/A"]]
+  ];
   var CHECKS = [
     ["conservation", "Conservation area"], ["article4", "Article 4 direction"], ["listed", "Listed building"], ["greenBelt", "Green Belt"],
     ["aonb", "National Landscape (AONB)"], ["flood", "Flood risk"], ["trees", "Protected trees"], ["pdRights", "Permitted development rights"], ["history", "Planning history"]
@@ -300,6 +335,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
         var jobs = Promise.resolve();
         if (!x.council && x.postcode) jobs = jobs.then(function () { return fetch("https://api.postcodes.io/postcodes/" + String(x.postcode).replace(/\s+/g, "")).then(function (r) { return r.json(); }).then(function (j) { if (j && j.result && j.result.admin_district && !x.council) { x.council = j.result.admin_district; x.updated = Date.now(); x.dirty = true; saveObj(x); if (x === v) { var el = document.querySelector('[data-k="council"]'); if (el) el.value = x.council; } } }).catch(function () {}); });
         if (x.checks && x.checks._pending) jobs = jobs.then(function () { return runChecks(x, x.checks._pending.lat, x.checks._pending.lng); });
+        if ((x.address || x.postcode) && (!x.data || x.data.key !== [x.address, x.postcode, x.council].join("|"))) jobs = jobs.then(function () { return getData(x); });
         if (x.dirty) jobs = jobs.then(function () { return push(x); });
         return jobs.then(function () { return uploadFor(x); }).then(function () { if (x.dirty) return push(x); });
       });
@@ -348,7 +384,24 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       inp.oninput = function () { (v.site[q[0]] = v.site[q[0]] || {}).note = inp.value; changed(); };
       $("siteq").appendChild(row);
     });
-    drawChecks(); drawPhotos(); title();
+    v.design = v.design || {};
+    $("designq").innerHTML = "";
+    DESIGN.forEach(function (q) {
+      var cur = v.design[q[0]] || {}, row = document.createElement("div");
+      row.className = "rowq" + (cur.a ? " yes" : "");
+      row.innerHTML = '<span></span><div class="seg" role="group"></div><input type="text" placeholder="Details (optional)">';
+      row.firstChild.innerHTML = esc(q[1]) + "<small>" + esc(q[2]) + "</small>";
+      var seg = row.querySelector(".seg"), inp = row.querySelector("input");
+      seg.setAttribute("aria-label", q[1]); inp.setAttribute("aria-label", q[1] + " details"); inp.value = cur.note || "";
+      q[3].forEach(function (o, i) {
+        var b = document.createElement("button"); b.type = "button"; b.textContent = o; b.className = i === 0 ? "n" : i === 1 ? "y" : ""; b.setAttribute("aria-pressed", cur.a === o);
+        b.onclick = function () { var d = v.design[q[0]] = v.design[q[0]] || {}; d.a = d.a === o ? "" : o; seg.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", d.a === x.textContent); }); row.classList.toggle("yes", !!d.a); changed(); };
+        seg.appendChild(b);
+      });
+      inp.oninput = function () { (v.design[q[0]] = v.design[q[0]] || {}).note = inp.value; changed(); };
+      $("designq").appendChild(row);
+    });
+    drawData(); drawChecks(); drawPhotos(); title();
   }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function council() {
@@ -406,6 +459,55 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     else go(0, 0);
   };
   function confirmLocal() { var t = v.date ? new Date(v.date + "T12:00:00") : new Date(); return Math.abs(Date.now() - t.getTime()) < 36 * 3600000; } /* only use GPS on the day of the visit */
+
+  /* ---------- your home in numbers: EPC (via the script), sold prices and area averages (straight from HM Land Registry) ---------- */
+  function money0(n) { return "\u00a3" + Math.round(Number(n) || 0).toLocaleString("en-GB"); }
+  function drawData() {
+    var d = v.data || {}, H = [];
+    if (d.epc && d.epc.band) H.push("<b>EPC:</b> " + esc(d.epc.band) + (d.epc.age ? ", built " + esc(d.epc.age) : "") + (d.epc.area ? ", " + esc(d.epc.area) + " m\u00b2" : "") + (d.epc.walls ? ". Walls: " + esc(d.epc.walls) : ""));
+    else if (d.epc && d.epc.missing) H.push("<b>EPC:</b> " + ({ token: "add your EPC access key on the start screen", none: "no certificate found for this postcode", "no-match": "no certificate matched this house number" }[d.epc.missing] || "couldn't load"));
+    if (d.hpi) H.push("<b>Area average</b> (" + esc(v.council) + ", " + esc(d.hpi.month) + "): " + money0(d.hpi.all) + ", " + (d.hpi.change > 0 ? "up " : "down ") + Math.abs(d.hpi.change) + "% on a year");
+    if (d.sales) H.push("<b>Sales in the street</b> (last 6 years): " + d.sales.length);
+    $("datashow").innerHTML = H.join("<br>");
+    $("datawhen").textContent = d.when ? "Updated " + new Date(d.when).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" }) : "";
+  }
+  function lrSales(x) {
+    var parts = String(x.address || "").split(",").map(function (p) { return p.trim(); }).filter(Boolean);
+    var num = (/^(\d+[A-Za-z]?)\b/.exec(parts[0] || "") || [])[1] || "";
+    var street = (parts[0] || "").replace(/^\d+[A-Za-z]?\s+/, "").toUpperCase(), town = parts.length > 1 ? parts[parts.length - 1].toUpperCase() : "";
+    var q = street && town ? "propertyAddress.street=" + encodeURIComponent(street) + "&propertyAddress.town=" + encodeURIComponent(town) : "propertyAddress.postcode=" + encodeURIComponent(x.postcode || "");
+    return fetch("https://landregistry.data.gov.uk/data/ppi/transaction-record.json?" + q + "&_sort=-transactionDate&_pageSize=40").then(function (r) { return r.json(); }).then(function (j) {
+      var cutoff = Date.now() - 6 * 365 * 86400000;
+      return (j.result.items || []).map(function (it) {
+        var a = it.propertyAddress || {}, t = it.propertyType && it.propertyType.prefLabel && it.propertyType.prefLabel[0] ? it.propertyType.prefLabel[0]._value : "";
+        return { date: new Date(it.transactionDate).getTime() || 0, price: it.pricePaid, type: t, num: a.paon || "", street: a.street || "" };
+      }).filter(function (s2) { return s2.date > cutoff && s2.num !== num; }).slice(0, 10);
+    });
+  }
+  function lrHpi(x) {
+    var slug = String(x.council || "").toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    if (!slug) return Promise.resolve(null);
+    var tries = [2, 3, 4, 5, 6, 7].map(function (b) { var d = new Date(); d.setDate(1); d.setMonth(d.getMonth() - b); return d.getFullYear() + "-" + ("0" + (d.getMonth() + 1)).slice(-2); });
+    return tries.reduce(function (p, mo) { return p.then(function (found) { if (found) return found; return fetch("https://landregistry.data.gov.uk/data/ukhpi/region/" + slug + "/month/" + mo + ".json").then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { var t = j && j.result && j.result.primaryTopic; return t && t.averagePrice ? { month: mo, all: t.averagePrice, detached: t.averagePriceDetached, semi: t.averagePriceSemiDetached, terraced: t.averagePriceTerraced, flat: t.averagePriceFlatMaisonette, change: t.percentageAnnualChange, changeDetached: t.percentageAnnualChangeDetached, changeSemi: t.percentageAnnualChangeSemiDetached, changeTerraced: t.percentageAnnualChangeTerraced } : null; }).catch(function () { return null; }); }); }, Promise.resolve(null));
+  }
+  function getData(x) {
+    if (!x.address && !x.postcode) return Promise.resolve();
+    var data = x.data || {};
+    var epc = pass ? RA.api({ action: "visit-data", pass: pass, address: x.address, postcode: x.postcode, council: x.council }).then(function (r) { return r && r.ok ? r.epc : null; }).catch(function () { return null; }) : Promise.resolve(null);
+    return Promise.all([epc, lrSales(x).catch(function () { return null; }), lrHpi(x)]).then(function (a) {
+      if (a[0]) data.epc = a[0]; if (a[1]) data.sales = a[1]; if (a[2]) data.hpi = a[2];
+      if (a[0] || a[1] || a[2]) { data.when = Date.now(); data.key = [x.address, x.postcode, x.council].join("|"); x.data = data; x.updated = Date.now(); x.dirty = true; saveObj(x); if (x === v) { drawData(); changed(); } }
+      return !!(a[1] || a[2]);
+    });
+  }
+  $("getdata").onclick = function () {
+    var b = this, err = $("dataerr"); err.hidden = true; b.disabled = true; b.textContent = "Getting it\u2026";
+    getData(v).then(function (ok) { b.disabled = false; b.textContent = "Get the data again"; if (!ok) { err.textContent = navigator.onLine === false ? "No signal. It will fill in on its own when you're back online." : "Add the address with the town after a comma, and the council, then try again."; err.hidden = false; } });
+  };
+  $("epcgo").onclick = function () {
+    var k = $("epckey").value.trim(); if (!k) return;
+    RA.api({ action: "visit-epc-key", pass: pass, token: k }).then(function (r) { $("epcok").textContent = r && r.ok ? "Saved." : "Couldn't save it. Check the key."; if (r && r.ok) $("epckey").value = ""; }).catch(function () { $("epcok").textContent = "No connection."; });
+  };
 
   /* ---------- photos ---------- */
   function resize(file) {

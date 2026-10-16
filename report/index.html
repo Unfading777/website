@@ -89,7 +89,7 @@ blockquote { margin: 0 0 .8rem; padding-left: 1rem; border-left: 3px solid var(-
 .photos figcaption { font-size: .88rem; color: var(--text); }
 .measures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; background: var(--bg); border-radius: 12px; padding: .8rem 1rem; font-size: .85rem; color: var(--grey); }
 .measures b { display: block; color: var(--ink); font-size: 1rem; }
-.plan svg { display: block; width: 100%; max-width: 32rem; height: auto; }
+.plan svg { display: block; width: 100%; max-width: 30rem; height: auto; }
 .plan p { font-size: .82rem; color: var(--grey); margin-top: .3rem; }
 
 .tbl { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: .93rem; }
@@ -214,6 +214,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
 <footer>© 2026 Residential Architecture, Maidenhead, Berkshire. Carl Collins BSc (Hons). <a href="/">Home</a></footer>
 
 <script src="/quote/q.js?v=40"></script>
+<script src="/report/policy.js?v=1"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
@@ -229,12 +230,17 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     return {
       v: 1, id: v.id, name: first(v.name), address: v.address || "", postcode: v.postcode || "", council: v.council || "", date: v.date || "",
       title: v.title || (v.types || []).join(" and ") || "Your project", types: v.types || [], words: v.words || "", wants: v.wants || [], wantsOther: v.wantsOther || "",
-      size: v.size || "", roof: v.roof || "", extDepth: v.extDepth || "", houseType: v.houseType || "", age: v.age || "", width: v.width || "", depth: v.depth || "",
+      size: v.size || "", roof: v.roof || "", extDepth: v.extDepth || "", extWidth: v.extWidth || "", sideWidth: v.sideWidth || "", houseDepth: v.houseDepth || "", distL: v.distL || "", distR: v.distR || "", houseType: v.houseType || "", age: v.age || "", width: v.width || "", depth: v.depth || "",
       earlier: v.earlier || "", earlierPlan: v.earlierPlan || "", ground: v.ground || "", attached: v.attached || "",
       site: Object.keys(v.site || {}).filter(function (k) { return v.site[k] && v.site[k].a === "Yes"; }).map(function (k) { return { k: k, note: v.site[k].note || "" }; }),
       photos: (v.photos || []).filter(function (p) { return p.report; }).slice(0, 4).map(function (p) { return { url: p.url || "", k: p.k, caption: p.caption || "" }; }),
       checks: (function () { var c = {}; Object.keys(v.checks || {}).forEach(function (k) { if (k.charAt(0) !== "_") c[k] = v.checks[k]; }); return c; })(),
       route: v.route || "", risk: v.risk || "", things: things,
+      materials: v.materials || "", character: v.character || "", designNotes: v.designNotes || "",
+      design: (function () { var o = {}; Object.keys(v.design || {}).forEach(function (k) { if (v.design[k] && v.design[k].a) o[k] = { a: v.design[k].a, note: v.design[k].note || "" }; }); return o; })(),
+      data: (function () { var d = v.data || {}, e = d.epc && d.epc.band ? d.epc : null; return {
+        epc: e ? { band: e.band, potential: e.potential, age: e.age, area: e.area, walls: e.walls, roof: e.roof, floor: e.floor, windows: e.windows, heating: e.heating, date: e.date } : null,
+        sales: (d.sales || []).slice(0, 8), hpi: d.hpi || null }; })(),
       nearby: [1, 2, 3].map(function (i) { return { what: v["n" + i + "w"] || "", decision: v["n" + i + "d"] || "", note: v["n" + i + "n"] || "" }; }).filter(function (n) { return n.what; })
     };
   }
@@ -272,15 +278,18 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     /* your house */
     var sec = 0;
     var meas = [["House width", r.width ? r.width + "m" : ""], ["Garden depth", r.depth ? "About " + r.depth + "m" : ""], ["Earlier extensions", r.earlier], ["Ground", r.ground]].filter(function (m) { return m[1]; });
-    var showPlan = r.extDepth && has(r.types, /Rear|Wrap/) && r.houseType && !/Flat/.test(r.houseType);
-    if (r.photos.length || meas.length || showPlan) {
+    var showPlan = ((r.extDepth && has(r.types, /Rear|Wrap/)) || (r.sideWidth && has(r.types, /Side|Wrap/))) && r.houseType && !/Flat/.test(r.houseType);
+    if (r.photos.length || meas.length || showPlan || (r.data && r.data.epc)) {
       sec++;
       H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Your house</h2></div>');
       if (r.photos.length) H.push('<div class="photos' + (r.photos.length === 1 ? " n1" : "") + '">' + r.photos.map(function (p, i) { return '<figure><img class="ph" data-k="' + esc(p.k) + '" ' + (p.url ? 'src="' + esc(p.url) + '"' : "") + ' alt="' + esc(p.caption || "Photo from the visit") + '" loading="lazy"><figcaption>' + esc(p.caption) + '</figcaption></figure>'; }).join("") + '</div>');
       if (meas.length) H.push('<div class="measures">' + meas.map(function (m) { return '<div>' + m[0] + '<b>' + esc(m[1]) + '</b></div>'; }).join("") + '</div>');
-      if (showPlan) H.push(plan(Number(r.extDepth), lim1, lim2, /Semi|terrace/.test(r.houseType), r.attached));
+      if (showPlan) H.push(plan(r, lim1, lim2));
+      H.push(numbers(r));
       H.push('</div></article>');
     }
+    var vals = values(r);
+    if (vals) { sec++; H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Local values</h2></div>' + vals + '</div></article>'); }
 
     /* planning */
     sec++;
@@ -295,6 +304,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
         '<div class="route' + (hh ? " on" : "") + '"><b>Householder planning' + (hh ? " · recommended" : "") + '</b><span>Anything beyond these</span><p>Full application, 8-week target. Needed if the design goes outside the limits.</p></div></div></div>');
     }
     if (pd || pa || ldc) H.push('<div class="box"><h3>Why I recommend a Lawful Development Certificate</h3><ul class="dash one"><li>It&rsquo;s the council&rsquo;s written confirmation that the extension is lawful, before you build.</li><li>Buyers&rsquo; solicitors often ask for proof when you sell. Without it, a sale can stall.</li><li>The rules are easy to get wrong, such as where the depth is measured from. The certificate settles it.</li><li>Building Regulations approval is still needed, whichever route you take.</li></ul></div>');
+    H.push(design(r));
     if (r.nearby.length) H.push('<div><h3>Nearby decisions</h3><p class="lead" style="margin-bottom:.7rem">I read the council&rsquo;s decisions on similar projects near you, and what they tell us.</p><div class="tbl near" style="--cols: 15rem 6rem minmax(0, 1fr)"><div class="r h"><span>Nearby application</span><span>Decision</span><span>What it tells us</span></div>' + r.nearby.map(function (n) { return '<div class="r"><span class="k">' + esc(n.what) + '</span><span class="' + (/Refused/i.test(n.decision) ? "pk" : "ok") + '">' + esc(n.decision) + '</span><span>' + esc(n.note) + '</span></div>'; }).join("") + '</div></div>');
     H.push('</div></article>');
 
@@ -334,18 +344,71 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     document.title = "Feasibility report" + (r.address ? ", " + r.address.split(",")[0] : "") + " | Residential Architecture";
   }
 
-  function plan(ext, l1, l2, attached, side) {
-    var top = 78, bottom = 292, s = (bottom - top - 6) / (Math.max(l2, ext) + 0.6), y = function (m) { return Math.round(top + m * s); };
-    var left = /Right/.test(side) ? false : attached, right = /Right/.test(side) || /Both/.test(side);
-    var g = [];
-    if (attached && (left || !right)) g.push('<rect x="4" y="8" width="66" height="70" fill="#EDEDF0" stroke="#9A9DA4"/><text x="37" y="47" text-anchor="middle" font-size="13" fill="#6A6875">Next door</text>');
-    g.push('<rect x="70" y="8" width="220" height="70" fill="#D5D7DB" stroke="#1F1E26" stroke-width="2"/><text x="180" y="48" text-anchor="middle" font-size="16" font-weight="700" fill="#1F1E26">Your house</text>');
-    g.push('<rect x="70" y="78" width="220" height="' + (y(ext) - 78) + '" fill="#FFD6EA" stroke="#B8005F" stroke-width="2"/><text x="180" y="' + (78 + Math.min(34, (y(ext) - 78) / 2 + 6)) + '" text-anchor="middle" font-size="16" font-weight="700" fill="#8A0047">Your ' + ext + 'm extension</text>');
-    g.push('<line x1="70" y1="8" x2="70" y2="292" stroke="#1F1E26" stroke-width="1.5"/><line x1="318" y1="8" x2="318" y2="292" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="2 4"/><text x="324" y="290" font-size="13" fill="#6A6875">Boundary</text>');
-    g.push('<line x1="4" y1="' + y(l1) + '" x2="318" y2="' + y(l1) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="7 5"/><text x="78" y="' + (y(l1) - 7) + '" font-size="14" font-weight="700" fill="#1F1E26">' + l1 + 'm · permitted development</text>');
-    g.push('<line x1="4" y1="' + y(l2) + '" x2="318" y2="' + y(l2) + '" stroke="#B8005F" stroke-width="1.5" stroke-dasharray="7 5"/><text x="78" y="' + (y(l2) - 7) + '" font-size="14" font-weight="700" fill="#B8005F">' + l2 + 'm · limit with prior approval</text>');
-    g.push('<line x1="304" y1="80" x2="304" y2="' + (y(ext) - 2) + '" stroke="#8A0047" stroke-width="1.2"/><line x1="298" y1="78" x2="310" y2="78" stroke="#8A0047" stroke-width="1.2"/><line x1="298" y1="' + y(ext) + '" x2="310" y2="' + y(ext) + '" stroke="#8A0047" stroke-width="1.2"/><text x="324" y="' + Math.round((78 + y(ext)) / 2 + 5) + '" font-size="15" font-weight="700" fill="#8A0047">' + ext + 'm deep</text>');
-    return '<div class="plan"><h3>What you can build, and how</h3><svg viewBox="0 0 420 300" role="img" aria-label="Plan showing your ' + ext + 'm extension against the ' + l1 + 'm and ' + l2 + 'm limits" style="font-family: \'DM Sans\', sans-serif">' + g.join("") + '</svg><p>Not to scale. Measured from the back of the original house.</p></div>';
+  function money0(n) { return "\u00a3" + Math.round(Number(n) || 0).toLocaleString("en-GB"); }
+  function tc(t) { return String(t || "").toLowerCase().replace(/(^|[\s,(-])([a-z])/g, function (m, a, b) { return a + b.toUpperCase(); }); }
+  function cap(t) { t = String(t || ""); return t.charAt(0).toUpperCase() + t.slice(1); }
+  function numbers(r) {
+    var e = r.data && r.data.epc; if (!e) return "";
+    var rows = [["Energy rating", e.band ? e.band + (e.potential && e.potential !== e.band ? " (could reach " + e.potential + ")" : "") : ""], ["Built", e.age ? String(e.age).replace(/^England and Wales:\s*/i, "") : ""], ["Floor area", e.area ? e.area + " m\u00b2" : ""], ["Walls", e.walls], ["Roof", e.roof], ["Floor", e.floor], ["Windows", e.windows], ["Heating", e.heating]].filter(function (x) { return x[1]; });
+    if (!rows.length) return "";
+    return '<div><h3>Your home in numbers</h3><div class="tbl other" style="--cols: 10rem minmax(0, 1fr)"><div class="r h"><span>From the EPC</span><span>Your home</span></div>' + rows.map(function (x) { return '<div class="r"><span class="k">' + x[0] + '</span><span>' + esc(cap(x[1])) + '</span></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">From the government&rsquo;s EPC register' + (e.date ? ", certificate dated " + esc(day(String(e.date).slice(0, 10))) : "") + '. The construction matters for the design and for Building Regulations, and the energy rating shows where the new work can help.</p></div>';
+  }
+  function values(r) {
+    var d = r.data || {}, h = d.hpi, sales = d.sales || [];
+    if (!h && !sales.length) return "";
+    var type = /Detached|Bungalow/.test(r.houseType) ? ["detached", "Detached homes", h && h.detached, h && h.changeDetached] : /Semi/.test(r.houseType) ? ["semi", "Semi-detached homes", h && h.semi, h && h.changeSemi] : /terrace/.test(r.houseType) ? ["terraced", "Terraced homes", h && h.terraced, h && h.changeTerraced] : ["all", "All homes", h && h.all, h && h.change];
+    var out = [];
+    if (h) {
+      var m = new Date(h.month + "-15").toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+      out.push('<div class="tiles t2"><div class="tile"><span>' + type[1] + ' in ' + esc(r.council) + '</span><b>' + money0(type[2] || h.all) + '</b><small>Average price, ' + m + '</small></div><div class="tile"><span>Change over a year</span><b>' + (Number(type[3]) > 0 ? "+" : "") + esc(type[3] != null ? type[3] : h.change) + '%</b><small>' + type[1] + ' in ' + esc(r.council) + '</small></div></div>');
+    }
+    if (sales.length) out.push('<div><h3>Recent sales in your street</h3><div class="tbl cost" style="--cols: minmax(0, 1fr) auto"><div class="r h"><span>Home and date</span><span class="num">Sold for</span></div>' + sales.map(function (x) { return '<div class="r"><span class="k">' + esc(tc([x.num, x.street].filter(Boolean).join(" "))) + (x.type ? " &middot; " + esc(({ "semi-detached": "Semi-detached", "flat-maisonette": "Flat or maisonette", "terraced": "Terraced", "detached": "Detached", "other": "Other" })[String(x.type).toLowerCase()] || cap(x.type)) : "") + '<br><small style="font-weight:400;color:var(--grey)">' + esc(new Date(x.date).toLocaleDateString("en-GB", { month: "long", year: "numeric" })) + '</small></span><span class="num">' + money0(x.price) + '</span></div>'; }).join("") + '</div></div>');
+    out.push('<p class="small">Sold prices and averages from HM Land Registry. A guide to the local market, not a valuation of your home.</p>');
+    return out.join("");
+  }
+  function design(r) {
+    var P = (window.RA_POLICY || {})[r.council], out = [];
+    var ANS = { d45: "45-degree line to neighbours&rsquo; windows", privacy: "Overlooking and privacy", scale: "Size against the house", precedent: "Similar extensions nearby", parking: "Parking after the work" };
+    var rows = Object.keys(ANS).filter(function (k) { return r.design && r.design[k]; }).map(function (k) { var a = r.design[k]; return '<div class="r"><span class="k">' + ANS[k] + '</span><span class="' + (/Clear|Fine|Yes/.test(a.a) ? "ok" : /N\/A|Not sure/.test(a.a) ? "" : "pk") + '">' + esc(a.a) + (a.note ? '<br><small style="font-weight:400;color:var(--text)">' + esc(a.note) + '</small>' : "") + '</span></div>'; });
+    if (r.materials) rows.push('<div class="r"><span class="k">Materials</span><span>' + esc(r.materials) + '</span></div>');
+    if (r.character) rows.push('<div class="r"><span class="k">Street character</span><span>' + esc(r.character) + '</span></div>');
+    if (rows.length || r.designNotes) out.push('<div><h3>Design assessment</h3>' + (rows.length ? '<div class="tbl other" style="--cols: 13rem minmax(0, 1fr)"><div class="r h"><span>What I checked</span><span>My view</span></div>' + rows.join("") + '</div>' : "") + (r.designNotes ? '<p class="lead" style="margin-top:.7rem">' + esc(r.designNotes) + '</p>' : "") + '</div>');
+    if (P) out.push('<div class="box"><h3>' + esc(r.council) + ' planning policy</h3><p class="lead" style="margin-bottom:.6rem">' + P.intro + '</p>' + (P.rules && P.rules.length ? '<ul class="dash one">' + P.rules.map(function (x) { return '<li>' + x + '</li>'; }).join("") + '</ul>' : "") + '</div>');
+    return out.join("");
+  }
+  /* Plan of the house and extension, drawn to scale when the house measurements are known. */
+  function plan(r, l1, l2) {
+    var W = Number(r.width) || 7, D = Number(r.houseDepth) || 0, scaled = !!(Number(r.width) && D);
+    if (!D) D = 6;
+    var E = has(r.types, /Rear|Wrap/) ? Number(r.extDepth) || 0 : 0, EW = Math.min(Number(r.extWidth) || W, W);
+    var SW = has(r.types, /Side|Wrap/) ? Number(r.sideWidth) || 0 : 0;
+    var attached = /Semi|terrace/.test(r.houseType), mid = /Mid terrace/.test(r.houseType), rightAtt = /Right/.test(r.attached);
+    var gapR = Number(rightAtt ? r.distL : r.distR) || 0;
+    var depthM = D + Math.max(l2, E) + 0.8, widthM = W + Math.max(SW, gapR, 1) + 0.5;
+    var s = Math.min(300 / widthM, 360 / depthM), x0 = attached ? 70 : 30, y0 = 10, hx = W * s, hy = D * s, rear = y0 + hy, H = Math.round(rear + Math.max(l2, E) * s + 22);
+    var Y = function (m) { return Math.round(rear + m * s); }, f = function (n) { return Math.round(n * 10) / 10; };
+    var g = [], right = x0 + hx;
+    if (attached) g.push('<rect x="4" y="' + y0 + '" width="' + (x0 - 4) + '" height="' + Math.round(hy) + '" fill="#EDEDF0" stroke="#9A9DA4"/><text x="' + ((x0 + 4) / 2) + '" y="' + Math.round(y0 + hy / 2 + 4) + '" text-anchor="middle" font-size="12" fill="#6A6875">Next door</text>');
+    if (mid) g.push('<rect x="' + right + '" y="' + y0 + '" width="60" height="' + Math.round(hy) + '" fill="#EDEDF0" stroke="#9A9DA4"/>');
+    g.push('<rect x="' + x0 + '" y="' + y0 + '" width="' + Math.round(hx) + '" height="' + Math.round(hy) + '" fill="#D5D7DB" stroke="#1F1E26" stroke-width="2"/><text x="' + Math.round(x0 + hx / 2) + '" y="' + Math.round(y0 + hy / 2) + '" text-anchor="middle" font-size="15" font-weight="700" fill="#1F1E26">Your house</text>' + (scaled ? '<text x="' + Math.round(x0 + hx / 2) + '" y="' + Math.round(y0 + hy / 2 + 18) + '" text-anchor="middle" font-size="12" fill="#3A3944">' + f(W) + 'm wide, ' + f(D) + 'm deep</text>' : ''));
+    if (E) {
+      var ex = rightAtt ? right - EW * s : x0;
+      g.push('<rect x="' + Math.round(ex) + '" y="' + Math.round(rear) + '" width="' + Math.round(EW * s) + '" height="' + (Y(E) - Math.round(rear)) + '" fill="#FFD6EA" stroke="#B8005F" stroke-width="2"/><text x="' + Math.round(ex + EW * s / 2) + '" y="' + Math.round(rear + Math.min(E * s / 2 + 5, 26)) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#8A0047">' + f(E) + 'm extension</text>');
+    }
+    if (SW && !mid) {
+      var sx = rightAtt ? x0 - SW * s : right, sd = has(r.types, /Wrap/) ? D + E : D;
+      g.push('<rect x="' + Math.round(sx) + '" y="' + y0 + '" width="' + Math.round(SW * s) + '" height="' + Math.round(sd * s) + '" fill="#FFD6EA" stroke="#B8005F" stroke-width="2"/><text x="' + Math.round(sx + SW * s / 2) + '" y="' + Math.round(y0 + 18) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#8A0047">' + f(SW) + 'm</text>');
+      if (!rightAtt) right = right + SW * s;
+    }
+    var bx = Math.round((rightAtt ? x0 : x0 + hx) + (gapR ? gapR * s : Math.max(SW * s, 18) + 10) * (rightAtt ? -1 : 1));
+    g.push('<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (H - 4) + '" stroke="#1F1E26" stroke-width="1.2"/>');
+    if (!rightAtt) g.push('<line x1="' + bx + '" y1="' + y0 + '" x2="' + bx + '" y2="' + (H - 4) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="2 4"/><text x="' + (bx + 5) + '" y="' + (H - 6) + '" font-size="12" fill="#6A6875">Boundary</text>');
+    if (has(r.types, /Rear|Wrap/)) {
+      g.push('<line x1="4" y1="' + Y(l1) + '" x2="' + Math.max(bx, right + 10) + '" y2="' + Y(l1) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="7 5"/><text x="8" y="' + (Y(l1) - 6) + '" font-size="12.5" font-weight="700" fill="#1F1E26">' + l1 + 'm · permitted development</text>');
+      g.push('<line x1="4" y1="' + Y(l2) + '" x2="' + Math.max(bx, right + 10) + '" y2="' + Y(l2) + '" stroke="#B8005F" stroke-width="1.5" stroke-dasharray="7 5"/><text x="8" y="' + (Y(l2) - 6) + '" font-size="12.5" font-weight="700" fill="#B8005F">' + l2 + 'm · limit with prior approval</text>');
+    }
+    var vbw = Math.max(320, Math.round(Math.max(bx, right) + 80));
+    return '<div class="plan"><h3>What you can build, and how</h3><svg viewBox="0 0 ' + vbw + ' ' + H + '" role="img" aria-label="Plan of your house and the proposed extension" style="font-family: \'DM Sans\', sans-serif">' + g.join("") + '</svg><p>' + (scaled ? "Drawn to scale from my measurements on site. Depths measured from the back of the original house." : "Not to scale. Depths measured from the back of the original house.") + '</p></div>';
   }
 
   /* ---------- load ---------- */
