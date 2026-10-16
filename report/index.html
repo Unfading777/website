@@ -89,7 +89,7 @@ blockquote { margin: 0 0 .8rem; padding-left: 1rem; border-left: 3px solid var(-
 .photos figcaption { font-size: .88rem; color: var(--text); }
 .measures { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; background: var(--bg); border-radius: 12px; padding: .8rem 1rem; font-size: .85rem; color: var(--grey); }
 .measures b { display: block; color: var(--ink); font-size: 1rem; }
-.plan svg { display: block; width: 100%; max-width: 30rem; height: auto; }
+.plan svg { display: block; width: 100%; max-width: 34rem; height: auto; }
 .plan p { font-size: .82rem; color: var(--grey); margin-top: .3rem; }
 
 .tbl { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: .93rem; }
@@ -367,7 +367,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     var BANDS = [["A", "92+", "#008054", 40], ["B", "81\u201391", "#19B459", 48], ["C", "69\u201380", "#8DCE46", 56], ["D", "55\u201368", "#FFD500", 64], ["E", "39\u201354", "#FCAA65", 72], ["F", "21\u201338", "#EF8023", 80], ["G", "1\u201320", "#E9153B", 88]];
     var cur = String(e.band || "").toUpperCase().charAt(0), pot = String(e.potential || "").toUpperCase().charAt(0);
     var chart = /^[A-G]$/.test(cur) ? '<div class="epcbar" role="img" aria-label="Energy rating ' + cur + (pot ? ', could reach ' + pot : '') + '"><div class="hd"><span>Energy rating</span><span>Now</span><span>Could be</span></div>' + BANDS.map(function (b) { var dark = /[CDE]/.test(b[0]) ? "#1F1E26" : "#fff"; return '<div><i style="width:' + b[3] + '%;background:' + b[2] + ';color:' + dark + '">' + b[0] + ' <small style="font-weight:400">' + b[1] + '</small></i><span>' + (cur === b[0] ? '<b style="background:' + b[2] + ';color:' + dark + '">' + cur + '</b>' : '') + '</span><span>' + (pot === b[0] ? '<b style="background:' + b[2] + ';color:' + dark + '">' + pot + '</b>' : '') + '</span></div>'; }).join("") + '</div>' : '';
-    return '<div><h3>Existing construction</h3><div class="tbl other" style="--cols: 10rem minmax(0, 1fr)"><div class="r h"><span>Element</span><span>As recorded</span></div>' + rows.map(function (x) { return '<div class="r"><span class="k">' + x[0] + '</span><span>' + esc(cap(x[1])) + '</span></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">From the government&rsquo;s EPC register' + (e.date ? ", certificate dated " + esc(day(String(e.date).slice(0, 10))) : "") + '. I confirm the construction on site at the measured survey; it shapes the structural design and the Building Regulations details.</p></div>';
+    return '<div><h3>How your house is built</h3><div class="tbl other" style="--cols: 10rem minmax(0, 1fr)"><div class="r h"><span>Element</span><span>Your house</span></div>' + rows.map(function (x) { return '<div class="r"><span class="k">' + x[0] + '</span><span>' + esc(cap(x[1])) + '</span></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">From the government&rsquo;s EPC register' + (e.date ? ", certificate dated " + esc(day(String(e.date).slice(0, 10))) : "") + '. I confirm the construction on site at the measured survey; it shapes the structural design and the Building Regulations details.</p></div>';
   }
   function values(r) {
     var d = r.data || {}, h = d.hpi, sales = d.sales || [];
@@ -418,12 +418,13 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     }
     var bx = Math.round((rightAtt ? x0 : x0 + hx) + (gapR ? gapR * s : Math.max(SW * s, 18) + 10) * (rightAtt ? -1 : 1));
     g.push('<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (H - 4) + '" stroke="#1F1E26" stroke-width="1.2"/>');
-    if (!rightAtt) g.push('<line x1="' + bx + '" y1="' + y0 + '" x2="' + bx + '" y2="' + (H - 4) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="2 4"/><text x="' + (bx + 5) + '" y="' + (H - 6) + '" font-size="12" fill="#6A6875">Boundary</text>');
+    if (!rightAtt) g.push('<line x1="' + bx + '" y1="' + y0 + '" x2="' + bx + '" y2="' + (H - 4) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="2 4"/><text x="' + (bx + 5) + '" y="' + (y0 + 11) + '" font-size="12" fill="#6A6875">Boundary</text>');
+    var lx = Math.max(bx, right) + 14;
     if (has(r.types, /Rear|Wrap/)) {
-      g.push('<line x1="4" y1="' + Y(l1) + '" x2="' + Math.max(bx, right + 10) + '" y2="' + Y(l1) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="7 5"/><text x="8" y="' + (Y(l1) - 6) + '" font-size="12.5" font-weight="700" fill="#1F1E26">' + l1 + 'm · permitted development</text>');
-      g.push('<line x1="4" y1="' + Y(l2) + '" x2="' + Math.max(bx, right + 10) + '" y2="' + Y(l2) + '" stroke="#B8005F" stroke-width="1.5" stroke-dasharray="7 5"/><text x="8" y="' + (Y(l2) - 6) + '" font-size="12.5" font-weight="700" fill="#B8005F">' + l2 + 'm · limit with prior approval</text>');
+      g.push('<line x1="4" y1="' + Y(l1) + '" x2="' + lx + '" y2="' + Y(l1) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="7 5"/><text x="' + (lx + 6) + '" y="' + (Y(l1) - 3) + '" font-size="13" font-weight="700" fill="#1F1E26">' + l1 + 'm<tspan x="' + (lx + 6) + '" dy="15" font-weight="400" font-size="12">permitted development</tspan></text>');
+      g.push('<line x1="4" y1="' + Y(l2) + '" x2="' + lx + '" y2="' + Y(l2) + '" stroke="#B8005F" stroke-width="1.5" stroke-dasharray="7 5"/><text x="' + (lx + 6) + '" y="' + (Y(l2) - 3) + '" font-size="13" font-weight="700" fill="#B8005F">' + l2 + 'm<tspan x="' + (lx + 6) + '" dy="15" font-weight="400" font-size="12">limit with prior approval</tspan></text>');
     }
-    var vbw = Math.max(320, Math.round(Math.max(bx, right) + 80));
+    var vbw = Math.round(lx + 165);
     return '<div class="plan"><h3>What you can build, and how</h3><svg viewBox="0 0 ' + vbw + ' ' + H + '" role="img" aria-label="Plan of your house and the proposed extension" style="font-family: \'DM Sans\', sans-serif">' + g.join("") + '</svg><p>' + (scaled ? "Drawn to scale from my measurements on site. Depths measured from the back of the original house." : "Not to scale. Depths measured from the back of the original house.") + '</p></div>';
   }
 
