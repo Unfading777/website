@@ -416,6 +416,20 @@ a.sb { text-decoration:none; }
 
   /* ---------- one job ---------- */
   function find(id) { return jobs.filter(function (j) { return j.id === id; })[0]; }
+  /* The council, from the visit or the postcode */
+  var councils = {};
+  function councilOf(j) {
+    if (j.visit && j.visit.council) return j.visit.council;
+    var pc = ((j.visit && j.visit.postcode) || (/\b([A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2})\b/i.exec(j.address || "") || [])[1] || "").toUpperCase().replace(/\s+/g, "");
+    if (!pc) return "";
+    if (councils[pc] === undefined) {
+      councils[pc] = "";
+      fetch("https://api.postcodes.io/postcodes/" + pc).then(function (r) { return r.json(); }).then(function (r) {
+        if (r && r.result) { councils[pc] = r.result.admin_district || ""; if (!j.lat) { j.lat = r.result.latitude; j.lng = r.result.longitude; } if (openId === j.id) panel(); }
+      }).catch(function () {});
+    }
+    return councils[pc];
+  }
   /* What the local validation list is likely to need, worked out from the visit's planning checks and route. */
   function docsNeeded(j) {
     var c = (j.visit && j.visit.checks) || {}, route = String((j.visit && j.visit.route) || j.route || ""), yes = function (k) { return /^(yes|nearby)/i.test(String(c[k] || "")); };
@@ -436,7 +450,10 @@ a.sb { text-decoration:none; }
   }
   function docsHtml(j) {
     var D = docsNeeded(j), got = j.docs || {}, files = j.files || {}, done = D.filter(function (d) { return got[d[0]]; }).length, mine = D.filter(function (d) { return d[2] === "I create"; }).length;
-    return '<div class="docs"><h3>Planning documents <span class="small" style="font-weight:500">' + done + ' of ' + D.length + ' ready</span></h3><ul>' + D.map(function (d) {
+    var cn = councilOf(j), short = { "Windsor and Maidenhead": "RBWM", "West Berkshire": "West Berks", "Buckinghamshire": "Bucks", "South Oxfordshire": "South Oxon", "Oxford": "Oxford City" }[cn] || cn;
+    var lists = window.RA_LOCALLIST || {}, fromCouncil = cn && lists[cn] && lists[cn].householder && lists[cn].householder.length;
+    return '<div class="docs"><h3>' + esc(short ? short + " validation checklist" : "Validation checklist") + ' <span class="small" style="font-weight:500">' + done + ' of ' + D.length + ' ready</span></h3>' +
+      '<p class="small" style="margin:-.4rem 0 .7rem">' + (fromCouncil ? "From " + esc(cn === "Windsor and Maidenhead" ? "the Royal Borough of Windsor and Maidenhead" : cn + " Council") + "\u2019s own validation list (" + esc(lists[cn].source || "") + "), matched to this job\u2019s planning checks." : "From the national requirements and this job\u2019s planning checks" + (cn ? ". " + esc(cn) + "\u2019s own list is being added." : ".")) + '</p><ul>' + D.map(function (d) {
       var f = files[d[0]];
       return '<li><label><input type="checkbox" data-doc="' + d[0] + '"' + (got[d[0]] ? " checked" : "") + '> <span>' + esc(d[1]) + (d[3] ? ' <span class="why">' + esc(d[3]) + '</span>' : "") + '</span></label>' +
         (f ? '<a class="who open" target="_blank" rel="noopener" href="' + esc(f.url) + '">Open PDF</a>' : '<span class="who">' + esc(d[2]) + '</span>') + '</li>';
