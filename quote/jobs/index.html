@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Jobs | Residential Architecture</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='4' transform='rotate(45 16 16)' fill='%23E6007A'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap">
+<style>
+:root { --pink:#E6007A; --pink-ink:#B8005F; --pink-hover:#C40068; --ink:#1F1E26; --text:#3A3944; --grey:#6A6875; --line:#E4E3EA; --tint:#FFE3F1; --tint-2:#FFF0F7; --bg:#F6F5F9; --soft:#EFEEF3; }
+* { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; }
+body { margin:0; background:var(--bg); color:var(--ink); font-family:'DM Sans',system-ui,sans-serif; line-height:1.5; }
+.wrap { max-width:76rem; margin:0 auto; padding:1rem 1rem 5rem; }
+.top { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.6rem; }
+.brand { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.15rem; display:inline-flex; align-items:center; gap:.55rem; margin:.4rem 0; }
+.brand i { width:.8rem; height:.8rem; background:var(--pink); border-radius:3px; transform:rotate(45deg); display:inline-block; }
+.nav a { color:var(--grey); font-weight:600; text-decoration:none; margin-left:1rem; font-size:.95rem; }
+.nav a:hover { color:var(--pink); }
+h1 { font-family:'Outfit',sans-serif; font-size:1.9rem; margin:.6rem 0 .1rem; letter-spacing:-.02em; }
+h2 { font-family:'Outfit',sans-serif; font-size:1.1rem; margin:0 0 .6rem; }
+h3 { font-family:'Outfit',sans-serif; font-size:1rem; margin:1.2rem 0 .5rem; }
+.small { color:var(--grey); font-size:.9rem; }
+.err { color:#B3261E; font-size:.92rem; }
+a { color:var(--pink); }
+[hidden] { display:none !important; }
+.card { background:#fff; border:1px solid var(--line); border-radius:18px; padding:1.1rem 1.2rem; margin-bottom:.8rem; }
+input[type=text], input[type=password], input[type=tel], input[type=email], input[type=number], input[type=date], input[type=search], select, textarea { width:100%; font:inherit; padding:.6rem .8rem; border:1.5px solid var(--line); border-radius:12px; background:#fff; color:var(--ink); }
+textarea { min-height:4.5rem; resize:vertical; }
+input:focus, textarea:focus, select:focus { outline:none; border-color:var(--pink); box-shadow:0 0 0 3px var(--tint); }
+label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25rem; }
+.btn, .ghost, .chip { font:inherit; font-weight:600; font-size:.9rem; padding:.5rem 1rem; border-radius:999px; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:.4rem; }
+.btn { border:0; background:var(--pink); color:#fff; } .btn:hover { background:var(--pink-hover); }
+.ghost { border:1.5px solid var(--line); background:#fff; color:var(--ink); } .ghost:hover { border-color:var(--ink); }
+.btn:focus-visible, .ghost:focus-visible, .chip:focus-visible, .tile:focus-visible, .step:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
+.actions { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.8rem; }
+
+/* Filters */
+.bar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.7rem; margin:1.2rem 0 1rem; }
+.seg { display:inline-flex; flex-wrap:wrap; gap:.25rem; background:var(--soft); border-radius:999px; padding:.3rem; }
+.chip { border:0; background:transparent; color:var(--text); padding:.45rem .9rem; }
+.chip b { display:inline-grid; place-items:center; min-width:1.4rem; height:1.4rem; padding:0 .35rem; border-radius:999px; background:#fff; font-size:.78rem; color:var(--grey); }
+.chip[aria-pressed=true] { background:#fff; color:var(--pink-ink); box-shadow:0 1px 3px rgba(31,30,38,.08); }
+.chip[aria-pressed=true] b { background:var(--tint); color:var(--pink-ink); }
+.chip.hot b { background:var(--pink); color:#fff; }
+.bar input[type=search] { width:16rem; max-width:100%; border-radius:999px; }
+
+/* Stage bar */
+.stages { background:#fff; border:1px solid var(--line); border-radius:20px; padding:1rem .6rem .8rem; margin:1.2rem 0 0; overflow-x:auto; scrollbar-width:thin; }
+.stages ol { list-style:none; margin:0; padding:0 .4rem; display:flex; min-width:max-content; }
+.stages li { position:relative; flex:1 0 6.6rem; }
+.stages li:not(:last-child)::after { content:""; position:absolute; top:1.25rem; left:calc(50% + 1.5rem); right:calc(-50% + 1.5rem); height:2px; background:var(--line); }
+.sb { width:100%; background:none; border:0; font:inherit; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:.4rem; padding:0 .2rem; color:var(--grey); }
+.sb .c { width:2.5rem; height:2.5rem; border-radius:50%; border:2px solid var(--line); display:grid; place-items:center; font-weight:700; font-size:.92rem; background:#fff; color:var(--grey); transition:.15s; }
+.sb.has .c { border-color:var(--ink); color:var(--ink); }
+.sb.late .c { border-color:var(--pink); color:var(--pink-ink); }
+.sb .l { font-size:.8rem; line-height:1.25; text-align:center; max-width:6.4rem; }
+.sb.has .l { color:var(--ink); }
+.sb[aria-pressed=true] .c { background:var(--pink); border-color:var(--pink); color:#fff; box-shadow:0 0 0 5px var(--tint); }
+.sb[aria-pressed=true] .l { color:var(--pink-ink); font-weight:700; }
+.sb:hover .c { border-color:var(--pink); }
+.sb:focus-visible { outline:3px solid var(--ink); outline-offset:2px; border-radius:12px; }
+.sb .all { width:.75rem; height:.75rem; border-radius:50%; background:currentColor; }
+
+/* Tiles */
+.grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(16.5rem, 1fr)); gap:1rem; }
+.tile { background:#fff; border:1px solid var(--line); border-radius:18px; overflow:hidden; cursor:pointer; text-align:left; font:inherit; color:inherit; padding:0; display:flex; flex-direction:column; transition:box-shadow .15s, transform .15s; }
+.tile:hover { box-shadow:0 8px 24px rgba(31,30,38,.08); transform:translateY(-2px); }
+.pic { position:relative; aspect-ratio:16/9; background:var(--soft); overflow:hidden; }
+.pic img { width:100%; height:100%; object-fit:cover; display:block; }
+.pill { position:absolute; left:.7rem; bottom:.7rem; background:rgba(255,255,255,.95); border-radius:999px; padding:.3rem .75rem .3rem .65rem; font-size:.85rem; font-weight:600; display:inline-flex; align-items:center; gap:.45rem; max-width:calc(100% - 1.4rem); }
+.pill i { width:.5rem; height:.5rem; border-radius:50%; background:var(--pink); flex:none; }
+.pill.wait i { background:var(--grey); }
+.pill.done i { background:var(--ink); }
+.flag { position:absolute; right:.7rem; top:.7rem; background:var(--pink); color:#fff; border-radius:999px; padding:.25rem .7rem; font-size:.8rem; font-weight:700; }
+.flag.mail { background:var(--ink); }
+.num { color:var(--ink); font-weight:700; }
+.notes li.auto { background:var(--tint-2); border-color:var(--tint); }
+.tb { padding:.9rem 1rem 1rem; }
+.tb .addr { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.08rem; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tb .who { color:var(--grey); font-size:.9rem; margin-top:.15rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.prog { height:.4rem; background:var(--soft); border-radius:999px; margin:.8rem 0 .45rem; overflow:hidden; }
+.prog span { display:block; height:100%; background:var(--pink); border-radius:999px; }
+.meta { display:flex; justify-content:space-between; gap:.5rem; font-size:.82rem; color:var(--grey); }
+.meta .late { color:var(--pink-ink); font-weight:700; }
+.empty { text-align:center; padding:3rem 1rem; color:var(--grey); }
+
+/* Map fallback */
+.map { position:absolute; inset:0; overflow:hidden; background:#E9E8EE; }
+.map .tiles { position:absolute; width:768px; height:768px; left:50%; top:50%; }
+.map .tiles img { position:absolute; width:256px; height:256px; }
+.map .pin { position:absolute; left:50%; top:50%; width:1rem; height:1rem; background:var(--pink); border:3px solid #fff; border-radius:50%; transform:translate(-50%, -50%); box-shadow:0 2px 6px rgba(0,0,0,.3); }
+.map small { position:absolute; right:.4rem; bottom:.3rem; font-size:.65rem; color:var(--grey); background:rgba(255,255,255,.8); padding:0 .3rem; border-radius:4px; }
+.noplace { position:absolute; inset:0; display:grid; place-items:center; color:var(--grey); font-size:.9rem; }
+
+/* Job panel */
+.shade { position:fixed; inset:0; background:rgba(31,30,38,.45); z-index:20; display:flex; justify-content:flex-end; }
+.panel { background:var(--bg); width:min(40rem, 100%); height:100%; overflow-y:auto; box-shadow:-10px 0 40px rgba(0,0,0,.15); }
+.ph { position:relative; aspect-ratio:16/8; background:var(--soft); }
+.ph img { width:100%; height:100%; object-fit:cover; display:block; }
+.close { position:absolute; right:.8rem; top:.8rem; width:2.4rem; height:2.4rem; border-radius:50%; border:0; background:rgba(255,255,255,.95); font-size:1.4rem; line-height:1; cursor:pointer; z-index:2; }
+.pb { padding:1.1rem 1.2rem 3rem; }
+.pb .addr { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.45rem; line-height:1.2; margin:0; }
+.strip { display:flex; gap:.4rem; overflow-x:auto; padding:.6rem 1.2rem 0; }
+.strip button { flex:none; width:4.6rem; height:3.2rem; border-radius:10px; overflow:hidden; border:2px solid transparent; padding:0; cursor:pointer; background:var(--soft); }
+.strip button[aria-pressed=true] { border-color:var(--pink); }
+.strip img { width:100%; height:100%; object-fit:cover; display:block; }
+.contact { display:flex; flex-wrap:wrap; gap:.5rem; margin:.8rem 0 0; }
+
+.road { list-style:none; margin:0; padding:0; position:relative; }
+.road li { position:relative; }
+.step { width:100%; display:flex; align-items:flex-start; gap:.8rem; background:none; border:0; font:inherit; color:inherit; text-align:left; padding:.5rem .4rem; border-radius:12px; cursor:pointer; }
+.step:hover { background:#fff; }
+.dot { flex:none; width:1.6rem; height:1.6rem; border-radius:50%; border:2px solid var(--line); background:#fff; display:grid; place-items:center; font-size:.8rem; font-weight:700; color:var(--grey); position:relative; z-index:1; }
+.road li:not(:last-child)::after { content:""; position:absolute; left:1.18rem; top:2.2rem; bottom:-.4rem; width:2px; background:var(--line); }
+.road li.done:not(:last-child)::after { background:var(--pink); }
+.done .dot { background:var(--pink); border-color:var(--pink); color:#fff; }
+.now .dot { border-color:var(--pink); color:var(--pink); box-shadow:0 0 0 4px var(--tint); }
+.step .t { font-weight:600; }
+.now .step .t { color:var(--pink-ink); }
+.step .s { display:block; font-size:.82rem; color:var(--grey); }
+.skip .step .t { color:var(--grey); font-weight:500; text-decoration:line-through; }
+.box { background:#fff; border:1px solid var(--line); border-radius:16px; padding:.9rem 1rem; margin-top:.8rem; }
+.box.hot { border-color:var(--pink); background:var(--tint-2); }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:.6rem; }
+.notes { list-style:none; margin:.6rem 0 0; padding:0; }
+.notes li { background:#fff; border:1px solid var(--line); border-radius:12px; padding:.6rem .8rem; margin-bottom:.45rem; white-space:pre-wrap; }
+.notes li small { display:block; color:var(--grey); font-size:.78rem; }
+.links { display:flex; flex-wrap:wrap; gap:.5rem; }
+.saving { position:fixed; left:50%; bottom:1rem; transform:translateX(-50%); background:var(--ink); color:#fff; border-radius:999px; padding:.45rem 1rem; font-size:.85rem; z-index:30; }
+@media (max-width:40rem) { .two { grid-template-columns:1fr; } .nav a { margin:0 1rem 0 0; } .bar input[type=search] { width:100%; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><i></i>Residential Architecture</div>
+    <div class="nav"><a href="../pipeline/">Pipeline</a><a href="../sent/">Sent quotes</a><a href="../visit/">Home visits</a></div>
+  </div>
+  <h1>Jobs</h1>
+  <p class="small" style="margin:0">Every signed job and where it is. Signed quotes appear here by themselves.</p>
+
+  <div class="card" id="connect" hidden style="margin-top:1rem;max-width:28rem">
+    <label for="pw" style="font-weight:600;display:block;margin-bottom:.3rem">Enter your passphrase</label>
+    <p class="small" style="margin:0 0 .5rem">The same one you use on the Sent quotes page.</p>
+    <input type="password" id="pw" autocomplete="current-password">
+    <div class="actions"><button class="btn" type="button" id="pwgo">Open jobs</button></div>
+    <p class="err" id="pwerr" hidden></p>
+  </div>
+  <p class="small" id="loading" style="margin-top:1rem">Loading your jobs&hellip;</p>
+
+  <div id="main" hidden>
+    <nav class="stages" aria-label="Stages"><ol id="stagebar"></ol></nav>
+    <div class="bar">
+      <div class="seg" role="group" aria-label="Show" id="filters"></div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
+        <input type="search" id="find" placeholder="Find a job" autocomplete="off" aria-label="Find a job">
+        <button class="btn" type="button" id="add">Add a job</button>
+      </div>
+    </div>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden></div>
+  </div>
+</div>
+
+<div class="shade" id="shade" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="p-addr" id="panel"></div>
+</div>
+<div class="saving" id="saving" hidden>Saved</div>
+
+<script src="../q.js?v=40"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var DAY = 86400000, jobs = [], visits = [], filter = "all", openId = "", only = "";
+  /* key, label, whose move, days before a chase (matches the Google script) */
+  var ST = [
+    ["signed", "Contract signed", "me", 0], ["survey-booked", "Survey booked", "me", 0], ["survey-done", "Survey done", "me", 0],
+    ["drawing", "Drawings in progress", "me", 0], ["client", "With client for feedback", "client", 7], ["planning", "Planning submitted", "council", 56],
+    ["approved", "Planning approved", "me", 0], ["calcs", "Calculations with engineer", "engineer", 14], ["bregs", "Building Regs submitted", "council", 35],
+    ["complete", "Complete", "done", 0]
+  ];
+  var WHO = { client: "client", council: "council", engineer: "engineer" };
+  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function stage(j) { for (var i = 0; i < ST.length; i++) if (ST[i][0] === j.stage) return { i: i, s: ST[i] }; return { i: 0, s: ST[0] }; }
+  function skipped(j) { return j.skip || {}; }
+  function days(t) { return Math.max(0, Math.floor((Date.now() - Number(t || Date.now())) / DAY)); }
+  function dateStr(t) { return t ? new Date(Number(t) || t).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : ""; }
+  function waitInfo(j) {
+    var x = stage(j), s = x.s; if (!WHO[s[2]] || j.status !== "Active") return null;
+    var wait = Number((j.wait || {})[s[0]]) || s[3], d = days(j.since);
+    var dueAt = s[0] === "planning" && j.decision ? new Date(j.decision).getTime() : Number(j.since) + wait * DAY;
+    return { who: s[2], days: d, due: Date.now() >= dueAt, dueAt: dueAt };
+  }
+  function progress(j) {
+    var x = stage(j), sk = skipped(j), total = 0, done = 0;
+    ST.forEach(function (s, i) { if (sk[s[0]]) return; total++; if (i <= x.i) done++; });
+    if (j.stage === "complete") done = total;
+    return { done: done, total: total, pct: Math.round(done / total * 100) };
+  }
+  function photo(j) {
+    var ps = (j.visit && j.visit.photos) || [];
+    if (j.photo) return j.photo;
+    var front = ps.filter(function (p) { return /front/i.test(p.caption); })[0];
+    return front ? front.url : ps[0] ? ps[0].url : "";
+  }
+  /* A little street map, centred on the house, when there is no photo yet */
+  var geo = {};
+  function mapHtml(j) {
+    var v = j.visit || {}, lat = Number(v.lat || j.lat), lng = Number(v.lng || j.lng);
+    if (!(lat && lng)) {
+      var pc = v.postcode || j.postcode || (/\b([A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2})\b/i.exec(j.address || "") || [])[1];
+      if (pc && !geo[pc]) { geo[pc] = 1; fetch("https://api.postcodes.io/postcodes/" + encodeURIComponent(pc)).then(function (r) { return r.json(); }).then(function (r) { if (r && r.result) { j.lat = r.result.latitude; j.lng = r.result.longitude; draw(); if (openId === j.id) panel(); } }).catch(function () {}); }
+      return '<div class="noplace">No photo yet</div>';
+    }
+    var z = 17, n = Math.pow(2, z), xf = (lng + 180) / 360 * n, yf = (1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * n;
+    var tx = Math.floor(xf), ty = Math.floor(yf), ox = (xf - tx) * 256, oy = (yf - ty) * 256, imgs = "";
+    for (var dx = -1; dx <= 1; dx++) for (var dy = -1; dy <= 1; dy++) imgs += '<img alt="" loading="lazy" src="https://tile.openstreetmap.org/' + z + '/' + (tx + dx) + '/' + (ty + dy) + '.png" style="left:' + ((dx + 1) * 256) + 'px;top:' + ((dy + 1) * 256) + 'px">';
+    return '<div class="map"><div class="tiles" style="transform:translate(' + (-(256 + ox)) + 'px,' + (-(256 + oy)) + 'px)">' + imgs + '</div><span class="pin"></span><small>&copy; OpenStreetMap</small></div>';
+  }
+  function picHtml(j) { var u = photo(j); return u ? '<img alt="" loading="lazy" src="' + esc(u) + '">' : mapHtml(j); }
+
+  /* ---------- the board ---------- */
+  function counts() {
+    var c = { all: 0, mine: 0, waiting: 0, chase: 0, done: 0 };
+    jobs.forEach(function (j) {
+      if (j.status !== "Active") { if (j.status === "Archived") c.done++; return; }
+      if (j.stage === "complete") { c.done++; return; }
+      c.all++; var w = waitInfo(j); if (w) { c.waiting++; if (w.due) c.chase++; } else c.mine++;
+    });
+    return c;
+  }
+  function inFilter(j) {
+    var finished = j.status !== "Active" || j.stage === "complete", w = waitInfo(j);
+    if (filter === "done") return finished;
+    if (finished) return false;
+    if (filter === "mine") return !w;
+    if (filter === "waiting") return !!w;
+    if (filter === "chase") return !!(w && w.due);
+    return true;
+  }
+  function bar() {
+    var act = jobs.filter(function (j) { return j.status === "Active" && j.stage !== "complete"; });
+    var H = ['<li><button class="sb' + (act.length ? " has" : "") + '" type="button" data-s="" aria-pressed="' + (!only) + '"><span class="c">' + (only ? act.length : '<span class="all"></span>') + '</span><span class="l">All stages</span></button></li>'];
+    ST.slice(0, -1).forEach(function (s) {
+      var here = act.filter(function (j) { return j.stage === s[0]; }), late = here.some(function (j) { var w = waitInfo(j); return w && w.due; });
+      H.push('<li><button class="sb' + (here.length ? " has" : "") + (late ? " late" : "") + '" type="button" data-s="' + s[0] + '" aria-pressed="' + (only === s[0]) + '"><span class="c">' + (here.length || "") + '</span><span class="l">' + esc(s[1]) + '</span></button></li>');
+    });
+    $("stagebar").innerHTML = H.join("");
+    [].forEach.call($("stagebar").querySelectorAll(".sb"), function (b) { b.onclick = function () { only = b.getAttribute("data-s"); if (only && filter === "done") filter = "all"; draw(); }; });
+  }
+  function draw() {
+    bar();
+    var c = counts(), F = [["all", "All"], ["mine", "My move"], ["waiting", "Waiting"], ["chase", "Chase now"], ["done", "Finished"]];
+    $("filters").innerHTML = F.map(function (f) { return '<button class="chip' + (f[0] === "chase" && c.chase ? " hot" : "") + '" type="button" data-f="' + f[0] + '" aria-pressed="' + (filter === f[0]) + '">' + f[1] + ' <b>' + c[f[0]] + '</b></button>'; }).join("");
+    [].forEach.call($("filters").querySelectorAll(".chip"), function (b) { b.onclick = function () { filter = b.getAttribute("data-f"); try { localStorage.setItem("ra-jobs-f", filter); } catch (e) {} draw(); }; });
+    var q = $("find").value.trim().toLowerCase();
+    var list = jobs.filter(function (j) { return inFilter(j) && (!only || j.stage === only) && (!q || [j.num, j.name, j.address, j.ref, j.project, j.planningRef].join(" ").toLowerCase().indexOf(q) >= 0); });
+    list.sort(function (a, b) { var wa = waitInfo(a), wb = waitInfo(b); return ((wb && wb.due) - (wa && wa.due)) || (Number(a.since) - Number(b.since)); });
+    $("grid").innerHTML = list.map(function (j) {
+      var x = stage(j), w = waitInfo(j), p = progress(j), cls = j.stage === "complete" || j.status !== "Active" ? "done" : w ? "wait" : "";
+      var meta = w ? (w.due ? '<span class="late">Waiting ' + w.days + ' day' + (w.days === 1 ? "" : "s") + ', chase</span>' : (j.stage === "planning" && j.decision ? '<span>Decision due ' + esc(new Date(j.decision).toLocaleDateString("en-GB", { day: "numeric", month: "short" })) + '</span>' : '<span>Waiting on ' + WHO[w.who] + ', ' + w.days + ' day' + (w.days === 1 ? "" : "s") + '</span>')) : j.stage === "complete" ? '<span>Complete</span>' : '<span>Your move</span>';
+      return '<button class="tile" type="button" data-id="' + esc(j.id) + '"><div class="pic">' + picHtml(j) + '<span class="pill ' + cls + '"><i></i>' + esc(x.s[1]) + '</span>' + (w && w.due ? '<span class="flag">Chase</span>' : j.replied && Date.now() - j.replied < 3 * DAY ? '<span class="flag mail">Client replied</span>' : "") + '</div>' +
+        '<div class="tb"><div class="addr">' + esc(String(j.address || "").split(",")[0] || "No address") + '</div><div class="who">' + (j.num ? '<span class="num">' + esc(j.num) + '</span> · ' : "") + esc(j.name || String(j.address || "").split(",").slice(1).join(",").trim()) + '</div>' +
+        '<div class="prog"><span style="width:' + p.pct + '%"></span></div><div class="meta"><span>Step ' + p.done + ' of ' + p.total + '</span>' + meta + '</div></div></button>';
+    }).join("");
+    [].forEach.call($("grid").querySelectorAll(".tile"), function (t) { t.onclick = function () { openId = t.getAttribute("data-id"); panel(); }; });
+    var e = $("empty"); e.hidden = list.length > 0;
+    e.textContent = jobs.length ? (filter === "chase" ? "Nobody to chase. Everyone is within their time." : "Nothing here.") : "No jobs yet. When a client signs a quote, the job appears here with the photo from your home visit. You can also add one yourself.";
+  }
+
+  /* ---------- one job ---------- */
+  function find(id) { return jobs.filter(function (j) { return j.id === id; })[0]; }
+  function panel() {
+    var j = find(openId); if (!j) { $("shade").hidden = true; return; }
+    var v = j.visit || {}, x = stage(j), sk = skipped(j), w = waitInfo(j), hist = {};
+    (j.history || []).forEach(function (h) { hist[h.s] = h.t; });
+    var ps = v.photos || [], cur = photo(j), mob = (v.mobile || j.mobile || "").replace(/[^0-9+]/g, ""), wa = mob.replace(/^\+/, "").replace(/^0/, "44");
+    var email = v.email || j.email || "", first = String(j.name || "").split(/\s+/)[0];
+    var H = [];
+    H.push('<div class="ph"><button class="close" type="button" id="p-close" aria-label="Close">&times;</button>' + picHtml(j) + '</div>');
+    if (ps.length > 1) H.push('<div class="strip" aria-label="Choose the picture">' + ps.map(function (p, i) { return '<button type="button" data-u="' + esc(p.url) + '" aria-pressed="' + (p.url === cur) + '" title="' + esc(p.caption || "Use this photo") + '"><img alt="" loading="lazy" src="' + esc(p.url) + '"></button>'; }).join("") + '</div>');
+    H.push('<div class="pb"><h2 class="addr" id="p-addr">' + esc(j.address || "No address") + '</h2>');
+    H.push('<p class="small" style="margin:.3rem 0 0">' + esc([j.num ? "Job " + j.num : "", j.name, j.project, j.fee ? RA.money(Number(j.fee)) : ""].filter(String).join(" · ")) + '</p>');
+    H.push('<div class="contact">' + (wa.length > 9 ? '<a class="btn" target="_blank" rel="noopener" href="https://wa.me/' + esc(wa) + '">WhatsApp ' + esc(first) + '</a>' : "") + (email ? '<a class="ghost" href="mailto:' + esc(email) + '">Email</a>' : "") + (mob ? '<a class="ghost" href="tel:' + esc(mob) + '">Call</a>' : "") + '</div>');
+    if (w) {
+      var txt = w.who === "client" ? "Waiting on " + esc(first || "the client") : "Waiting on the " + WHO[w.who];
+      H.push('<div class="box' + (w.due ? " hot" : "") + '"><b>' + txt + ' for ' + w.days + ' day' + (w.days === 1 ? "" : "s") + '</b><div class="small">' + (w.due ? "Worth a chase now." : "I'll flag it on " + dateStr(w.dueAt) + " if nothing has moved.") + '</div>' +
+        (w.due && w.who === "client" && wa.length > 9 ? '<div class="actions"><a class="btn" target="_blank" rel="noopener" id="p-chase" href="https://wa.me/' + esc(wa) + '?text=' + encodeURIComponent("Hi " + (first || "there") + ", just checking in on the drawings I sent over. Any changes at all, just send them through, or if you're happy with them, let me know and I'll get the next stage moving.") + '">Send a nudge</a></div>' : "") +
+        (j.stage !== "planning" ? '<label class="f" for="p-wait">Flag it after this many days</label><input type="number" min="1" max="120" id="p-wait" style="max-width:7rem" value="' + (Number((j.wait || {})[j.stage]) || x.s[3]) + '">' : "") + '</div>');
+    }
+    H.push('<h3>Where it is</h3><p class="small" style="margin:-.3rem 0 .4rem">Tap a step when the job reaches it.</p><ol class="road">');
+    ST.forEach(function (s, i) {
+      var c = sk[s[0]] ? "skip" : i < x.i || j.stage === "complete" ? "done" : i === x.i ? "now" : "";
+      var sub = sk[s[0]] ? "Not needed" : hist[s[0]] && i <= x.i ? dateStr(hist[s[0]]) : WHO[s[2]] ? "Waiting on the " + WHO[s[2]] : "";
+      H.push('<li class="' + c + '"><button class="step" type="button" data-s="' + s[0] + '"><span class="dot">' + (c === "done" ? "&#10003;" : i + 1) + '</span><span><span class="t">' + esc(s[1]) + '</span><span class="s">' + esc(sub) + '</span></span></button></li>');
+    });
+    H.push('</ol><p class="small" style="margin:.5rem 0 0">Not every job needs every step. <a href="#" id="p-skip">Choose steps this job skips</a></p>');
+    H.push('<div id="p-skips" hidden class="box">' + ST.slice(1, -1).map(function (s) { return '<label style="display:flex;gap:.5rem;align-items:center;margin:.2rem 0"><input type="checkbox" data-k="' + s[0] + '"' + (sk[s[0]] ? " checked" : "") + '> ' + esc(s[1]) + '</label>'; }).join("") + '</div>');
+    H.push('<h3>Planning and Building Regs</h3><div class="two"><div><label class="f" for="p-ref">Planning reference</label><input type="text" id="p-ref" value="' + esc(j.planningRef || "") + '"></div><div><label class="f" for="p-dec">Decision due</label><input type="date" id="p-dec" value="' + esc(j.decision || "") + '"></div></div>' +
+      '<label class="f" for="p-bref">Building Regs reference</label><input type="text" id="p-bref" value="' + esc(j.bregsRef || "") + '">');
+    H.push('<h3>Notes</h3><textarea id="p-note" placeholder="Spoke to ' + esc(first || "the client") + ', away until the 20th"></textarea><div class="actions"><button class="btn" type="button" id="p-addnote">Add note</button></div>');
+    H.push('<ul class="notes">' + (j.notes || []).slice().reverse().map(function (n) { return '<li' + (n.auto ? ' class="auto"' : "") + '><small>' + esc(dateStr(n.t)) + (n.auto ? " · picked up from your email" : "") + '</small>' + esc(n.text) + '</li>'; }).join("") + '</ul>');
+    var links = [];
+    if (j.quoteLink) links.push('<a class="ghost" target="_blank" rel="noopener" href="' + esc(j.quoteLink) + '">Quote</a>');
+    if (v.report) links.push('<a class="ghost" target="_blank" rel="noopener" href="' + esc(v.report) + '">Feasibility report</a>');
+    if (v.folder) links.push('<a class="ghost" target="_blank" rel="noopener" href="' + esc(v.folder) + '">Visit photos</a>');
+    if (j.visitId) links.push('<a class="ghost" href="../visit/#' + esc(j.visitId) + '">Visit notes</a>');
+    H.push('<h3>Links</h3><div class="links">' + (links.join("") || '<span class="small">None yet</span>') + '</div>');
+    H.push('<h3>Details</h3><div class="two"><div><label class="f" for="p-name">Client</label><input type="text" id="p-name" value="' + esc(j.name || "") + '"></div><div><label class="f" for="p-proj">Project</label><input type="text" id="p-proj" value="' + esc(j.project || "") + '"></div></div>' +
+      '<label class="f" for="p-address">Address</label><input type="text" id="p-address" value="' + esc(j.address || "") + '">' +
+      '<div class="two"><div><label class="f" for="p-mob">Mobile</label><input type="tel" id="p-mob" value="' + esc(j.mobile || v.mobile || "") + '"></div><div><label class="f" for="p-email">Email</label><input type="email" id="p-email" value="' + esc(j.email || v.email || "") + '"></div></div>' +
+      '<label class="f" for="p-visit">Home visit (for the photos)</label><select id="p-visit"><option value="">None</option>' + visits.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === j.visitId ? " selected" : "") + '>' + esc([x.name, x.address].filter(String).join(", ")) + '</option>'; }).join("") + '</select>');
+    H.push('<div class="actions" style="margin-top:1.4rem">' + (j.status === "Active" ? '<button class="ghost" type="button" id="p-arch">Move to finished</button>' : '<button class="ghost" type="button" id="p-unarch">Make active again</button>') + '<button class="ghost" type="button" id="p-del" style="color:#B3261E">Delete job</button></div></div>');
+    $("panel").innerHTML = H.join("");
+    $("shade").hidden = false; document.body.style.overflow = "hidden";
+    $("p-close").onclick = shut;
+    [].forEach.call($("panel").querySelectorAll(".strip button"), function (b) { b.onclick = function () { j.photo = b.getAttribute("data-u"); save(j); panel(); draw(); }; });
+    [].forEach.call($("panel").querySelectorAll(".step"), function (b) { b.onclick = function () { setStage(j, b.getAttribute("data-s")); }; });
+    $("p-skip").onclick = function (e) { e.preventDefault(); $("p-skips").hidden = !$("p-skips").hidden; };
+    [].forEach.call($("panel").querySelectorAll("#p-skips input"), function (c) { c.onchange = function () { j.skip = j.skip || {}; if (c.checked) j.skip[c.getAttribute("data-k")] = 1; else delete j.skip[c.getAttribute("data-k")]; save(j); panel(); $("p-skips").hidden = false; draw(); }; });
+    if ($("p-wait")) $("p-wait").onchange = function () { j.wait = j.wait || {}; j.wait[j.stage] = Math.max(1, Math.min(120, Number(this.value) || x.s[3])); save(j); panel(); draw(); };
+    var field = function (id, k) { $(id).onchange = function () { j[k] = this.value.trim(); save(j); draw(); }; };
+    field("p-ref", "planningRef"); field("p-bref", "bregsRef"); field("p-name", "name"); field("p-proj", "project"); field("p-address", "address"); field("p-mob", "mobile"); field("p-email", "email");
+    $("p-dec").onchange = function () { j.decision = this.value; save(j); panel(); draw(); };
+    $("p-visit").onchange = function () { j.visitId = this.value; j.photo = ""; save(j, true); };
+    $("p-addnote").onclick = function () { var t = $("p-note").value.trim(); if (!t) return; j.notes = j.notes || []; j.notes.push({ t: Date.now(), text: t.slice(0, 2000) }); save(j); panel(); };
+    if ($("p-arch")) $("p-arch").onclick = function () { j.status = "Archived"; save(j); shut(); };
+    if ($("p-unarch")) $("p-unarch").onclick = function () { j.status = "Active"; save(j); panel(); draw(); };
+    $("p-del").onclick = function () { if (!window.confirm("Delete this job? Its notes go with it.")) return; j.status = "Deleted"; save(j); jobs = jobs.filter(function (x) { return x !== j; }); shut(); };
+  }
+  function setStage(j, key) {
+    if (j.stage === key) return;
+    j.stage = key; j.since = Date.now(); j.chased = 0;
+    j.history = (j.history || []).filter(function (h) { return h.s !== key; }); j.history.push({ s: key, t: j.since });
+    if (j.skip) delete j.skip[key];
+    save(j); panel(); draw();
+  }
+  function shut() { $("shade").hidden = true; openId = ""; document.body.style.overflow = ""; draw(); }
+  $("shade").onclick = function (e) { if (e.target === $("shade")) shut(); };
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("shade").hidden) shut(); });
+
+  /* ---------- saving ---------- */
+  var toast;
+  function flash(t) { var s = $("saving"); s.textContent = t; s.hidden = false; clearTimeout(toast); toast = setTimeout(function () { s.hidden = true; }, 1600); }
+  function save(j, reload) {
+    var copy = {}; Object.keys(j).forEach(function (k) { if (k !== "visit" && k !== "lat" && k !== "lng") copy[k] = j[k]; });
+    RA.api({ action: "job-save", pass: RA.pass(), job: copy }).then(function (r) {
+      if (!r || !r.ok) { flash("Not saved. Check your signal"); return; }
+      flash("Saved");
+      if (r.job && r.job.num && !j.num) { j.num = r.job.num; draw(); if (openId === j.id) panel(); }
+      if (reload && r.job) { r.job.lat = j.lat; r.job.lng = j.lng; Object.keys(r.job).forEach(function (k) { j[k] = r.job[k]; }); if (!r.job.visit) delete j.visit; panel(); draw(); }
+    }).catch(function () { flash("Not saved. Check your signal"); });
+  }
+  $("add").onclick = function () {
+    var j = { id: "j" + Math.random().toString(36).slice(2, 12).replace(/[^a-z0-9]/g, "") + "x", name: "", address: "", project: "", stage: "signed", since: Date.now(), history: [{ s: "signed", t: Date.now() }], notes: [], status: "Active" };
+    jobs.unshift(j); openId = j.id; panel(); draw(); setTimeout(function () { $("p-address").focus(); $("p-address").scrollIntoView({ block: "center" }); }, 50);
+    save(j);
+  };
+  $("find").oninput = draw;
+
+  /* ---------- loading ---------- */
+  function load(pw) {
+    $("loading").hidden = false;
+    RA.api({ action: "job-list", pass: pw }).then(function (r) {
+      $("loading").hidden = true;
+      if (!r || !r.ok) { try { if (r && r.error === "bad-pass") localStorage.removeItem("ra-pass"); } catch (e) {} $("connect").hidden = false; $("pwerr").textContent = r && r.error === "bad-pass" ? "That passphrase is not right." : "Could not load your jobs. Please try again."; $("pwerr").hidden = false; return; }
+      try { localStorage.setItem("ra-pass", pw); } catch (e) {}
+      jobs = r.jobs || []; visits = r.visits || [];
+      $("connect").hidden = true; $("main").hidden = false; draw();
+      var h = location.hash.slice(1); if (h && find(h)) { openId = h; panel(); }
+    }).catch(function () { $("loading").hidden = true; $("connect").hidden = false; $("pwerr").textContent = "Could not reach your Google Sheet. Check your signal and try again."; $("pwerr").hidden = false; });
+  }
+  try { filter = localStorage.getItem("ra-jobs-f") || "all"; } catch (e) {}
+  $("pwgo").onclick = function () { var p = $("pw").value.trim(); if (!p) return; $("pwerr").hidden = true; $("connect").hidden = true; load(p); };
+  $("pw").onkeydown = function (e) { if (e.key === "Enter") $("pwgo").click(); };
+  if (RA.pass()) load(RA.pass()); else { $("loading").hidden = true; $("connect").hidden = false; }
+})();
+</script>
+</body>
+</html>
