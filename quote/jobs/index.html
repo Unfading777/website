@@ -106,7 +106,8 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 .docs li .who { margin-left:auto; color:var(--grey); font-size:.78rem; white-space:nowrap; }
 .docs li .why { color:var(--grey); font-size:.78rem; }
 .stages li.prestage .sb .c { border-style:dashed; }
-.stages li.prestage:nth-child(3)::after { background:var(--pink); opacity:.35; }
+.stages li.prestage:nth-child(4)::after { background:var(--pink); opacity:.35; }
+a.sb { text-decoration:none; }
 .tile.pre { text-decoration:none; opacity:.92; }
 .tile.pre .pic img { filter:saturate(.85); }
 .facts { margin:.5rem 0 0; display:grid; gap:.25rem; font-size:.95rem; color:var(--text); }
@@ -214,7 +215,7 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var DAY = 86400000, jobs = [], visits = [], pre = [], filter = "all", openId = "", only = "", svKey = "", svMeta = {};
+  var DAY = 86400000, jobs = [], visits = [], pre = [], leadCount = 0, filter = "all", openId = "", only = "", svKey = "", svMeta = {};
   /* key, label, whose move, days before a chase (matches the Google script) */
   var ST = [
     ["signed", "Contract signed", "me", 0], ["survey-booked", "Survey booked", "me", 0], ["survey-done", "Survey done", "me", 0],
@@ -287,6 +288,7 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     RA.api({ action: "pipeline", pass: RA.pass() }).then(function (r) {
       if (!r || !r.ok) return;
       var cut = Date.now() - 120 * DAY;
+      leadCount = (r.people || []).filter(function (p) { return p.st === "Lead" && !p.lost && !p.sg && (p.f || 0) > Date.now() - 60 * DAY; }).length;
       pre = (r.people || []).filter(function (p) { return !p.sg && !p.lost && (p.qs ? p.qs > cut : (p.vs === "Booked" || p.vs === "Visited") && (p.vd || p.f || 0) > cut); }).map(function (p) {
         var q = p.ql ? RA.decode((String(p.ql).split("#")[1] || "").split(".")[0]) : null;
         return { k: p.k, name: p.n || "", addr: q && q.a ? String(q.a).split("\n").join(", ") : (p.pc || ""), st: p.qs ? "quote" : "visit", vs: p.vs, vd: p.vd, qs: p.qs, fee: p.qf, link: p.ql || "" };
@@ -326,6 +328,7 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
   function bar() {
     var act = jobs.filter(function (j) { return j.status === "Active" && j.stage !== "complete"; });
     var H = ['<li><button class="sb' + (act.length ? " has" : "") + '" type="button" data-s="" aria-pressed="' + (!only) + '"><span class="c">' + (only ? act.length : '<span class="all"></span>') + '</span><span class="l">All stages</span></button></li>'];
+    H.push('<li class="prestage"><a class="sb' + (leadCount ? " has" : "") + '" href="../pipeline/" title="Open your pipeline"><span class="c">' + (leadCount || "") + '</span><span class="l">Leads</span></a></li>');
     [["pre-visit", "Visit booked"], ["pre-quote", "Quote sent"]].forEach(function (s) {
       var n = pre.filter(function (p) { return "pre-" + p.st === s[0]; }).length;
       H.push('<li class="prestage"><button class="sb' + (n ? " has" : "") + '" type="button" data-s="' + s[0] + '" aria-pressed="' + (only === s[0]) + '"><span class="c">' + (n || "") + '</span><span class="l">' + s[1] + '</span></button></li>');
