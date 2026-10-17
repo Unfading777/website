@@ -109,7 +109,10 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 .quick h3, .docs h3 { margin:0 0 .5rem; font-size:.95rem; }
 .qbtns { display:flex; flex-wrap:wrap; gap:.45rem; }
 .qbtns .ghost { font-size:.86rem; padding:.42rem .85rem; }
-.docs { background:var(--bg); border-radius:16px; padding:1rem 1.1rem; }
+.docs { }
+.docs h3 { font-family:'Outfit',sans-serif; font-size:1.1rem !important; margin:0 0 .7rem !important; }
+.jact { padding-top:.4rem; }
+.jact .quick { margin-top:1.1rem; }
 .docs ul { list-style:none; margin:0; padding:0; display:grid; gap:.3rem; }
 .docs li { display:flex; align-items:center; gap:.55rem; font-size:.9rem; }
 .docs li label { display:flex; gap:.55rem; align-items:center; cursor:pointer; flex:1; }
@@ -140,14 +143,14 @@ a.sb { text-decoration:none; }
 /* Job page */
 .back { font:inherit; font-weight:600; color:var(--grey); background:none; border:0; padding:.3rem 0; cursor:pointer; margin:.8rem 0 .6rem; }
 .back:hover { color:var(--pink); }
-.jhero { display:grid; grid-template-columns:minmax(14rem, 22rem) minmax(0, 1fr) minmax(0, 1fr); gap:1.6rem; align-items:start; background:#fff; border:1px solid var(--line); border-radius:22px; padding:1rem; }
+.jhero { display:grid; grid-template-columns:minmax(14rem, 20rem) minmax(0, 1.2fr) minmax(0, 1fr); gap:1.8rem; align-items:start; background:#fff; border:1px solid var(--line); border-radius:22px; padding:1rem; }
 .jpic .ph { border-radius:16px; overflow:hidden; }
 .jinfo { padding:.4rem .4rem .4rem 0; }
 .jnum { display:inline-block; background:var(--tint); color:var(--pink-ink); font-weight:700; font-size:.82rem; border-radius:999px; padding:.2rem .7rem; margin-bottom:.5rem; }
 .jinfo .addr { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.7rem; line-height:1.15; margin:0; letter-spacing:-.01em; }
 .jprog { margin:.9rem 0 .2rem; }
 .jprog .prog { margin:0 0 .4rem; height:.5rem; }
-.jgrid { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1.25fr); gap:1rem; margin-top:1rem; align-items:start; }
+.jgrid { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); gap:1rem; margin-top:1rem; align-items:start; }
 .jgrid .card { border-radius:20px; padding:1.2rem 1.3rem; }
 .ph { position:relative; aspect-ratio:4/3; background:var(--soft); }
 .strip button { width:3.6rem !important; height:2.6rem !important; }
@@ -158,6 +161,23 @@ a.sb { text-decoration:none; }
 .strip img { width:100%; height:100%; object-fit:cover; display:block; }
 .contact { display:flex; flex-wrap:wrap; gap:.5rem; margin:.8rem 0 0; }
 
+.jroad { background:#fff; border:1px solid var(--line); border-radius:20px; padding:1.2rem .8rem 1rem; margin:0 0 1rem; }
+.jroad ol { list-style:none; margin:0; padding:0; display:flex; }
+.jroad li { position:relative; flex:1 1 0; min-width:0; }
+.jroad li:not(:last-child)::after { content:""; position:absolute; top:1.3rem; left:calc(50% + 1.45rem); right:calc(-50% + 1.45rem); height:2px; background:var(--line); }
+.jroad li.done:not(:last-child)::after { background:var(--pink); }
+.jroad .step { width:100%; display:flex; flex-direction:column; align-items:center; gap:.35rem; background:none; border:0; font:inherit; color:inherit; padding:0 .15rem; cursor:pointer; border-radius:12px; text-align:center; }
+.jroad .dot { width:2.6rem; height:2.6rem; border-radius:50%; border:2px solid var(--line); background:#fff; display:grid; place-items:center; font-weight:700; font-size:.95rem; color:var(--grey); }
+.jroad .step:hover .dot { border-color:var(--pink); }
+.jroad .done .dot { background:var(--pink); border-color:var(--pink); color:#fff; }
+.jroad .now .dot { border-color:var(--pink); color:var(--pink); box-shadow:0 0 0 5px var(--tint); }
+.jroad .t { font-size:.86rem; line-height:1.25; font-weight:600; color:var(--ink); }
+.jroad li:not(.done):not(.now) .t { color:var(--grey); font-weight:500; }
+.jroad .now .t { color:var(--pink-ink); font-weight:700; }
+.jroad .s { font-size:.75rem; color:var(--grey); min-height:1em; }
+.jroad .skip .t { text-decoration:line-through; }
+.jroad #p-skips { max-width:30rem; margin:.8rem auto 0; }
+@media (max-width:52rem) { .jroad ol { display:grid; grid-template-columns:repeat(5, minmax(0, 1fr)); row-gap:.9rem; } .jroad li::after { display:none; } .jroad .t { font-size:.72rem; } }
 .road { list-style:none; margin:0; padding:0; position:relative; }
 .road li { position:relative; }
 .step { width:100%; display:flex; align-items:flex-start; gap:.8rem; background:none; border:0; font:inherit; color:inherit; text-align:left; padding:.5rem .4rem; border-radius:12px; cursor:pointer; }
@@ -179,7 +199,7 @@ a.sb { text-decoration:none; }
 .notes li small { display:block; color:var(--grey); font-size:.78rem; }
 .links { display:flex; flex-wrap:wrap; gap:.5rem; }
 .saving { position:fixed; left:50%; bottom:1rem; transform:translateX(-50%); background:var(--ink); color:#fff; border-radius:999px; padding:.45rem 1rem; font-size:.85rem; z-index:30; }
-@media (max-width:80rem) { .jhero { grid-template-columns:minmax(12rem, 18rem) minmax(0, 1fr); } .jdocs { grid-column:1 / -1; } }
+@media (max-width:80rem) { .jhero { grid-template-columns:minmax(12rem, 18rem) minmax(0, 1fr); } .jact { grid-column:2; } }
 @media (max-width:52rem) { .jhero, .jgrid { grid-template-columns:minmax(0, 1fr); } .jinfo { padding:0 .2rem .3rem; } }
 @media (max-width:40rem) { .two { grid-template-columns:1fr; } .jinfo .addr { font-size:1.4rem; } .nav a { margin:0 1rem 0 0; } .bar input[type=search] { width:100%; } }
 </style>
@@ -447,8 +467,8 @@ a.sb { text-decoration:none; }
       '<label class="f" for="p-bref">Building Regs reference</label><input type="text" id="p-bref" value="' + esc(j.bregsRef || "") + '">' +
       '<label class="f" for="p-visit">Home visit (for the photos)</label><select id="p-visit"><option value="">None</option>' + visits.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === j.visitId ? " selected" : "") + '>' + esc([x.name, x.address].filter(String).join(", ")) + '</option>'; }).join("") + '</select>' +
       '<div class="actions"><button class="btn" type="button" id="p-done">Done</button></div></div>');
-    H.push('<div class="jprog"><div class="prog"><span style="width:' + pr.pct + '%"></span></div><div class="meta"><span>Step ' + pr.done + ' of ' + pr.total + ' &middot; <b style="color:var(--ink)">' + esc(x.s[1]) + '</b></span></div></div>');
-    if (wa.length > 9 || email) H.push('<div class="contact">' + (wa.length > 9 ? '<a class="btn" target="_blank" rel="noopener" href="https://wa.me/' + esc(wa) + '">WhatsApp ' + esc(first) + '</a>' : "") + (email ? '<a class="ghost" href="mailto:' + esc(email) + '">Email ' + esc(first || "client") + '</a>' : "") + '</div>');
+    H.push('</div><div class="jact">');
+    if (wa.length > 9 || email) H.push('<div class="contact" style="margin-top:0">' + (wa.length > 9 ? '<a class="btn" target="_blank" rel="noopener" href="https://wa.me/' + esc(wa) + '">WhatsApp ' + esc(first) + '</a>' : "") + (email ? '<a class="ghost" href="mailto:' + esc(email) + '">Email ' + esc(first || "client") + '</a>' : "") + '</div>');
     /* One-tap updates: the likely next moves for this job */
     var NEXT = { "signed": ["survey-booked", "survey-done"], "survey-booked": ["survey-done"], "survey-done": ["drawing", "client"], "drawing": ["client", "planning"], "client": ["drawing", "planning"],
       "planning": ["approved", "calcs"], "approved": ["calcs", "bregs"], "calcs": ["bregs"], "bregs": ["complete"], "complete": [] };
@@ -462,15 +482,17 @@ a.sb { text-decoration:none; }
         (w.due && w.who === "client" && wa.length > 9 ? '<div class="actions" style="margin-top:.6rem"><a class="btn" target="_blank" rel="noopener" id="p-chase" href="https://wa.me/' + esc(wa) + '?text=' + encodeURIComponent("Hi " + (first || "there") + ", just checking in on the drawings I sent over. Any changes at all, just send them through, or if you're happy with them, let me know and I'll get the next stage moving.") + '">Send a nudge</a></div>' : "") +
         (j.stage !== "planning" ? '<div class="small" style="margin-top:.6rem;display:flex;align-items:center;gap:.45rem;flex-wrap:wrap"><label for="p-wait">Flag it after</label><input type="number" min="1" max="120" id="p-wait" style="width:4.2rem;padding:.3rem .5rem" value="' + (Number((j.wait || {})[j.stage]) || x.s[3]) + '"><span>days</span></div>' : "") + '</div>');
     }
-    H.push('</div><div class="jdocs">' + docsHtml(j) + '</div></div>');
-    H.push('<div class="jgrid"><section class="card"><h2>Where it is</h2><p class="small" style="margin:-.3rem 0 .5rem">Tap a step when the job reaches it.</p><ol class="road">');
+    H.push('</div></div>');
+    var road = '<nav class="jroad" aria-label="Where the job is"><ol>';
     ST.forEach(function (s, i) {
       var c = sk[s[0]] ? "skip" : i < x.i || j.stage === "complete" ? "done" : i === x.i ? "now" : "";
-      var sub = sk[s[0]] ? "Not needed" : hist[s[0]] && i <= x.i ? dateStr(hist[s[0]]) : WHO[s[2]] ? "Waiting on the " + WHO[s[2]] : "";
-      H.push('<li class="' + c + '"><button class="step" type="button" data-s="' + s[0] + '"><span class="dot">' + (c === "done" ? "&#10003;" : i + 1) + '</span><span><span class="t">' + esc(s[1]) + '</span><span class="s">' + esc(sub) + '</span></span></button></li>');
+      var sub = sk[s[0]] ? "Not needed" : hist[s[0]] && i <= x.i ? dateStr(hist[s[0]]) : "";
+      road += '<li class="' + c + '"><button class="step" type="button" data-s="' + s[0] + '" title="Move the job to ' + esc(s[1]) + '"><span class="dot">' + (c === "done" ? "&#10003;" : i + 1) + '</span><span class="t">' + esc(s[1]) + '</span><span class="s">' + esc(sub) + '</span></button></li>';
     });
-    H.push('</ol><p class="small" style="margin:.6rem 0 0">Not every job needs every step. <a href="#" id="p-skip">Choose steps this job skips</a></p>');
-    H.push('<div id="p-skips" hidden class="box">' + ST.slice(1, -1).map(function (s) { return '<label style="display:flex;gap:.5rem;align-items:center;margin:.2rem 0"><input type="checkbox" data-k="' + s[0] + '"' + (sk[s[0]] ? " checked" : "") + '> ' + esc(s[1]) + '</label>'; }).join("") + '</div></section><div>');
+    road += '</ol><p class="small" style="margin:.6rem 0 0;text-align:center">Tap a step when the job reaches it. Not every job needs every step: <a href="#" id="p-skip">choose steps this job skips</a></p>';
+    road += '<div id="p-skips" hidden class="box">' + ST.slice(1, -1).map(function (s) { return '<label style="display:flex;gap:.5rem;align-items:center;margin:.2rem 0"><input type="checkbox" data-k="' + s[0] + '"' + (sk[s[0]] ? " checked" : "") + '> ' + esc(s[1]) + '</label>'; }).join("") + '</div></nav>';
+    H.splice(1, 0, road);
+    H.push('<div class="jgrid"><section class="card">' + docsHtml(j) + '</section><div>');
     H.push('<section class="card"><h2>Notes</h2><textarea id="p-note" placeholder="Spoke to ' + esc(first || "the client") + ', away until the 20th"></textarea><div class="actions"><button class="btn" type="button" id="p-addnote">Add note</button></div>');
     H.push('<ul class="notes">' + (j.notes || []).slice().reverse().map(function (n) { return '<li' + (n.auto ? ' class="auto"' : "") + '><small>' + esc(dateStr(n.t)) + (n.auto ? " · picked up from your email" : "") + '</small>' + esc(n.text) + '</li>'; }).join("") + '</ul></section>');
     H.push('</div></div><div class="foot">' + (j.status === "Active" ? '<button type="button" id="p-arch">Move to finished</button>' : '<button type="button" id="p-unarch">Make active again</button>') + '<button type="button" id="p-del" class="del">Delete job</button></div>');
