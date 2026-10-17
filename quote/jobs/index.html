@@ -117,6 +117,7 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 .docs li { display:flex; align-items:center; gap:.55rem; font-size:.9rem; }
 .docs li label { display:flex; gap:.55rem; align-items:center; cursor:pointer; flex:1; }
 .docs li .who { margin-left:auto; color:var(--grey); font-size:.78rem; white-space:nowrap; }
+.docs li a.open { color:var(--pink-ink); font-weight:700; font-size:.82rem; text-decoration:none; }
 .docs li .why { color:var(--grey); font-size:.78rem; }
 .stages li.prestage .sb .c { border-style:dashed; }
 .stages li.prestage:nth-child(4)::after { background:var(--pink); opacity:.35; }
@@ -143,7 +144,10 @@ a.sb { text-decoration:none; }
 /* Job page */
 .back { font:inherit; font-weight:600; color:var(--grey); background:none; border:0; padding:.3rem 0; cursor:pointer; margin:.8rem 0 .6rem; }
 .back:hover { color:var(--pink); }
-.jhero { display:grid; grid-template-columns:minmax(14rem, 20rem) minmax(0, 1.2fr) minmax(0, 1fr); gap:1.8rem; align-items:start; background:#fff; border:1px solid var(--line); border-radius:22px; padding:1rem; }
+.jtop { display:grid; grid-template-columns:minmax(0, 1.5fr) minmax(0, 1fr); gap:1rem; align-items:stretch; }
+.jhero { display:grid; grid-template-columns:minmax(12rem, 19rem) minmax(0, 1fr); gap:1.6rem; align-items:start; background:#fff; border:1px solid var(--line); border-radius:22px; padding:1rem; }
+.jact.card { margin:0; border-radius:22px; padding:1.2rem 1.3rem; }
+.jact .box { margin-top:1rem; }
 .jpic .ph { border-radius:16px; overflow:hidden; }
 .jinfo { padding:.4rem .4rem .4rem 0; }
 .jnum { display:inline-block; background:var(--tint); color:var(--pink-ink); font-weight:700; font-size:.82rem; border-radius:999px; padding:.2rem .7rem; margin-bottom:.5rem; }
@@ -199,8 +203,8 @@ a.sb { text-decoration:none; }
 .notes li small { display:block; color:var(--grey); font-size:.78rem; }
 .links { display:flex; flex-wrap:wrap; gap:.5rem; }
 .saving { position:fixed; left:50%; bottom:1rem; transform:translateX(-50%); background:var(--ink); color:#fff; border-radius:999px; padding:.45rem 1rem; font-size:.85rem; z-index:30; }
-@media (max-width:80rem) { .jhero { grid-template-columns:minmax(12rem, 18rem) minmax(0, 1fr); } .jact { grid-column:2; } }
-@media (max-width:52rem) { .jhero, .jgrid { grid-template-columns:minmax(0, 1fr); } .jinfo { padding:0 .2rem .3rem; } }
+@media (max-width:80rem) { .jtop { grid-template-columns:minmax(0, 1fr); } }
+@media (max-width:52rem) { .jtop, .jhero, .jgrid { grid-template-columns:minmax(0, 1fr); } .jinfo { padding:0 .2rem .3rem; } }
 @media (max-width:40rem) { .two { grid-template-columns:1fr; } .jinfo .addr { font-size:1.4rem; } .nav a { margin:0 1rem 0 0; } .bar input[type=search] { width:100%; } }
 </style>
 </head>
@@ -431,10 +435,26 @@ a.sb { text-decoration:none; }
     return D;
   }
   function docsHtml(j) {
-    var D = docsNeeded(j), got = j.docs || {}, done = D.filter(function (d) { return got[d[0]]; }).length;
+    var D = docsNeeded(j), got = j.docs || {}, files = j.files || {}, done = D.filter(function (d) { return got[d[0]]; }).length, mine = D.filter(function (d) { return d[2] === "I create"; }).length;
     return '<div class="docs"><h3>Planning documents <span class="small" style="font-weight:500">' + done + ' of ' + D.length + ' ready</span></h3><ul>' + D.map(function (d) {
-      return '<li><label><input type="checkbox" data-doc="' + d[0] + '"' + (got[d[0]] ? " checked" : "") + '> <span>' + esc(d[1]) + (d[3] ? ' <span class="why">' + esc(d[3]) + '</span>' : "") + '</span></label><span class="who">' + esc(d[2]) + '</span></li>';
-    }).join("") + '</ul><p class="small" style="margin:.6rem 0 0">Worked out from the planning checks at the visit. The "Create documents" button comes next: it fills in everything marked \u201cI create\u201d and saves it to the job\u2019s planning folder.</p></div>';
+      var f = files[d[0]];
+      return '<li><label><input type="checkbox" data-doc="' + d[0] + '"' + (got[d[0]] ? " checked" : "") + '> <span>' + esc(d[1]) + (d[3] ? ' <span class="why">' + esc(d[3]) + '</span>' : "") + '</span></label>' +
+        (f ? '<a class="who open" target="_blank" rel="noopener" href="' + esc(f.url) + '">Open PDF</a>' : '<span class="who">' + esc(d[2]) + '</span>') + '</li>';
+    }).join("") + '</ul><div class="actions" style="margin-top:1rem;align-items:center"><button class="btn" type="button" id="p-create">' + (Object.keys(files).length ? "Create them again" : "Create documents") + '</button>' +
+      '<span class="small" id="p-cmsg">Writes the ' + mine + ' marked \u201cI create\u201d and saves them as PDFs in the job folder.</span></div></div>';
+  }
+  /* Writes every "I create" document on the server and saves them as PDFs in Issued > Planning Issue > today's date */
+  function createDocs(j, btn) {
+    var D = docsNeeded(j), keys = D.filter(function (d) { return d[2] === "I create"; }).map(function (d) { return d[0]; });
+    var list = D.filter(function (d) { return d[0] !== "letter"; }).map(function (d) { return d[1]; });
+    btn.disabled = true; btn.textContent = "Writing documents\u2026"; $("p-cmsg").textContent = "This takes about half a minute.";
+    RA.api({ action: "job-docs", pass: RA.pass(), id: j.id, keys: keys, list: list }).then(function (r) {
+      if (!r || !r.ok) { btn.disabled = false; btn.textContent = "Create documents"; $("p-cmsg").textContent = "Something went wrong" + (r && r.error ? " (" + r.error + ")" : "") + ". Please try again."; return; }
+      j.files = j.files || {}; j.docs = j.docs || {};
+      r.files.forEach(function (f) { j.files[f.key] = { url: f.url, at: f.at }; j.docs[f.key] = 1; });
+      j.issueFolder = r.folder; panel(); flash(r.files.length + " documents saved");
+      if ($("p-cmsg")) $("p-cmsg").innerHTML = 'Saved in <a target="_blank" rel="noopener" href="' + esc(r.folder) + '">Issued \u203a Planning Issue \u203a today</a>.';
+    }).catch(function () { btn.disabled = false; btn.textContent = "Create documents"; $("p-cmsg").textContent = "Could not reach your Google Sheet. Please try again."; });
   }
   function panel() {
     var j = find(openId); if (!j) { showBoard(); return; }
@@ -444,7 +464,7 @@ a.sb { text-decoration:none; }
     var email = v.email || j.email || "", first = String(j.name || "").split(/\s+/)[0];
     var H = [];
     H.push('<button class="back" type="button" id="p-close">&larr; All jobs</button>');
-    H.push('<div class="jhero"><div class="jpic"><div class="ph">' + picHtml(j) + '</div>');
+    H.push('<div class="jtop"><div class="jhero"><div class="jpic"><div class="ph">' + picHtml(j) + '</div>');
     if (ps.length > 1) H.push('<div class="strip" aria-label="Choose the picture">' + ps.map(function (p) { return '<button type="button" data-u="' + esc(p.url) + '" aria-pressed="' + (p.url === cur) + '" title="' + esc(p.caption || "Use this photo") + '"><img alt="" loading="lazy" src="' + esc(p.url) + '"></button>'; }).join("") + '</div>');
     H.push('</div><div class="jinfo">');
     H.push((j.num ? '<span class="jnum">Job ' + esc(j.num) + '</span>' : "") + '<h2 class="addr" id="p-addr">' + esc(j.address || "No address") + '</h2>');
@@ -468,15 +488,18 @@ a.sb { text-decoration:none; }
       '<label class="f" for="p-visit">Home visit (for the photos)</label><select id="p-visit"><option value="">None</option>' + visits.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === j.visitId ? " selected" : "") + '>' + esc([x.name, x.address].filter(String).join(", ")) + '</option>'; }).join("") + '</select>' +
       '<label class="f">Steps this job doesn\u2019t need</label><div id="p-skips">' + ST.slice(1, -1).map(function (s) { return '<label style="display:flex;gap:.5rem;align-items:center;margin:.25rem 0"><input type="checkbox" data-k="' + s[0] + '"' + (sk[s[0]] ? " checked" : "") + '> ' + esc(s[1]) + '</label>'; }).join("") + '</div>' +
       '<div class="actions"><button class="btn" type="button" id="p-done">Done</button></div></div>');
-    H.push('</div><div class="jact">');
-    if (wa.length > 9 || email) H.push('<div class="contact" style="margin-top:0">' + (wa.length > 9 ? '<a class="btn" target="_blank" rel="noopener" href="https://wa.me/' + esc(wa) + '">WhatsApp ' + esc(first) + '</a>' : "") + (email ? '<a class="ghost" href="mailto:' + esc(email) + '">Email ' + esc(first || "client") + '</a>' : "") + '</div>');
+    /* WhatsApp opens WhatsApp on the computer; Email opens a new message in Outlook on the web */
+    var outlook = "https://outlook.office.com/mail/deeplink/compose?to=" + encodeURIComponent(email) + "&subject=" + encodeURIComponent(String(j.address || "").split(",")[0]);
+    H.push('<div class="contact">' + (wa.length > 9 ? '<a class="btn" target="_blank" rel="noopener" href="https://wa.me/' + esc(wa) + '">WhatsApp ' + esc(first || "client") + '</a>' : '<button class="btn" type="button" id="p-addmob">WhatsApp ' + esc(first || "client") + '</button>') +
+      (email ? '<a class="ghost" target="_blank" rel="noopener" href="' + esc(outlook) + '">Email ' + esc(first || "client") + '</a>' : "") + '</div>');
+    H.push('</div></div><div class="jact card">');
     /* One-tap updates: the likely next moves for this job */
     var NEXT = { "signed": ["survey-booked", "survey-done"], "survey-booked": ["survey-done"], "survey-done": ["drawing", "client"], "drawing": ["client", "planning"], "client": ["drawing", "planning"],
       "planning": ["approved", "calcs"], "approved": ["calcs", "bregs"], "calcs": ["bregs"], "bregs": ["complete"], "complete": [] };
     var LBL = { "survey-booked": "Survey booked", "survey-done": "Survey done", "drawing": j.stage === "client" ? "Client came back" : "Started drawings", "client": "Issued to client", "planning": "Planning submitted",
       "approved": "Planning approved", "calcs": "Sent to engineer", "bregs": "Building Regs submitted", "complete": "Job complete" };
     var nx = (NEXT[j.stage] || []).filter(function (k) { return !sk[k]; });
-    if (nx.length) H.push('<div class="quick"><h3>Update</h3><div class="qbtns">' + nx.map(function (k, i) { return '<button class="' + (i ? "ghost" : "btn") + '" type="button" data-q="' + k + '">' + esc(LBL[k]) + '</button>'; }).join("") + '</div></div>');
+    if (nx.length) H.push('<div class="quick" style="margin-top:0"><h3>Update</h3><div class="qbtns">' + nx.map(function (k, i) { return '<button class="' + (i ? "ghost" : "btn") + '" type="button" data-q="' + k + '">' + esc(LBL[k]) + '</button>'; }).join("") + '</div></div>');
     if (w) {
       var txt = w.who === "client" ? "Waiting on " + esc(first || "the client") : "Waiting on the " + WHO[w.who];
       H.push('<div class="box' + (w.due ? " hot" : "") + '"><b>' + txt + ' for ' + w.days + ' day' + (w.days === 1 ? "" : "s") + '</b><div class="small">' + (w.due ? "Worth a chase now." : "I'll flag it on " + dateStr(w.dueAt) + " if nothing has moved.") + '</div>' +
@@ -503,6 +526,8 @@ a.sb { text-decoration:none; }
     $("p-close").onclick = shut;
     $("p-edit").onclick = function (e) { e.preventDefault(); $("p-editbox").hidden = !$("p-editbox").hidden; };
     $("p-done").onclick = function () { panel(); };
+    if ($("p-addmob")) $("p-addmob").onclick = function () { $("p-editbox").hidden = false; $("p-mob").focus(); $("p-mob").scrollIntoView({ block: "center" }); };
+    if ($("p-create")) $("p-create").onclick = function () { createDocs(j, this); };
     [].forEach.call(P.querySelectorAll(".strip button"), function (b) { b.onclick = function () { j.photo = b.getAttribute("data-u"); save(j); panel(); }; });
     [].forEach.call(P.querySelectorAll("[data-q]"), function (b) { b.onclick = function () { setStage(j, b.getAttribute("data-q")); }; });
     [].forEach.call(P.querySelectorAll("[data-doc]"), function (c) { c.onchange = function () { j.docs = j.docs || {}; j.docs[c.getAttribute("data-doc")] = c.checked ? 1 : 0; save(j); }; });
