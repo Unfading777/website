@@ -95,14 +95,21 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 .noplace { position:absolute; inset:0; display:grid; place-items:center; color:var(--grey); font-size:.9rem; }
 
 /* Job panel */
-.shade { position:fixed; inset:0; background:rgba(31,30,38,.45); z-index:20; display:flex; justify-content:flex-end; }
-.panel { background:var(--bg); width:min(40rem, 100%); height:100%; overflow-y:auto; box-shadow:-10px 0 40px rgba(0,0,0,.15); }
-.ph { position:relative; aspect-ratio:16/8; background:var(--soft); }
+/* Job page */
+.back { font:inherit; font-weight:600; color:var(--grey); background:none; border:0; padding:.3rem 0; cursor:pointer; margin:.8rem 0 .6rem; }
+.back:hover { color:var(--pink); }
+.jhero { display:grid; grid-template-columns:minmax(0, 1.25fr) minmax(0, 1fr); gap:1.6rem; align-items:start; background:#fff; border:1px solid var(--line); border-radius:22px; padding:1rem; }
+.jpic .ph { border-radius:16px; overflow:hidden; }
+.jinfo { padding:.4rem .4rem .4rem 0; }
+.jnum { display:inline-block; background:var(--tint); color:var(--pink-ink); font-weight:700; font-size:.82rem; border-radius:999px; padding:.2rem .7rem; margin-bottom:.5rem; }
+.jinfo .addr { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.7rem; line-height:1.15; margin:0; letter-spacing:-.01em; }
+.jprog { margin:.9rem 0 .2rem; }
+.jprog .prog { margin:0 0 .4rem; height:.5rem; }
+.jgrid { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1.25fr); gap:1rem; margin-top:1rem; align-items:start; }
+.jgrid .card { border-radius:20px; padding:1.2rem 1.3rem; }
+.ph { position:relative; aspect-ratio:16/10; background:var(--soft); }
 .ph img { width:100%; height:100%; object-fit:cover; display:block; }
-.close { position:absolute; right:.8rem; top:.8rem; width:2.4rem; height:2.4rem; border-radius:50%; border:0; background:rgba(255,255,255,.95); font-size:1.4rem; line-height:1; cursor:pointer; z-index:2; }
-.pb { padding:1.1rem 1.2rem 3rem; }
-.pb .addr { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.45rem; line-height:1.2; margin:0; }
-.strip { display:flex; gap:.4rem; overflow-x:auto; padding:.6rem 1.2rem 0; }
+.strip { display:flex; gap:.4rem; overflow-x:auto; padding:.6rem 0 0; }
 .strip button { flex:none; width:4.6rem; height:3.2rem; border-radius:10px; overflow:hidden; border:2px solid transparent; padding:0; cursor:pointer; background:var(--soft); }
 .strip button[aria-pressed=true] { border-color:var(--pink); }
 .strip img { width:100%; height:100%; object-fit:cover; display:block; }
@@ -129,7 +136,8 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 .notes li small { display:block; color:var(--grey); font-size:.78rem; }
 .links { display:flex; flex-wrap:wrap; gap:.5rem; }
 .saving { position:fixed; left:50%; bottom:1rem; transform:translateX(-50%); background:var(--ink); color:#fff; border-radius:999px; padding:.45rem 1rem; font-size:.85rem; z-index:30; }
-@media (max-width:40rem) { .two { grid-template-columns:1fr; } .nav a { margin:0 1rem 0 0; } .bar input[type=search] { width:100%; } }
+@media (max-width:52rem) { .jhero, .jgrid { grid-template-columns:minmax(0, 1fr); } .jinfo { padding:0 .2rem .3rem; } }
+@media (max-width:40rem) { .two { grid-template-columns:1fr; } .jinfo .addr { font-size:1.4rem; } .nav a { margin:0 1rem 0 0; } .bar input[type=search] { width:100%; } }
 </style>
 </head>
 <body>
@@ -138,8 +146,8 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     <div class="brand"><i></i>Residential Architecture</div>
     <div class="nav"><a href="../pipeline/">Pipeline</a><a href="../sent/">Sent quotes</a><a href="../visit/">Home visits</a></div>
   </div>
-  <h1>Jobs</h1>
-  <p class="small" style="margin:0">Every signed job and where it is. Signed quotes appear here by themselves.</p>
+  <div id="intro"><h1>Jobs</h1>
+  <p class="small" style="margin:0">Every signed job and where it is. Signed quotes appear here by themselves.</p></div>
 
   <div class="card" id="connect" hidden style="margin-top:1rem;max-width:28rem">
     <label for="pw" style="font-weight:600;display:block;margin-bottom:.3rem">Enter your passphrase</label>
@@ -151,6 +159,7 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
   <p class="small" id="loading" style="margin-top:1rem">Loading your jobs&hellip;</p>
 
   <div id="main" hidden>
+  <div id="board">
     <nav class="stages" aria-label="Stages"><ol id="stagebar"></ol></nav>
     <div class="bar">
       <div class="seg" role="group" aria-label="Show" id="filters"></div>
@@ -169,11 +178,10 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
       <p class="err" id="sverr" hidden></p>
     </div>
   </div>
+  <div id="jobpage" hidden></div>
+  </div>
 </div>
 
-<div class="shade" id="shade" hidden>
-  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="p-addr" id="panel"></div>
-</div>
 <div class="saving" id="saving" hidden>Saved</div>
 
 <script src="../q.js?v=40"></script>
@@ -289,7 +297,7 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
         '<div class="tb"><div class="addr">' + esc(String(j.address || "").split(",")[0] || "No address") + '</div><div class="who">' + (j.num ? '<span class="num">' + esc(j.num) + '</span> · ' : "") + esc(j.name || String(j.address || "").split(",").slice(1).join(",").trim()) + '</div>' +
         '<div class="prog"><span style="width:' + p.pct + '%"></span></div><div class="meta"><span>Step ' + p.done + ' of ' + p.total + '</span>' + meta + '</div></div></button>';
     }).join("");
-    [].forEach.call($("grid").querySelectorAll(".tile"), function (t) { t.onclick = function () { openId = t.getAttribute("data-id"); panel(); }; });
+    [].forEach.call($("grid").querySelectorAll(".tile"), function (t) { t.onclick = function () { go(t.getAttribute("data-id")); }; });
     var e = $("empty"); e.hidden = list.length > 0;
     e.textContent = jobs.length ? (filter === "chase" ? "Nobody to chase. Everyone is within their time." : "Nothing here.") : "No jobs yet. When a client signs a quote, the job appears here with the photo from your home visit. You can also add one yourself.";
   }
@@ -297,16 +305,19 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
   /* ---------- one job ---------- */
   function find(id) { return jobs.filter(function (j) { return j.id === id; })[0]; }
   function panel() {
-    var j = find(openId); if (!j) { $("shade").hidden = true; return; }
-    var v = j.visit || {}, x = stage(j), sk = skipped(j), w = waitInfo(j), hist = {};
+    var j = find(openId); if (!j) { showBoard(); return; }
+    var v = j.visit || {}, x = stage(j), sk = skipped(j), w = waitInfo(j), hist = {}, pr = progress(j);
     (j.history || []).forEach(function (h) { hist[h.s] = h.t; });
     var ps = v.photos || [], cur = photo(j), mob = (v.mobile || j.mobile || "").replace(/[^0-9+]/g, ""), wa = mob.replace(/^\+/, "").replace(/^0/, "44");
     var email = v.email || j.email || "", first = String(j.name || "").split(/\s+/)[0];
     var H = [];
-    H.push('<div class="ph"><button class="close" type="button" id="p-close" aria-label="Close">&times;</button>' + picHtml(j) + '</div>');
-    if (ps.length > 1) H.push('<div class="strip" aria-label="Choose the picture">' + ps.map(function (p, i) { return '<button type="button" data-u="' + esc(p.url) + '" aria-pressed="' + (p.url === cur) + '" title="' + esc(p.caption || "Use this photo") + '"><img alt="" loading="lazy" src="' + esc(p.url) + '"></button>'; }).join("") + '</div>');
-    H.push('<div class="pb"><h2 class="addr" id="p-addr">' + esc(j.address || "No address") + '</h2>');
-    H.push('<p class="small" style="margin:.3rem 0 0">' + esc([j.num ? "Job " + j.num : "", j.name, j.project, j.fee ? RA.money(Number(j.fee)) : ""].filter(String).join(" · ")) + '</p>');
+    H.push('<button class="back" type="button" id="p-close">&larr; All jobs</button>');
+    H.push('<div class="jhero"><div class="jpic"><div class="ph">' + picHtml(j) + '</div>');
+    if (ps.length > 1) H.push('<div class="strip" aria-label="Choose the picture">' + ps.map(function (p) { return '<button type="button" data-u="' + esc(p.url) + '" aria-pressed="' + (p.url === cur) + '" title="' + esc(p.caption || "Use this photo") + '"><img alt="" loading="lazy" src="' + esc(p.url) + '"></button>'; }).join("") + '</div>');
+    H.push('</div><div class="jinfo">');
+    H.push((j.num ? '<span class="jnum">Job ' + esc(j.num) + '</span>' : "") + '<h2 class="addr" id="p-addr">' + esc(j.address || "No address") + '</h2>');
+    H.push('<p class="small" style="margin:.35rem 0 0">' + esc([j.name, j.project, j.fee ? RA.money(Number(j.fee)) : ""].filter(String).join(" · ")) + '</p>');
+    H.push('<div class="jprog"><div class="prog"><span style="width:' + pr.pct + '%"></span></div><div class="meta"><span>Step ' + pr.done + ' of ' + pr.total + ' &middot; <b style="color:var(--ink)">' + esc(x.s[1]) + '</b></span></div></div>');
     H.push('<div class="contact">' + (wa.length > 9 ? '<a class="btn" target="_blank" rel="noopener" href="https://wa.me/' + esc(wa) + '">WhatsApp ' + esc(first) + '</a>' : "") + (email ? '<a class="ghost" href="mailto:' + esc(email) + '">Email</a>' : "") + (mob ? '<a class="ghost" href="tel:' + esc(mob) + '">Call</a>' : "") + '</div>');
     if (w) {
       var txt = w.who === "client" ? "Waiting on " + esc(first || "the client") : "Waiting on the " + WHO[w.who];
@@ -314,44 +325,47 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
         (w.due && w.who === "client" && wa.length > 9 ? '<div class="actions"><a class="btn" target="_blank" rel="noopener" id="p-chase" href="https://wa.me/' + esc(wa) + '?text=' + encodeURIComponent("Hi " + (first || "there") + ", just checking in on the drawings I sent over. Any changes at all, just send them through, or if you're happy with them, let me know and I'll get the next stage moving.") + '">Send a nudge</a></div>' : "") +
         (j.stage !== "planning" ? '<label class="f" for="p-wait">Flag it after this many days</label><input type="number" min="1" max="120" id="p-wait" style="max-width:7rem" value="' + (Number((j.wait || {})[j.stage]) || x.s[3]) + '">' : "") + '</div>');
     }
-    H.push('<h3>Where it is</h3><p class="small" style="margin:-.3rem 0 .4rem">Tap a step when the job reaches it.</p><ol class="road">');
+    H.push('</div></div>');
+    H.push('<div class="jgrid"><section class="card"><h2>Where it is</h2><p class="small" style="margin:-.3rem 0 .5rem">Tap a step when the job reaches it.</p><ol class="road">');
     ST.forEach(function (s, i) {
       var c = sk[s[0]] ? "skip" : i < x.i || j.stage === "complete" ? "done" : i === x.i ? "now" : "";
       var sub = sk[s[0]] ? "Not needed" : hist[s[0]] && i <= x.i ? dateStr(hist[s[0]]) : WHO[s[2]] ? "Waiting on the " + WHO[s[2]] : "";
       H.push('<li class="' + c + '"><button class="step" type="button" data-s="' + s[0] + '"><span class="dot">' + (c === "done" ? "&#10003;" : i + 1) + '</span><span><span class="t">' + esc(s[1]) + '</span><span class="s">' + esc(sub) + '</span></span></button></li>');
     });
-    H.push('</ol><p class="small" style="margin:.5rem 0 0">Not every job needs every step. <a href="#" id="p-skip">Choose steps this job skips</a></p>');
-    H.push('<div id="p-skips" hidden class="box">' + ST.slice(1, -1).map(function (s) { return '<label style="display:flex;gap:.5rem;align-items:center;margin:.2rem 0"><input type="checkbox" data-k="' + s[0] + '"' + (sk[s[0]] ? " checked" : "") + '> ' + esc(s[1]) + '</label>'; }).join("") + '</div>');
-    H.push('<h3>Planning and Building Regs</h3><div class="two"><div><label class="f" for="p-ref">Planning reference</label><input type="text" id="p-ref" value="' + esc(j.planningRef || "") + '"></div><div><label class="f" for="p-dec">Decision due</label><input type="date" id="p-dec" value="' + esc(j.decision || "") + '"></div></div>' +
-      '<label class="f" for="p-bref">Building Regs reference</label><input type="text" id="p-bref" value="' + esc(j.bregsRef || "") + '">');
-    H.push('<h3>Notes</h3><textarea id="p-note" placeholder="Spoke to ' + esc(first || "the client") + ', away until the 20th"></textarea><div class="actions"><button class="btn" type="button" id="p-addnote">Add note</button></div>');
-    H.push('<ul class="notes">' + (j.notes || []).slice().reverse().map(function (n) { return '<li' + (n.auto ? ' class="auto"' : "") + '><small>' + esc(dateStr(n.t)) + (n.auto ? " · picked up from your email" : "") + '</small>' + esc(n.text) + '</li>'; }).join("") + '</ul>');
+    H.push('</ol><p class="small" style="margin:.6rem 0 0">Not every job needs every step. <a href="#" id="p-skip">Choose steps this job skips</a></p>');
+    H.push('<div id="p-skips" hidden class="box">' + ST.slice(1, -1).map(function (s) { return '<label style="display:flex;gap:.5rem;align-items:center;margin:.2rem 0"><input type="checkbox" data-k="' + s[0] + '"' + (sk[s[0]] ? " checked" : "") + '> ' + esc(s[1]) + '</label>'; }).join("") + '</div></section><div>');
+    H.push('<section class="card"><h2>Notes</h2><textarea id="p-note" placeholder="Spoke to ' + esc(first || "the client") + ', away until the 20th"></textarea><div class="actions"><button class="btn" type="button" id="p-addnote">Add note</button></div>');
+    H.push('<ul class="notes">' + (j.notes || []).slice().reverse().map(function (n) { return '<li' + (n.auto ? ' class="auto"' : "") + '><small>' + esc(dateStr(n.t)) + (n.auto ? " · picked up from your email" : "") + '</small>' + esc(n.text) + '</li>'; }).join("") + '</ul></section>');
+    H.push('<section class="card"><h2>Planning and Building Regs</h2><div class="two"><div><label class="f" for="p-ref">Planning reference</label><input type="text" id="p-ref" value="' + esc(j.planningRef || "") + '"></div><div><label class="f" for="p-dec">Decision due</label><input type="date" id="p-dec" value="' + esc(j.decision || "") + '"></div></div>' +
+      '<label class="f" for="p-bref">Building Regs reference</label><input type="text" id="p-bref" value="' + esc(j.bregsRef || "") + '"></section>');
     var links = [];
     if (j.quoteLink) links.push('<a class="ghost" target="_blank" rel="noopener" href="' + esc(j.quoteLink) + '">Quote</a>');
     if (v.report) links.push('<a class="ghost" target="_blank" rel="noopener" href="' + esc(v.report) + '">Feasibility report</a>');
     if (v.folder) links.push('<a class="ghost" target="_blank" rel="noopener" href="' + esc(v.folder) + '">Visit photos</a>');
     if (j.visitId) links.push('<a class="ghost" href="../visit/#' + esc(j.visitId) + '">Visit notes</a>');
-    H.push('<h3>Links</h3><div class="links">' + (links.join("") || '<span class="small">None yet</span>') + '</div>');
-    H.push('<h3>Details</h3><div class="two"><div><label class="f" for="p-name">Client</label><input type="text" id="p-name" value="' + esc(j.name || "") + '"></div><div><label class="f" for="p-proj">Project</label><input type="text" id="p-proj" value="' + esc(j.project || "") + '"></div></div>' +
+    H.push('<section class="card"><h2>Links</h2><div class="links">' + (links.join("") || '<span class="small">None yet</span>') + '</div></section>');
+    H.push('<section class="card"><h2>Details</h2><div class="two"><div><label class="f" for="p-name">Client</label><input type="text" id="p-name" value="' + esc(j.name || "") + '"></div><div><label class="f" for="p-proj">Project</label><input type="text" id="p-proj" value="' + esc(j.project || "") + '"></div></div>' +
       '<label class="f" for="p-address">Address</label><input type="text" id="p-address" value="' + esc(j.address || "") + '">' +
       '<div class="two"><div><label class="f" for="p-mob">Mobile</label><input type="tel" id="p-mob" value="' + esc(j.mobile || v.mobile || "") + '"></div><div><label class="f" for="p-email">Email</label><input type="email" id="p-email" value="' + esc(j.email || v.email || "") + '"></div></div>' +
       '<label class="f" for="p-visit">Home visit (for the photos)</label><select id="p-visit"><option value="">None</option>' + visits.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === j.visitId ? " selected" : "") + '>' + esc([x.name, x.address].filter(String).join(", ")) + '</option>'; }).join("") + '</select>');
-    H.push('<div class="actions" style="margin-top:1.4rem">' + (j.status === "Active" ? '<button class="ghost" type="button" id="p-arch">Move to finished</button>' : '<button class="ghost" type="button" id="p-unarch">Make active again</button>') + '<button class="ghost" type="button" id="p-del" style="color:#B3261E">Delete job</button></div></div>');
-    $("panel").innerHTML = H.join("");
-    $("shade").hidden = false; document.body.style.overflow = "hidden";
+    H.push('<div class="actions" style="margin-top:1.2rem">' + (j.status === "Active" ? '<button class="ghost" type="button" id="p-arch">Move to finished</button>' : '<button class="ghost" type="button" id="p-unarch">Make active again</button>') + '<button class="ghost" type="button" id="p-del" style="color:#B3261E">Delete job</button></div></section></div></div>');
+    var P = $("jobpage"), fresh = P.hidden || P.getAttribute("data-id") !== j.id, y = window.scrollY;
+    P.innerHTML = H.join(""); P.setAttribute("data-id", j.id);
+    $("board").hidden = true; $("intro").hidden = true; P.hidden = false; document.title = (String(j.address || "Job").split(",")[0]) + " | Jobs";
+    if (fresh) window.scrollTo(0, 0); else window.scrollTo(0, y);
     $("p-close").onclick = shut;
-    [].forEach.call($("panel").querySelectorAll(".strip button"), function (b) { b.onclick = function () { j.photo = b.getAttribute("data-u"); save(j); panel(); draw(); }; });
-    [].forEach.call($("panel").querySelectorAll(".step"), function (b) { b.onclick = function () { setStage(j, b.getAttribute("data-s")); }; });
+    [].forEach.call(P.querySelectorAll(".strip button"), function (b) { b.onclick = function () { j.photo = b.getAttribute("data-u"); save(j); panel(); }; });
+    [].forEach.call(P.querySelectorAll(".step"), function (b) { b.onclick = function () { setStage(j, b.getAttribute("data-s")); }; });
     $("p-skip").onclick = function (e) { e.preventDefault(); $("p-skips").hidden = !$("p-skips").hidden; };
-    [].forEach.call($("panel").querySelectorAll("#p-skips input"), function (c) { c.onchange = function () { j.skip = j.skip || {}; if (c.checked) j.skip[c.getAttribute("data-k")] = 1; else delete j.skip[c.getAttribute("data-k")]; save(j); panel(); $("p-skips").hidden = false; draw(); }; });
-    if ($("p-wait")) $("p-wait").onchange = function () { j.wait = j.wait || {}; j.wait[j.stage] = Math.max(1, Math.min(120, Number(this.value) || x.s[3])); save(j); panel(); draw(); };
-    var field = function (id, k) { $(id).onchange = function () { j[k] = this.value.trim(); save(j); draw(); }; };
+    [].forEach.call(P.querySelectorAll("#p-skips input"), function (c) { c.onchange = function () { j.skip = j.skip || {}; if (c.checked) j.skip[c.getAttribute("data-k")] = 1; else delete j.skip[c.getAttribute("data-k")]; save(j); panel(); $("p-skips").hidden = false; }; });
+    if ($("p-wait")) $("p-wait").onchange = function () { j.wait = j.wait || {}; j.wait[j.stage] = Math.max(1, Math.min(120, Number(this.value) || x.s[3])); save(j); panel(); };
+    var field = function (id, k) { $(id).onchange = function () { j[k] = this.value.trim(); save(j); }; };
     field("p-ref", "planningRef"); field("p-bref", "bregsRef"); field("p-name", "name"); field("p-proj", "project"); field("p-address", "address"); field("p-mob", "mobile"); field("p-email", "email");
-    $("p-dec").onchange = function () { j.decision = this.value; save(j); panel(); draw(); };
+    $("p-dec").onchange = function () { j.decision = this.value; save(j); panel(); };
     $("p-visit").onchange = function () { j.visitId = this.value; j.photo = ""; save(j, true); };
     $("p-addnote").onclick = function () { var t = $("p-note").value.trim(); if (!t) return; j.notes = j.notes || []; j.notes.push({ t: Date.now(), text: t.slice(0, 2000) }); save(j); panel(); };
     if ($("p-arch")) $("p-arch").onclick = function () { j.status = "Archived"; save(j); shut(); };
-    if ($("p-unarch")) $("p-unarch").onclick = function () { j.status = "Active"; save(j); panel(); draw(); };
+    if ($("p-unarch")) $("p-unarch").onclick = function () { j.status = "Active"; save(j); panel(); };
     $("p-del").onclick = function () { if (!window.confirm("Delete this job? Its notes go with it.")) return; j.status = "Deleted"; save(j); jobs = jobs.filter(function (x) { return x !== j; }); shut(); };
   }
   function setStage(j, key) {
@@ -359,11 +373,14 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     j.stage = key; j.since = Date.now(); j.chased = 0;
     j.history = (j.history || []).filter(function (h) { return h.s !== key; }); j.history.push({ s: key, t: j.since });
     if (j.skip) delete j.skip[key];
-    save(j); panel(); draw();
+    save(j); panel();
   }
-  function shut() { $("shade").hidden = true; openId = ""; document.body.style.overflow = ""; draw(); }
-  $("shade").onclick = function (e) { if (e.target === $("shade")) shut(); };
-  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("shade").hidden) shut(); });
+  /* Each job has its own page address (jobs/#id), so the back button and bookmarks work. */
+  var boardY = 0, fromBoard = false;
+  function go(id) { boardY = window.scrollY; fromBoard = true; location.hash = id; }
+  function showBoard() { $("jobpage").hidden = true; $("board").hidden = false; $("intro").hidden = false; document.title = "Jobs | Residential Architecture"; openId = ""; draw(); window.scrollTo(0, boardY); }
+  function shut() { if (fromBoard) { fromBoard = false; history.back(); } else { history.replaceState(null, "", location.pathname); showBoard(); } }
+  window.addEventListener("hashchange", function () { var h = location.hash.slice(1); if (h && find(h)) { openId = h; panel(); } else showBoard(); });
 
   /* ---------- saving ---------- */
   var toast;
@@ -373,13 +390,13 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     RA.api({ action: "job-save", pass: RA.pass(), job: copy }).then(function (r) {
       if (!r || !r.ok) { flash("Not saved. Check your signal"); return; }
       flash("Saved");
-      if (r.job && r.job.num && !j.num) { j.num = r.job.num; draw(); if (openId === j.id) panel(); }
-      if (reload && r.job) { r.job.lat = j.lat; r.job.lng = j.lng; Object.keys(r.job).forEach(function (k) { j[k] = r.job[k]; }); if (!r.job.visit) delete j.visit; panel(); draw(); }
+      if (r.job && r.job.num && !j.num) { j.num = r.job.num; if (openId === j.id) panel(); else draw(); }
+      if (reload && r.job) { r.job.lat = j.lat; r.job.lng = j.lng; Object.keys(r.job).forEach(function (k) { j[k] = r.job[k]; }); if (!r.job.visit) delete j.visit; if (openId === j.id) panel(); else draw(); }
     }).catch(function () { flash("Not saved. Check your signal"); });
   }
   $("add").onclick = function () {
     var j = { id: "j" + Math.random().toString(36).slice(2, 12).replace(/[^a-z0-9]/g, "") + "x", name: "", address: "", project: "", stage: "signed", since: Date.now(), history: [{ s: "signed", t: Date.now() }], notes: [], status: "Active" };
-    jobs.unshift(j); openId = j.id; panel(); draw(); setTimeout(function () { $("p-address").focus(); $("p-address").scrollIntoView({ block: "center" }); }, 50);
+    jobs.unshift(j); go(j.id); setTimeout(function () { if ($("p-address")) { $("p-address").focus(); $("p-address").scrollIntoView({ block: "center" }); } }, 80);
     save(j);
   };
   $("find").oninput = draw;
