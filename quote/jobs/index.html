@@ -130,6 +130,13 @@ a.sb { text-decoration:none; }
 .foot { display:flex; gap:1.2rem; justify-content:center; margin:1.6rem 0 0; }
 .foot button { font:inherit; font-size:.88rem; background:none; border:0; color:var(--grey); cursor:pointer; text-decoration:underline; }
 .foot button.del { color:#B3261E; }
+.docs input[type=checkbox], #p-skips input[type=checkbox] { -webkit-appearance:none; appearance:none; flex:none; width:1.25rem; height:1.25rem; margin:0; border:2px solid var(--pink); border-radius:50%; background:#fff; display:grid; place-items:center; cursor:pointer; transition:background .15s, box-shadow .15s; }
+.docs input[type=checkbox]::after, #p-skips input[type=checkbox]::after { content:""; width:.32rem; height:.6rem; border:solid #fff; border-width:0 2px 2px 0; transform:rotate(45deg) translate(-1px, -1px); opacity:0; }
+.docs input[type=checkbox]:checked, #p-skips input[type=checkbox]:checked { background:var(--pink); }
+.docs input[type=checkbox]:checked::after, #p-skips input[type=checkbox]:checked::after { opacity:1; }
+.docs input[type=checkbox]:hover, #p-skips input[type=checkbox]:hover { box-shadow:0 0 0 4px var(--tint); }
+.docs input[type=checkbox]:focus-visible, #p-skips input[type=checkbox]:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
+.docs li { padding:.15rem 0; }
 /* Job page */
 .back { font:inherit; font-weight:600; color:var(--grey); background:none; border:0; padding:.3rem 0; cursor:pointer; margin:.8rem 0 .6rem; }
 .back:hover { color:var(--pink); }
