@@ -396,7 +396,7 @@ a.sb { text-decoration:none; }
     D.push(["drawings", "Site plan, existing and proposed drawings", "Your drawings", ""]);
     if (lpa === "ldc") D.push(["ldc", "Permitted development statement", "I create", "Shows how it meets the rules"]);
     if (lpa === "full") D.push(["bng", "Biodiversity net gain exemption statement", "I create", "Householder exemption"]);
-    if (lpa === "full") D.push(["cil", "CIL form", "I create", "Under 100m\u00b2, so not liable"]);
+    D.push(["cil", "CIL form", "I create", "Always needed, even under 100m\u00b2"]);
     if (yes("conservation") && lpa === "full") D.push(["das", "Design and Access statement", "I create", "Conservation area"]);
     if (yes("conservation") || yes("listed")) D.push(["heritage", "Heritage statement", "I create", yes("listed") ? "Listed building nearby" : "Conservation area"]);
     if (fz >= 2) D.push(["flood", "Flood risk assessment", "I create", "Flood zone " + fz]);
