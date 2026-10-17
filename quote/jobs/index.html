@@ -441,7 +441,7 @@ a.sb { text-decoration:none; }
     D.push(["drawings", "Site plan, existing and proposed drawings", "Your drawings", ""]);
     if (lpa === "ldc") D.push(["ldc", "Permitted development statement", "I create", "Shows how it meets the rules"]);
     if (lpa === "full") D.push(["bng", "Biodiversity net gain exemption statement", "I create", "Householder exemption"]);
-    D.push(["cil", "CIL form", "I create", "Always needed, even under 100m\u00b2"]);
+    D.push(["cil", "CIL Form 1", "I create", "Council\u2019s own form, always needed"]);
     if (yes("conservation") && lpa === "full") D.push(["das", "Design and Access statement", "I create", "Conservation area"]);
     if (yes("conservation") || yes("listed")) D.push(["heritage", "Heritage statement", "I create", yes("listed") ? "Listed building nearby" : "Conservation area"]);
     if (fz >= 2) D.push(["flood", "Flood risk assessment", "I create", "Flood zone " + fz]);
@@ -458,19 +458,75 @@ a.sb { text-decoration:none; }
       return '<li><label><input type="checkbox" data-doc="' + d[0] + '"' + (got[d[0]] ? " checked" : "") + '> <span>' + esc(d[1]) + (d[3] ? ' <span class="why">' + esc(d[3]) + '</span>' : "") + '</span></label>' +
         (f ? '<a class="who open" target="_blank" rel="noopener" href="' + esc(f.url) + '">Open PDF</a>' : '<span class="who">' + esc(d[2]) + '</span>') + '</li>';
     }).join("") + '</ul><div class="actions" style="margin-top:1rem;align-items:center"><button class="btn" type="button" id="p-create">' + (Object.keys(files).length ? "Create them again" : "Create documents") + '</button>' +
-      '<span class="small" id="p-cmsg">Writes the ' + mine + ' marked \u201cI create\u201d and saves them as PDFs in the job folder.</span></div></div>';
+      '<span class="small" id="p-cmsg">Writes the ' + mine + ' marked \u201cI create\u201d (the CIL form on the council\u2019s own Form 1) and saves them as PDFs in the job folder.</span></div></div>';
   }
   /* Writes every "I create" document on the server and saves them as PDFs in Issued > Planning Issue > today's date */
+  /* The council's own CIL Form 1: the blank form from Carl's Projects folder, filled in here and saved to the job */
+  function loadScript(src) { return new Promise(function (ok, no) { var s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
+  function fillCil(j) {
+    var P = "Proposal[0].";
+    return (window.PDFLib ? Promise.resolve() : loadScript("https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js")).then(function () {
+      return RA.api({ action: "job-form", pass: RA.pass(), id: j.id, name: "form_1_cil_additional_information" });
+    }).then(function (r) {
+      if (!r || !r.ok) throw new Error(r && r.error || "no template");
+      var f = r.facts || {}, raw = atob(r.data), bytes = new Uint8Array(raw.length); for (var i = 0; i < raw.length; i++) bytes[i] = raw.charCodeAt(i);
+      return PDFLib.PDFDocument.load(bytes, { ignoreEncryption: true }).then(function (doc) {
+        var form = doc.getForm(), set = function (n, v) { try { form.getTextField(P + n).setText(String(v == null ? "" : v)); } catch (e) {} }, tick = function (n) { try { form.getCheckBox(P + n).check(); } catch (e) {} };
+        var area = Number(f.area) || 0, big = area >= 100, now = new Date(), dd = ("0" + now.getDate()).slice(-2) + "/" + ("0" + (now.getMonth() + 1)).slice(-2) + "/" + now.getFullYear();
+        set("page1[0].AppDetails[0].PlanningRef_Text[0]", "Carl Collins BSc (Hons), Residential Architecture (agent for " + (f.client || j.name || "the applicant") + ")");
+        set("page1[0].AppDetails[0].TextField2[0]", f.ref || j.planningRef || "");
+        set("page1[0].AppDetails[0].TextField3[0]", f.address || j.address || "");
+        set("page1[0].AppDetails[0].TextField4[0]", f.desc || j.project || "");
+        tick("page2[0].Conditions[0].CheckBox2[1]");          /* 2a: not a Section 73 application */
+        tick("page2[0].ReservedMatters[0].CheckBox2[0]");     /* 3a: not reserved matters */
+        tick(big ? "page2[0].Liability[0].CheckBox1[1]" : "page2[0].Liability[0].CheckBox1[0]");   /* 4a: 100m\u00b2 or more? */
+        tick("page2[0].Liability[0].CheckBox1[2]");           /* 4b: no new dwellings */
+        tick("page3[0].ExemptionRelief[0].CheckBox1[0]");     /* 5a: not a charity */
+        tick("page3[0].ExemptionRelief[0].CheckBox1[2]");     /* 5b: no social housing relief */
+        tick("page3[0].ExemptionRelief[0].CheckBox1[5]");     /* 5c: no self-build exemption */
+        tick(big ? "page3[0].ExemptionRelief[0].CheckBox1[6]" : "page3[0].ExemptionRelief[0].CheckBox1[7]"); /* 5d: extension exemption only needed at 100m\u00b2 or more */
+        tick("page4[0].ProposedFloorspace[0].CheckBox3[1]");  /* 6a: residential development */
+        tick("page4[0].ProposedFloorspace[0].CheckBox3[2]");  /* 6b: no non-residential */
+        if (area) {
+          var T = "page4[0].ProposedFloorspace[0].Table1[0].";
+          [["Row1[0].", ""], ["Row3[0].", ""]].forEach(function (row) {
+            set(T + row[0] + "Cell2[0]", f.existing ? Math.round(f.existing) : "");
+            set(T + row[0] + "Cell3[0]", "0");
+            set(T + row[0] + "Cell4[0]", area);
+            set(T + row[0] + "Cell5[0]", area);
+          });
+        }
+        set("page4[0].ExistingBuildings1[0].TextField6[0]", "1");
+        tick("page5[0].ExistingBuildings2[0].CheckBox3[2]");  /* 7c: no buildings left unused */
+        tick("page5[0].ExistingBuildings2[0].CheckBox3[1]");  /* 7d: no mezzanine */
+        set("page6[0].Declaration[0].TextField8[0]", "Carl Collins BSc (Hons), agent");
+        set("page6[0].Declaration[0].TextField9[0]", dd);
+        try { form.deleteXFA(); } catch (e) {}
+        return doc.save();
+      });
+    }).then(function (out) {
+      var bin = "", CH = 32768; for (var i = 0; i < out.length; i += CH) bin += String.fromCharCode.apply(null, out.subarray(i, i + CH));
+      return RA.api({ action: "job-save-pdf", pass: RA.pass(), id: j.id, key: "cil", name: "CIL Form 1", data: btoa(bin) });
+    }).then(function (r) {
+      if (!r || !r.ok) throw new Error(r && r.error || "save failed");
+      j.files = j.files || {}; j.files.cil = { url: r.url, at: Date.now() }; j.docs = j.docs || {}; j.docs.cil = 1;
+      return r;
+    });
+  }
   function createDocs(j, btn) {
-    var D = docsNeeded(j), keys = D.filter(function (d) { return d[2] === "I create"; }).map(function (d) { return d[0]; });
+    var D = docsNeeded(j), keys = D.filter(function (d) { return d[2] === "I create" && d[0] !== "cil"; }).map(function (d) { return d[0]; }), wantCil = D.some(function (d) { return d[0] === "cil"; });
     var list = D.filter(function (d) { return d[0] !== "letter"; }).map(function (d) { return d[1]; });
     btn.disabled = true; btn.textContent = "Writing documents\u2026"; $("p-cmsg").textContent = "This takes about half a minute.";
     RA.api({ action: "job-docs", pass: RA.pass(), id: j.id, keys: keys, list: list }).then(function (r) {
       if (!r || !r.ok) { btn.disabled = false; btn.textContent = "Create documents"; $("p-cmsg").textContent = "Something went wrong" + (r && r.error ? " (" + r.error + ")" : "") + ". Please try again."; return; }
       j.files = j.files || {}; j.docs = j.docs || {};
       r.files.forEach(function (f) { j.files[f.key] = { url: f.url, at: f.at }; j.docs[f.key] = 1; });
-      j.issueFolder = r.folder; panel(); flash(r.files.length + " documents saved");
-      if ($("p-cmsg")) $("p-cmsg").innerHTML = 'Saved in <a target="_blank" rel="noopener" href="' + esc(r.folder) + '">Issued \u203a Planning Issue \u203a today</a>.';
+      j.issueFolder = r.folder;
+      var finish = function (extra) { panel(); flash((r.files.length + (extra ? 1 : 0)) + " documents saved");
+        if ($("p-cmsg")) $("p-cmsg").innerHTML = 'Saved in <a target="_blank" rel="noopener" href="' + esc(r.folder) + '">Issued \u203a Planning Issue \u203a today</a>.' + (extra === false ? " The CIL form couldn\u2019t be filled this time." : ""); };
+      if (!wantCil) return finish();
+      $("p-cmsg").textContent = "Filling in the council\u2019s CIL Form 1\u2026";
+      fillCil(j).then(function () { finish(true); }).catch(function () { finish(false); });
     }).catch(function () { btn.disabled = false; btn.textContent = "Create documents"; $("p-cmsg").textContent = "Could not reach your Google Sheet. Please try again."; });
   }
   function panel() {
