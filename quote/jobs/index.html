@@ -466,6 +466,7 @@ a.sb { text-decoration:none; }
       '<div class="two"><div><label class="f" for="p-ref">Planning reference</label><input type="text" id="p-ref" value="' + esc(j.planningRef || "") + '"></div><div><label class="f" for="p-dec">Decision due</label><input type="date" id="p-dec" value="' + esc(j.decision || "") + '"></div></div>' +
       '<label class="f" for="p-bref">Building Regs reference</label><input type="text" id="p-bref" value="' + esc(j.bregsRef || "") + '">' +
       '<label class="f" for="p-visit">Home visit (for the photos)</label><select id="p-visit"><option value="">None</option>' + visits.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === j.visitId ? " selected" : "") + '>' + esc([x.name, x.address].filter(String).join(", ")) + '</option>'; }).join("") + '</select>' +
+      '<label class="f">Steps this job doesn\u2019t need</label><div id="p-skips">' + ST.slice(1, -1).map(function (s) { return '<label style="display:flex;gap:.5rem;align-items:center;margin:.25rem 0"><input type="checkbox" data-k="' + s[0] + '"' + (sk[s[0]] ? " checked" : "") + '> ' + esc(s[1]) + '</label>'; }).join("") + '</div>' +
       '<div class="actions"><button class="btn" type="button" id="p-done">Done</button></div></div>');
     H.push('</div><div class="jact">');
     if (wa.length > 9 || email) H.push('<div class="contact" style="margin-top:0">' + (wa.length > 9 ? '<a class="btn" target="_blank" rel="noopener" href="https://wa.me/' + esc(wa) + '">WhatsApp ' + esc(first) + '</a>' : "") + (email ? '<a class="ghost" href="mailto:' + esc(email) + '">Email ' + esc(first || "client") + '</a>' : "") + '</div>');
@@ -489,8 +490,7 @@ a.sb { text-decoration:none; }
       var sub = sk[s[0]] ? "Not needed" : hist[s[0]] && i <= x.i ? dateStr(hist[s[0]]) : "";
       road += '<li class="' + c + '"><button class="step" type="button" data-s="' + s[0] + '" title="Move the job to ' + esc(s[1]) + '"><span class="dot">' + (c === "done" ? "&#10003;" : i + 1) + '</span><span class="t">' + esc(s[1]) + '</span><span class="s">' + esc(sub) + '</span></button></li>';
     });
-    road += '</ol><p class="small" style="margin:.6rem 0 0;text-align:center">Tap a step when the job reaches it. Not every job needs every step: <a href="#" id="p-skip">choose steps this job skips</a></p>';
-    road += '<div id="p-skips" hidden class="box">' + ST.slice(1, -1).map(function (s) { return '<label style="display:flex;gap:.5rem;align-items:center;margin:.2rem 0"><input type="checkbox" data-k="' + s[0] + '"' + (sk[s[0]] ? " checked" : "") + '> ' + esc(s[1]) + '</label>'; }).join("") + '</div></nav>';
+    road += '</ol></nav>';
     H.splice(1, 0, road);
     H.push('<div class="jgrid"><section class="card">' + docsHtml(j) + '</section><div>');
     H.push('<section class="card"><h2>Notes</h2><textarea id="p-note" placeholder="Spoke to ' + esc(first || "the client") + ', away until the 20th"></textarea><div class="actions"><button class="btn" type="button" id="p-addnote">Add note</button></div>');
@@ -507,8 +507,7 @@ a.sb { text-decoration:none; }
     [].forEach.call(P.querySelectorAll("[data-q]"), function (b) { b.onclick = function () { setStage(j, b.getAttribute("data-q")); }; });
     [].forEach.call(P.querySelectorAll("[data-doc]"), function (c) { c.onchange = function () { j.docs = j.docs || {}; j.docs[c.getAttribute("data-doc")] = c.checked ? 1 : 0; save(j); }; });
     [].forEach.call(P.querySelectorAll(".step"), function (b) { b.onclick = function () { setStage(j, b.getAttribute("data-s")); }; });
-    $("p-skip").onclick = function (e) { e.preventDefault(); $("p-skips").hidden = !$("p-skips").hidden; };
-    [].forEach.call(P.querySelectorAll("#p-skips input"), function (c) { c.onchange = function () { j.skip = j.skip || {}; if (c.checked) j.skip[c.getAttribute("data-k")] = 1; else delete j.skip[c.getAttribute("data-k")]; save(j); panel(); $("p-skips").hidden = false; }; });
+    [].forEach.call(P.querySelectorAll("#p-skips input"), function (c) { c.onchange = function () { j.skip = j.skip || {}; if (c.checked) j.skip[c.getAttribute("data-k")] = 1; else delete j.skip[c.getAttribute("data-k")]; save(j); var k = keepOpen(); panel(); k(); }; });
     if ($("p-wait")) $("p-wait").onchange = function () { j.wait = j.wait || {}; j.wait[j.stage] = Math.max(1, Math.min(120, Number(this.value) || x.s[3])); save(j); panel(); };
     var field = function (id, k) { $(id).onchange = function () { j[k] = this.value.trim(); save(j); }; };
     var keepOpen = function () { var o = !$("p-editbox").hidden; return function () { if (o) $("p-editbox").hidden = false; }; };
