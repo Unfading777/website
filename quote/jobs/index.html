@@ -109,7 +109,7 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 .quick h3, .docs h3 { margin:0 0 .5rem; font-size:.95rem; }
 .qbtns { display:flex; flex-wrap:wrap; gap:.45rem; }
 .qbtns .ghost { font-size:.86rem; padding:.42rem .85rem; }
-.docs { margin-top:1rem; background:var(--bg); border-radius:16px; padding:1rem 1.1rem; }
+.docs { background:var(--bg); border-radius:16px; padding:1rem 1.1rem; }
 .docs ul { list-style:none; margin:0; padding:0; display:grid; gap:.3rem; }
 .docs li { display:flex; align-items:center; gap:.55rem; font-size:.9rem; }
 .docs li label { display:flex; gap:.55rem; align-items:center; cursor:pointer; flex:1; }
@@ -133,7 +133,7 @@ a.sb { text-decoration:none; }
 /* Job page */
 .back { font:inherit; font-weight:600; color:var(--grey); background:none; border:0; padding:.3rem 0; cursor:pointer; margin:.8rem 0 .6rem; }
 .back:hover { color:var(--pink); }
-.jhero { display:grid; grid-template-columns:minmax(0, 1.25fr) minmax(0, 1fr); gap:1.6rem; align-items:start; background:#fff; border:1px solid var(--line); border-radius:22px; padding:1rem; }
+.jhero { display:grid; grid-template-columns:minmax(14rem, 22rem) minmax(0, 1fr) minmax(0, 1fr); gap:1.6rem; align-items:start; background:#fff; border:1px solid var(--line); border-radius:22px; padding:1rem; }
 .jpic .ph { border-radius:16px; overflow:hidden; }
 .jinfo { padding:.4rem .4rem .4rem 0; }
 .jnum { display:inline-block; background:var(--tint); color:var(--pink-ink); font-weight:700; font-size:.82rem; border-radius:999px; padding:.2rem .7rem; margin-bottom:.5rem; }
@@ -142,7 +142,8 @@ a.sb { text-decoration:none; }
 .jprog .prog { margin:0 0 .4rem; height:.5rem; }
 .jgrid { display:grid; grid-template-columns:minmax(0, 1fr) minmax(0, 1.25fr); gap:1rem; margin-top:1rem; align-items:start; }
 .jgrid .card { border-radius:20px; padding:1.2rem 1.3rem; }
-.ph { position:relative; aspect-ratio:16/10; background:var(--soft); }
+.ph { position:relative; aspect-ratio:4/3; background:var(--soft); }
+.strip button { width:3.6rem !important; height:2.6rem !important; }
 .ph img { width:100%; height:100%; object-fit:cover; display:block; }
 .strip { display:flex; gap:.4rem; overflow-x:auto; padding:.6rem 0 0; }
 .strip button { flex:none; width:4.6rem; height:3.2rem; border-radius:10px; overflow:hidden; border:2px solid transparent; padding:0; cursor:pointer; background:var(--soft); }
@@ -171,6 +172,7 @@ a.sb { text-decoration:none; }
 .notes li small { display:block; color:var(--grey); font-size:.78rem; }
 .links { display:flex; flex-wrap:wrap; gap:.5rem; }
 .saving { position:fixed; left:50%; bottom:1rem; transform:translateX(-50%); background:var(--ink); color:#fff; border-radius:999px; padding:.45rem 1rem; font-size:.85rem; z-index:30; }
+@media (max-width:80rem) { .jhero { grid-template-columns:minmax(12rem, 18rem) minmax(0, 1fr); } .jdocs { grid-column:1 / -1; } }
 @media (max-width:52rem) { .jhero, .jgrid { grid-template-columns:minmax(0, 1fr); } .jinfo { padding:0 .2rem .3rem; } }
 @media (max-width:40rem) { .two { grid-template-columns:1fr; } .jinfo .addr { font-size:1.4rem; } .nav a { margin:0 1rem 0 0; } .bar input[type=search] { width:100%; } }
 </style>
@@ -295,9 +297,10 @@ a.sb { text-decoration:none; }
     return "https://maps.googleapis.com/maps/api/streetview?size=640x360&fov=75&pitch=4&source=outdoor&location=" + encodeURIComponent(a) + "&key=" + encodeURIComponent(svKey);
   }
   /* Booked visits and sent quotes, from the same data as the Pipeline page */
-  function loadPre() {
+  function loadPre(tries) {
+    tries = tries || 0;
     RA.api({ action: "pipeline", pass: RA.pass() }).then(function (r) {
-      if (!r || !r.ok) return;
+      if (!r || !r.ok || !r.people) { if (tries < 2) setTimeout(function () { loadPre(tries + 1); }, 2500); return; }
       var cut = Date.now() - 120 * DAY;
       leadCount = (r.people || []).filter(function (p) { return p.st === "Lead" && !p.lost && !p.sg && (p.f || 0) > Date.now() - 60 * DAY; }).length;
       pre = (r.people || []).filter(function (p) { return !p.sg && !p.lost && (p.qs ? p.qs > cut : (p.vs === "Booked" || p.vs === "Visited") && (p.vd || p.f || 0) > cut); }).map(function (p) {
@@ -305,7 +308,7 @@ a.sb { text-decoration:none; }
         return { k: p.k, name: p.n || "", addr: q && q.a ? String(q.a).split("\n").join(", ") : (p.pc || ""), st: p.qs ? "quote" : "visit", vs: p.vs, vd: p.vd, qs: p.qs, fee: p.qf, link: p.ql || "" };
       });
       draw();
-    }).catch(function () {});
+    }).catch(function () { if (tries < 2) setTimeout(function () { loadPre(tries + 1); }, 2500); });
   }
   function preTiles(list) {
     return list.map(function (p) {
@@ -416,7 +419,6 @@ a.sb { text-decoration:none; }
     H.push('<button class="back" type="button" id="p-close">&larr; All jobs</button>');
     H.push('<div class="jhero"><div class="jpic"><div class="ph">' + picHtml(j) + '</div>');
     if (ps.length > 1) H.push('<div class="strip" aria-label="Choose the picture">' + ps.map(function (p) { return '<button type="button" data-u="' + esc(p.url) + '" aria-pressed="' + (p.url === cur) + '" title="' + esc(p.caption || "Use this photo") + '"><img alt="" loading="lazy" src="' + esc(p.url) + '"></button>'; }).join("") + '</div>');
-    H.push(docsHtml(j));
     H.push('</div><div class="jinfo">');
     H.push((j.num ? '<span class="jnum">Job ' + esc(j.num) + '</span>' : "") + '<h2 class="addr" id="p-addr">' + esc(j.address || "No address") + '</h2>');
     var links = [];
@@ -450,10 +452,10 @@ a.sb { text-decoration:none; }
     if (w) {
       var txt = w.who === "client" ? "Waiting on " + esc(first || "the client") : "Waiting on the " + WHO[w.who];
       H.push('<div class="box' + (w.due ? " hot" : "") + '"><b>' + txt + ' for ' + w.days + ' day' + (w.days === 1 ? "" : "s") + '</b><div class="small">' + (w.due ? "Worth a chase now." : "I'll flag it on " + dateStr(w.dueAt) + " if nothing has moved.") + '</div>' +
-        (w.due && w.who === "client" && wa.length > 9 ? '<div class="actions"><a class="btn" target="_blank" rel="noopener" id="p-chase" href="https://wa.me/' + esc(wa) + '?text=' + encodeURIComponent("Hi " + (first || "there") + ", just checking in on the drawings I sent over. Any changes at all, just send them through, or if you're happy with them, let me know and I'll get the next stage moving.") + '">Send a nudge</a></div>' : "") +
-        (j.stage !== "planning" ? '<label class="f" for="p-wait">Flag it after this many days</label><input type="number" min="1" max="120" id="p-wait" style="max-width:7rem" value="' + (Number((j.wait || {})[j.stage]) || x.s[3]) + '">' : "") + '</div>');
+        (w.due && w.who === "client" && wa.length > 9 ? '<div class="actions" style="margin-top:.6rem"><a class="btn" target="_blank" rel="noopener" id="p-chase" href="https://wa.me/' + esc(wa) + '?text=' + encodeURIComponent("Hi " + (first || "there") + ", just checking in on the drawings I sent over. Any changes at all, just send them through, or if you're happy with them, let me know and I'll get the next stage moving.") + '">Send a nudge</a></div>' : "") +
+        (j.stage !== "planning" ? '<div class="small" style="margin-top:.6rem;display:flex;align-items:center;gap:.45rem;flex-wrap:wrap"><label for="p-wait">Flag it after</label><input type="number" min="1" max="120" id="p-wait" style="width:4.2rem;padding:.3rem .5rem" value="' + (Number((j.wait || {})[j.stage]) || x.s[3]) + '"><span>days</span></div>' : "") + '</div>');
     }
-    H.push('</div></div>');
+    H.push('</div><div class="jdocs">' + docsHtml(j) + '</div></div>');
     H.push('<div class="jgrid"><section class="card"><h2>Where it is</h2><p class="small" style="margin:-.3rem 0 .5rem">Tap a step when the job reaches it.</p><ol class="road">');
     ST.forEach(function (s, i) {
       var c = sk[s[0]] ? "skip" : i < x.i || j.stage === "complete" ? "done" : i === x.i ? "now" : "";
