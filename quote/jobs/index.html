@@ -161,6 +161,13 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     </div>
     <div class="grid" id="grid"></div>
     <div class="empty" id="empty" hidden></div>
+    <div class="card" id="svcard" hidden style="margin-top:1.5rem;max-width:34rem">
+      <h2>Street View photos</h2>
+      <p class="small" style="margin:0 0 .6rem">Jobs without a visit photo can show the front of the house from Google Street View. Paste your Google key here once. It's kept in your Google script, not on the website.</p>
+      <input type="password" id="svkey" placeholder="Paste the API key" autocomplete="off" aria-label="Street View API key">
+      <div class="actions"><button class="btn" type="button" id="svgo">Connect Street View</button></div>
+      <p class="err" id="sverr" hidden></p>
+    </div>
   </div>
 </div>
 
@@ -173,7 +180,7 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var DAY = 86400000, jobs = [], visits = [], filter = "all", openId = "", only = "";
+  var DAY = 86400000, jobs = [], visits = [], filter = "all", openId = "", only = "", svKey = "", svMeta = {};
   /* key, label, whose move, days before a chase (matches the Google script) */
   var ST = [
     ["signed", "Contract signed", "me", 0], ["survey-booked", "Survey booked", "me", 0], ["survey-done", "Survey done", "me", 0],
@@ -219,7 +226,24 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     for (var dx = -1; dx <= 1; dx++) for (var dy = -1; dy <= 1; dy++) imgs += '<img alt="" loading="lazy" src="https://tile.openstreetmap.org/' + z + '/' + (tx + dx) + '/' + (ty + dy) + '.png" style="left:' + ((dx + 1) * 256) + 'px;top:' + ((dy + 1) * 256) + 'px">';
     return '<div class="map"><div class="tiles" style="transform:translate(' + (-(256 + ox)) + 'px,' + (-(256 + oy)) + 'px)">' + imgs + '</div><span class="pin"></span><small>&copy; OpenStreetMap</small></div>';
   }
-  function picHtml(j) { var u = photo(j); return u ? '<img alt="" loading="lazy" src="' + esc(u) + '">' : mapHtml(j); }
+  /* Google Street View, turned to face the house. The metadata lookup is free; only the picture counts towards the free allowance. */
+  function streetView(j) {
+    var v = j.visit || {}, lat = Number(v.lat || j.lat), lng = Number(v.lng || j.lng);
+    if (!svKey || !(lat && lng)) return "";
+    var k = lat.toFixed(6) + "," + lng.toFixed(6), m = svMeta[k];
+    if (m === undefined) {
+      svMeta[k] = null;
+      fetch("https://maps.googleapis.com/maps/api/streetview/metadata?source=outdoor&radius=60&location=" + k + "&key=" + encodeURIComponent(svKey)).then(function (r) { return r.json(); }).then(function (r) {
+        svMeta[k] = r && r.status === "OK" && r.location ? r.location : false; draw(); if (openId === j.id) panel();
+      }).catch(function () { svMeta[k] = false; });
+      return "";
+    }
+    if (!m) return "";
+    var toR = Math.PI / 180, y = Math.sin((lng - m.lng) * toR) * Math.cos(lat * toR), x = Math.cos(m.lat * toR) * Math.sin(lat * toR) - Math.sin(m.lat * toR) * Math.cos(lat * toR) * Math.cos((lng - m.lng) * toR);
+    var heading = Math.round((Math.atan2(y, x) / toR + 360) % 360);
+    return "https://maps.googleapis.com/maps/api/streetview?size=640x360&fov=75&pitch=4&source=outdoor&location=" + m.lat + "," + m.lng + "&heading=" + heading + "&key=" + encodeURIComponent(svKey);
+  }
+  function picHtml(j) { var u = photo(j) || streetView(j); return u ? '<img alt="" loading="lazy" src="' + esc(u) + '">' : mapHtml(j); }
 
   /* ---------- the board ---------- */
   function counts() {
@@ -359,6 +383,16 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     save(j);
   };
   $("find").oninput = draw;
+  $("svgo").onclick = function () {
+    var k = $("svkey").value.trim(); $("sverr").hidden = true;
+    if (!/^AIza[0-9A-Za-z_-]{30,45}$/.test(k)) { $("sverr").textContent = "That doesn't look like a Google API key. It starts with AIza."; $("sverr").hidden = false; return; }
+    $("svgo").textContent = "Connecting…";
+    RA.api({ action: "job-sv-key", pass: RA.pass(), key: k }).then(function (r) {
+      $("svgo").textContent = "Connect Street View";
+      if (!r || !r.ok) { $("sverr").textContent = "Could not save the key. Please try again."; $("sverr").hidden = false; return; }
+      svKey = k; svMeta = {}; $("svkey").value = ""; $("svcard").hidden = true; draw(); flash("Street View connected");
+    }).catch(function () { $("svgo").textContent = "Connect Street View"; $("sverr").textContent = "Could not reach your Google Sheet."; $("sverr").hidden = false; });
+  };
 
   /* ---------- loading ---------- */
   function load(pw) {
@@ -367,7 +401,7 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
       $("loading").hidden = true;
       if (!r || !r.ok) { try { if (r && r.error === "bad-pass") localStorage.removeItem("ra-pass"); } catch (e) {} $("connect").hidden = false; $("pwerr").textContent = r && r.error === "bad-pass" ? "That passphrase is not right." : "Could not load your jobs. Please try again."; $("pwerr").hidden = false; return; }
       try { localStorage.setItem("ra-pass", pw); } catch (e) {}
-      jobs = r.jobs || []; visits = r.visits || [];
+      jobs = r.jobs || []; visits = r.visits || []; svKey = r.sv || ""; $("svcard").hidden = !!svKey;
       $("connect").hidden = true; $("main").hidden = false; draw();
       var h = location.hash.slice(1); if (h && find(h)) { openId = h; panel(); }
     }).catch(function () { $("loading").hidden = true; $("connect").hidden = false; $("pwerr").textContent = "Could not reach your Google Sheet. Check your signal and try again."; $("pwerr").hidden = false; });
