@@ -4,12 +4,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sample feasibility report | Residential Architecture</title>
-<meta name="description" content="Every free home visit comes with a written feasibility report on your home: planning route, property checks, typical costs and next steps. See a sample.">
+<title>Sample planning feasibility report | Residential Architecture</title>
+<meta name="description" content="Every free home visit comes with a written planning feasibility report on your home: planning route, property checks, typical costs and next steps. See a sample.">
 <link rel="canonical" href="https://residential-architecture.co.uk/feasibility-report/">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Your free feasibility report | Residential Architecture">
-<meta property="og:description" content="Every free home visit comes with a written feasibility report on your home. See a sample.">
+<meta property="og:title" content="Your free planning feasibility report | Residential Architecture">
+<meta property="og:description" content="Every free home visit comes with a written planning feasibility report on your home. See a sample.">
 <meta property="og:url" content="https://residential-architecture.co.uk/feasibility-report/">
 <meta property="og:site_name" content="Residential Architecture">
 <meta property="og:image" content="https://residential-architecture.co.uk/img/report-preview.jpg">
@@ -208,7 +208,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
       <button class="btn" type="button" id="pv-go">Ready for the quote</button>
     </div>
     <div class="out" id="pv-out" hidden>
-      <span id="pv-note">Now make their quote and pick this report under <b>Feasibility report</b>. It appears on their quote, so they only get one link.</span>
+      <span id="pv-note">Now make their quote and pick this report under <b>Planning feasibility report</b>. It appears on their quote, so they only get one link.</span>
       <input type="text" id="pv-link" readonly aria-label="Report link" hidden>
       <button class="btn ghost" type="button" id="pv-copy">Copy report link</button>
       <a class="btn" id="pv-quote" href="/quote/new/">Make the quote</a>
@@ -268,7 +268,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     var H = [];
     /* cover */
     H.push('<article class="sheet"><div class="cover"><div class="row"><div class="who"><span class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span><div><b>Residential Architecture</b><small>Carl Collins BSc (Hons)</small></div></div></div>');
-    H.push('<div><span class="kick">Feasibility report</span><h2>' + esc(r.title) + '</h2><p class="addr">' + esc([r.address, r.postcode].filter(Boolean).join(", ")) + '</p></div>');
+    H.push('<div><span class="kick">Planning feasibility report</span><h2>' + esc(r.title) + '</h2><p class="addr">' + esc([r.address, r.postcode].filter(Boolean).join(", ")) + '</p></div>');
     H.push('<div class="meta">' + (r.fullName ? '<div>Prepared for<b>' + esc(r.fullName) + '</b></div>' : '<div>Based on<b>My visit and the public records for your home</b></div>') + '<div>Local authority<b>' + esc(r.council || "To confirm") + '</b></div><div>Visit date<b>' + esc(day(r.date)) + '</b></div></div></div>');
     /* summary */
     var hello = (r.name ? "Thank you for showing me round, " + esc(r.name) + ". " : "Thank you for showing me round. ") + "Here&rsquo;s what I found from my visit and the public records for your home.";
@@ -361,7 +361,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     H.push('<p class="lead" style="font-size:.93rem">This report is based on a 30-minute visit and the public records for your address on the date shown. It&rsquo;s a first look at what&rsquo;s possible, not a full planning appraisal, a survey or a builder&rsquo;s quote. Once you go ahead, I check everything in detail as part of the design.</p>');
     H.push('<p class="lead" style="font-size:.93rem">Any questions, just message me.<br><b>Carl Collins BSc (Hons)</b></p></div></article>');
     $("main").innerHTML = H.join("");
-    document.title = "Feasibility report" + (r.address ? ", " + r.address.split(",")[0] : "") + " | Residential Architecture";
+    document.title = "Planning feasibility report" + (r.address ? ", " + r.address.split(",")[0] : "") + " | Residential Architecture";
   }
 
   function money0(n) { return "\u00a3" + Math.round(Number(n) || 0).toLocaleString("en-GB"); }

@@ -570,7 +570,7 @@ a.sb { text-decoration:none; }
     var links = [];
     if (j.folder) links.push('<a target="_blank" rel="noopener" href="' + esc(j.folder) + '">Job folder</a>');
     if (j.quoteLink) links.push('<a target="_blank" rel="noopener" href="' + esc(j.quoteLink) + '">Quote</a>');
-    if (v.report) links.push('<a target="_blank" rel="noopener" href="' + esc(v.report) + '">Feasibility report</a>');
+    if (v.report) links.push('<a target="_blank" rel="noopener" href="' + esc(v.report) + '">Planning feasibility report</a>');
     if (j.visitId) links.push('<a href="../visit/#' + esc(j.visitId) + '">Visit notes</a>');
     var refs = [j.planningRef ? "Planning " + j.planningRef : "", j.decision ? "Decision due " + dateStr(j.decision) : "", j.bregsRef ? "Building Regs " + j.bregsRef : ""].filter(String);
     H.push('<div class="facts">' +
