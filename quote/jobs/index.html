@@ -95,6 +95,20 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 .noplace { position:absolute; inset:0; display:grid; place-items:center; color:var(--grey); font-size:.9rem; }
 
 /* Job panel */
+.quick { margin-top:1rem; }
+.quick h3, .docs h3 { margin:0 0 .5rem; font-size:.95rem; }
+.qbtns { display:flex; flex-wrap:wrap; gap:.45rem; }
+.qbtns .ghost { font-size:.86rem; padding:.42rem .85rem; }
+.docs { margin-top:1rem; background:var(--bg); border-radius:16px; padding:1rem 1.1rem; }
+.docs ul { list-style:none; margin:0; padding:0; display:grid; gap:.3rem; }
+.docs li { display:flex; align-items:center; gap:.55rem; font-size:.9rem; }
+.docs li label { display:flex; gap:.55rem; align-items:center; cursor:pointer; flex:1; }
+.docs li .who { margin-left:auto; color:var(--grey); font-size:.78rem; white-space:nowrap; }
+.docs li .why { color:var(--grey); font-size:.78rem; }
+.stages li.prestage .sb .c { border-style:dashed; }
+.stages li.prestage:nth-child(3)::after { background:var(--pink); opacity:.35; }
+.tile.pre { text-decoration:none; opacity:.92; }
+.tile.pre .pic img { filter:saturate(.85); }
 /* Job page */
 .back { font:inherit; font-weight:600; color:var(--grey); background:none; border:0; padding:.3rem 0; cursor:pointer; margin:.8rem 0 .6rem; }
 .back:hover { color:var(--pink); }
@@ -170,6 +184,8 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     </div>
     <div class="grid" id="grid"></div>
     <div class="empty" id="empty" hidden></div>
+    <h2 id="prehead" hidden style="margin:2rem 0 .8rem">In the pipeline</h2>
+    <div class="grid" id="pregrid"></div>
     <div class="card" id="svcard" hidden style="margin-top:1.5rem;max-width:34rem">
       <h2>Street View photos</h2>
       <p class="small" style="margin:0 0 .6rem">Jobs without a visit photo can show the front of the house from Google Street View. Paste your Google key here once. It's kept in your Google script, not on the website.</p>
@@ -188,7 +204,7 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var DAY = 86400000, jobs = [], visits = [], filter = "all", openId = "", only = "", svKey = "", svMeta = {};
+  var DAY = 86400000, jobs = [], visits = [], pre = [], filter = "all", openId = "", only = "", svKey = "", svMeta = {};
   /* key, label, whose move, days before a chase (matches the Google script) */
   var ST = [
     ["signed", "Contract signed", "me", 0], ["survey-booked", "Survey booked", "me", 0], ["survey-done", "Survey done", "me", 0],
@@ -251,6 +267,31 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     var heading = Math.round((Math.atan2(y, x) / toR + 360) % 360);
     return "https://maps.googleapis.com/maps/api/streetview?size=640x360&fov=75&pitch=4&source=outdoor&location=" + m.lat + "," + m.lng + "&heading=" + heading + "&key=" + encodeURIComponent(svKey);
   }
+  /* Before a job is signed there is no visit pin yet, so Street View is pointed at the address and faces it by itself. */
+  function svAddress(a) {
+    if (!svKey || !a) return "";
+    return "https://maps.googleapis.com/maps/api/streetview?size=640x360&fov=75&pitch=4&source=outdoor&location=" + encodeURIComponent(a) + "&key=" + encodeURIComponent(svKey);
+  }
+  /* Booked visits and sent quotes, from the same data as the Pipeline page */
+  function loadPre() {
+    RA.api({ action: "pipeline", pass: RA.pass() }).then(function (r) {
+      if (!r || !r.ok) return;
+      var cut = Date.now() - 120 * DAY;
+      pre = (r.people || []).filter(function (p) { return !p.sg && !p.lost && (p.qs ? p.qs > cut : (p.vs === "Booked" || p.vs === "Visited") && (p.vd || p.f || 0) > cut); }).map(function (p) {
+        var q = p.ql ? RA.decode((String(p.ql).split("#")[1] || "").split(".")[0]) : null;
+        return { k: p.k, name: p.n || "", addr: q && q.a ? String(q.a).split("\n").join(", ") : (p.pc || ""), st: p.qs ? "quote" : "visit", vs: p.vs, vd: p.vd, qs: p.qs, fee: p.qf, link: p.ql || "" };
+      });
+      draw();
+    }).catch(function () {});
+  }
+  function preTiles(list) {
+    return list.map(function (p) {
+      var u = svAddress(p.addr), when = p.st === "quote" ? "Quote sent " + days(p.qs) + (days(p.qs) === 1 ? " day" : " days") + " ago" : p.vs === "Visited" ? "Visited " + dateStr(p.vd) : "Visit " + dateStr(p.vd);
+      return '<a class="tile pre" href="' + esc(p.link || "../pipeline/") + '"' + (p.link ? ' target="_blank" rel="noopener"' : "") + '><div class="pic">' + (u ? '<img alt="" loading="lazy" src="' + esc(u) + '">' : '<div class="noplace">No photo yet</div>') +
+        '<span class="pill wait"><i></i>' + (p.st === "quote" ? "Quote sent" : "Visit booked") + '</span></div><div class="tb"><div class="addr">' + esc(String(p.addr).split(",")[0] || p.name) + '</div><div class="who">' + esc(p.name) + '</div>' +
+        '<div class="meta" style="margin-top:.7rem"><span>' + esc(when) + '</span>' + (p.fee && p.st === "quote" ? '<span>' + esc(RA.money(Number(p.fee))) + '</span>' : "") + '</div></div></a>';
+    }).join("");
+  }
   function picHtml(j) { var u = photo(j) || streetView(j); return u ? '<img alt="" loading="lazy" src="' + esc(u) + '">' : mapHtml(j); }
 
   /* ---------- the board ---------- */
@@ -275,6 +316,10 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
   function bar() {
     var act = jobs.filter(function (j) { return j.status === "Active" && j.stage !== "complete"; });
     var H = ['<li><button class="sb' + (act.length ? " has" : "") + '" type="button" data-s="" aria-pressed="' + (!only) + '"><span class="c">' + (only ? act.length : '<span class="all"></span>') + '</span><span class="l">All stages</span></button></li>'];
+    [["pre-visit", "Visit booked"], ["pre-quote", "Quote sent"]].forEach(function (s) {
+      var n = pre.filter(function (p) { return "pre-" + p.st === s[0]; }).length;
+      H.push('<li class="prestage"><button class="sb' + (n ? " has" : "") + '" type="button" data-s="' + s[0] + '" aria-pressed="' + (only === s[0]) + '"><span class="c">' + (n || "") + '</span><span class="l">' + s[1] + '</span></button></li>');
+    });
     ST.slice(0, -1).forEach(function (s) {
       var here = act.filter(function (j) { return j.stage === s[0]; }), late = here.some(function (j) { var w = waitInfo(j); return w && w.due; });
       H.push('<li><button class="sb' + (here.length ? " has" : "") + (late ? " late" : "") + '" type="button" data-s="' + s[0] + '" aria-pressed="' + (only === s[0]) + '"><span class="c">' + (here.length || "") + '</span><span class="l">' + esc(s[1]) + '</span></button></li>');
@@ -286,10 +331,19 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     bar();
     var c = counts(), F = [["all", "All"], ["mine", "My move"], ["waiting", "Waiting"], ["chase", "Chase now"], ["done", "Finished"]];
     $("filters").innerHTML = F.map(function (f) { return '<button class="chip' + (f[0] === "chase" && c.chase ? " hot" : "") + '" type="button" data-f="' + f[0] + '" aria-pressed="' + (filter === f[0]) + '">' + f[1] + ' <b>' + c[f[0]] + '</b></button>'; }).join("");
-    [].forEach.call($("filters").querySelectorAll(".chip"), function (b) { b.onclick = function () { filter = b.getAttribute("data-f"); try { localStorage.setItem("ra-jobs-f", filter); } catch (e) {} draw(); }; });
+    [].forEach.call($("filters").querySelectorAll(".chip"), function (b) { b.onclick = function () { filter = b.getAttribute("data-f"); if (/^pre-/.test(only)) only = ""; try { localStorage.setItem("ra-jobs-f", filter); } catch (e) {} draw(); }; });
     var q = $("find").value.trim().toLowerCase();
     var list = jobs.filter(function (j) { return inFilter(j) && (!only || j.stage === only) && (!q || [j.num, j.name, j.address, j.ref, j.project, j.planningRef].join(" ").toLowerCase().indexOf(q) >= 0); });
     list.sort(function (a, b) { var wa = waitInfo(a), wb = waitInfo(b); return ((wb && wb.due) - (wa && wa.due)) || (Number(a.since) - Number(b.since)); });
+    if (/^pre-/.test(only)) {
+      var pl = pre.filter(function (p) { return "pre-" + p.st === only && (!q || (p.name + " " + p.addr).toLowerCase().indexOf(q) >= 0); });
+      $("grid").innerHTML = preTiles(pl); $("pregrid").innerHTML = ""; $("prehead").hidden = true;
+      [].forEach.call($("filters").querySelectorAll(".chip"), function (b) { b.setAttribute("aria-pressed", "false"); });
+      $("empty").hidden = pl.length > 0; $("empty").textContent = "Nothing at this stage right now.";
+      return;
+    }
+    var showPre = filter === "all" && !only && pre.length && !q;
+    $("pregrid").innerHTML = showPre ? preTiles(pre.slice().sort(function (a, b) { return (b.qs || b.vd || 0) - (a.qs || a.vd || 0); })) : ""; $("prehead").hidden = !showPre;
     $("grid").innerHTML = list.map(function (j) {
       var x = stage(j), w = waitInfo(j), p = progress(j), cls = j.stage === "complete" || j.status !== "Active" ? "done" : w ? "wait" : "";
       var meta = w ? (w.due ? '<span class="late">Waiting ' + w.days + ' day' + (w.days === 1 ? "" : "s") + ', chase</span>' : (j.stage === "planning" && j.decision ? '<span>Decision due ' + esc(new Date(j.decision).toLocaleDateString("en-GB", { day: "numeric", month: "short" })) + '</span>' : '<span>Waiting on ' + WHO[w.who] + ', ' + w.days + ' day' + (w.days === 1 ? "" : "s") + '</span>')) : j.stage === "complete" ? '<span>Complete</span>' : '<span>Your move</span>';
@@ -304,6 +358,30 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 
   /* ---------- one job ---------- */
   function find(id) { return jobs.filter(function (j) { return j.id === id; })[0]; }
+  /* What the local validation list is likely to need, worked out from the visit's planning checks and route. */
+  function docsNeeded(j) {
+    var c = (j.visit && j.visit.checks) || {}, route = String((j.visit && j.visit.route) || j.route || ""), yes = function (k) { return /^(yes|nearby)/i.test(String(c[k] || "")); };
+    var fz = Number((/zone\s*(\d)/i.exec(String(c.flood || "")) || [])[1] || 1), D = [];
+    var lpa = /prior/i.test(route) ? "prior" : /lawful|ldc|certificate/i.test(route) ? "ldc" : "full";
+    D.push(["letter", "Covering letter", "I create", ""]);
+    D.push(["form", lpa === "prior" ? "Prior approval form and neighbour addresses" : lpa === "ldc" ? "Lawful Development Certificate form" : "Application form and ownership certificate", "Planda", ""]);
+    D.push(["location", "Location plan", "Planda, free", ""]);
+    D.push(["drawings", "Site plan, existing and proposed drawings", "Your drawings", ""]);
+    if (lpa === "ldc") D.push(["ldc", "Permitted development statement", "I create", "Shows how it meets the rules"]);
+    if (lpa === "full") D.push(["bng", "Biodiversity net gain exemption statement", "I create", "Householder exemption"]);
+    if (lpa === "full") D.push(["cil", "CIL form", "I create", "Under 100m\u00b2, so not liable"]);
+    if (yes("conservation") && lpa === "full") D.push(["das", "Design and Access statement", "I create", "Conservation area"]);
+    if (yes("conservation") || yes("listed")) D.push(["heritage", "Heritage statement", "I create", yes("listed") ? "Listed building nearby" : "Conservation area"]);
+    if (fz >= 2) D.push(["flood", "Flood risk assessment", "I create", "Flood zone " + fz]);
+    if (yes("trees")) D.push(["trees", "Tree survey or arboricultural statement", "Specialist", "Protected trees"]);
+    return D;
+  }
+  function docsHtml(j) {
+    var D = docsNeeded(j), got = j.docs || {}, done = D.filter(function (d) { return got[d[0]]; }).length;
+    return '<div class="docs"><h3>Planning documents <span class="small" style="font-weight:500">' + done + ' of ' + D.length + ' ready</span></h3><ul>' + D.map(function (d) {
+      return '<li><label><input type="checkbox" data-doc="' + d[0] + '"' + (got[d[0]] ? " checked" : "") + '> <span>' + esc(d[1]) + (d[3] ? ' <span class="why">' + esc(d[3]) + '</span>' : "") + '</span></label><span class="who">' + esc(d[2]) + '</span></li>';
+    }).join("") + '</ul><p class="small" style="margin:.6rem 0 0">Worked out from the planning checks at the visit. The "Create documents" button comes next: it fills in everything marked \u201cI create\u201d and saves it to the job\u2019s planning folder.</p></div>';
+  }
   function panel() {
     var j = find(openId); if (!j) { showBoard(); return; }
     var v = j.visit || {}, x = stage(j), sk = skipped(j), w = waitInfo(j), hist = {}, pr = progress(j);
@@ -314,11 +392,19 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     H.push('<button class="back" type="button" id="p-close">&larr; All jobs</button>');
     H.push('<div class="jhero"><div class="jpic"><div class="ph">' + picHtml(j) + '</div>');
     if (ps.length > 1) H.push('<div class="strip" aria-label="Choose the picture">' + ps.map(function (p) { return '<button type="button" data-u="' + esc(p.url) + '" aria-pressed="' + (p.url === cur) + '" title="' + esc(p.caption || "Use this photo") + '"><img alt="" loading="lazy" src="' + esc(p.url) + '"></button>'; }).join("") + '</div>');
+    H.push(docsHtml(j));
     H.push('</div><div class="jinfo">');
     H.push((j.num ? '<span class="jnum">Job ' + esc(j.num) + '</span>' : "") + '<h2 class="addr" id="p-addr">' + esc(j.address || "No address") + '</h2>');
     H.push('<p class="small" style="margin:.35rem 0 0">' + esc([j.name, j.project, j.fee ? RA.money(Number(j.fee)) : ""].filter(String).join(" · ")) + '</p>');
     H.push('<div class="jprog"><div class="prog"><span style="width:' + pr.pct + '%"></span></div><div class="meta"><span>Step ' + pr.done + ' of ' + pr.total + ' &middot; <b style="color:var(--ink)">' + esc(x.s[1]) + '</b></span></div></div>');
     H.push('<div class="contact">' + (wa.length > 9 ? '<a class="btn" target="_blank" rel="noopener" href="https://wa.me/' + esc(wa) + '">WhatsApp ' + esc(first) + '</a>' : "") + (email ? '<a class="ghost" href="mailto:' + esc(email) + '">Email</a>' : "") + (mob ? '<a class="ghost" href="tel:' + esc(mob) + '">Call</a>' : "") + '</div>');
+    /* One-tap updates: the likely next moves for this job */
+    var NEXT = { "signed": ["survey-booked", "survey-done"], "survey-booked": ["survey-done"], "survey-done": ["drawing", "client"], "drawing": ["client", "planning"], "client": ["drawing", "planning"],
+      "planning": ["approved", "calcs"], "approved": ["calcs", "bregs"], "calcs": ["bregs"], "bregs": ["complete"], "complete": [] };
+    var LBL = { "survey-booked": "Survey booked", "survey-done": "Survey done", "drawing": j.stage === "client" ? "Client came back" : "Started drawings", "client": "Issued to client", "planning": "Planning submitted",
+      "approved": "Planning approved", "calcs": "Sent to engineer", "bregs": "Building Regs submitted", "complete": "Job complete" };
+    var nx = (NEXT[j.stage] || []).filter(function (k) { return !sk[k]; });
+    if (nx.length) H.push('<div class="quick"><h3>Update</h3><div class="qbtns">' + nx.map(function (k, i) { return '<button class="' + (i ? "ghost" : "btn") + '" type="button" data-q="' + k + '">' + esc(LBL[k]) + '</button>'; }).join("") + '</div></div>');
     if (w) {
       var txt = w.who === "client" ? "Waiting on " + esc(first || "the client") : "Waiting on the " + WHO[w.who];
       H.push('<div class="box' + (w.due ? " hot" : "") + '"><b>' + txt + ' for ' + w.days + ' day' + (w.days === 1 ? "" : "s") + '</b><div class="small">' + (w.due ? "Worth a chase now." : "I'll flag it on " + dateStr(w.dueAt) + " if nothing has moved.") + '</div>' +
@@ -355,6 +441,8 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
     if (fresh) window.scrollTo(0, 0); else window.scrollTo(0, y);
     $("p-close").onclick = shut;
     [].forEach.call(P.querySelectorAll(".strip button"), function (b) { b.onclick = function () { j.photo = b.getAttribute("data-u"); save(j); panel(); }; });
+    [].forEach.call(P.querySelectorAll("[data-q]"), function (b) { b.onclick = function () { setStage(j, b.getAttribute("data-q")); }; });
+    [].forEach.call(P.querySelectorAll("[data-doc]"), function (c) { c.onchange = function () { j.docs = j.docs || {}; j.docs[c.getAttribute("data-doc")] = c.checked ? 1 : 0; save(j); }; });
     [].forEach.call(P.querySelectorAll(".step"), function (b) { b.onclick = function () { setStage(j, b.getAttribute("data-s")); }; });
     $("p-skip").onclick = function (e) { e.preventDefault(); $("p-skips").hidden = !$("p-skips").hidden; };
     [].forEach.call(P.querySelectorAll("#p-skips input"), function (c) { c.onchange = function () { j.skip = j.skip || {}; if (c.checked) j.skip[c.getAttribute("data-k")] = 1; else delete j.skip[c.getAttribute("data-k")]; save(j); panel(); $("p-skips").hidden = false; }; });
@@ -418,7 +506,7 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
       $("loading").hidden = true;
       if (!r || !r.ok) { try { if (r && r.error === "bad-pass") localStorage.removeItem("ra-pass"); } catch (e) {} $("connect").hidden = false; $("pwerr").textContent = r && r.error === "bad-pass" ? "That passphrase is not right." : "Could not load your jobs. Please try again."; $("pwerr").hidden = false; return; }
       try { localStorage.setItem("ra-pass", pw); } catch (e) {}
-      jobs = r.jobs || []; visits = r.visits || []; svKey = r.sv || ""; $("svcard").hidden = !!svKey;
+      jobs = r.jobs || []; visits = r.visits || []; svKey = r.sv || ""; $("svcard").hidden = !!svKey; loadPre();
       $("connect").hidden = true; $("main").hidden = false; draw();
       var h = location.hash.slice(1); if (h && find(h)) { openId = h; panel(); }
     }).catch(function () { $("loading").hidden = true; $("connect").hidden = false; $("pwerr").textContent = "Could not reach your Google Sheet. Check your signal and try again."; $("pwerr").hidden = false; });
