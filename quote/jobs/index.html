@@ -47,20 +47,30 @@ label.f { display:block; font-weight:600; font-size:.88rem; margin:.7rem 0 .25re
 .bar input[type=search] { width:16rem; max-width:100%; border-radius:999px; }
 
 /* Stage bar */
-.stages { background:#fff; border:1px solid var(--line); border-radius:20px; padding:1rem .6rem .8rem; margin:1.2rem 0 0; overflow-x:auto; scrollbar-width:thin; }
-.stages ol { list-style:none; margin:0; padding:0 .4rem; display:flex; min-width:max-content; }
-.stages li { position:relative; flex:1 0 6.6rem; }
-.stages li:not(:last-child)::after { content:""; position:absolute; top:1.25rem; left:calc(50% + 1.5rem); right:calc(-50% + 1.5rem); height:2px; background:var(--line); }
-.sb { width:100%; background:none; border:0; font:inherit; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:.4rem; padding:0 .2rem; color:var(--grey); }
-.sb .c { width:2.5rem; height:2.5rem; border-radius:50%; border:2px solid var(--line); display:grid; place-items:center; font-weight:700; font-size:.92rem; background:#fff; color:var(--grey); transition:.15s; }
+.stages { background:#fff; border:1px solid var(--line); border-radius:20px; padding:1rem .5rem .8rem; margin:1.2rem 0 0; }
+.stages ol { list-style:none; margin:0; padding:0; display:flex; }
+.stages li { position:relative; flex:1 1 0; min-width:0; }
+.stages li:not(:last-child)::after { content:""; position:absolute; top:1.1rem; left:calc(50% + 1.25rem); right:calc(-50% + 1.25rem); height:2px; background:var(--line); }
+.sb { width:100%; background:none; border:0; font:inherit; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:.35rem; padding:0 .1rem; color:var(--grey); }
+.sb .c { width:2.2rem; height:2.2rem; border-radius:50%; border:2px solid var(--line); display:grid; place-items:center; font-weight:700; font-size:.88rem; background:#fff; color:var(--grey); transition:.15s; }
 .sb.has .c { border-color:var(--ink); color:var(--ink); }
 .sb.late .c { border-color:var(--pink); color:var(--pink-ink); }
-.sb .l { font-size:.8rem; line-height:1.25; text-align:center; max-width:6.4rem; }
+.sb .l { font-size:.74rem; line-height:1.2; text-align:center; }
 .sb.has .l { color:var(--ink); }
-.sb[aria-pressed=true] .c { background:var(--pink); border-color:var(--pink); color:#fff; box-shadow:0 0 0 5px var(--tint); }
-.sb[aria-pressed=true] .l { color:var(--pink-ink); font-weight:700; }
+.sb[aria-pressed=true] .c { background:var(--pink); border-color:var(--pink); color:#fff; box-shadow:0 0 0 4px var(--tint); }
+.sb[aria-pressed=true] .l, .sb[aria-pressed=true] .ls { color:var(--pink-ink); font-weight:700; }
+.sb.has .ls { color:var(--ink); }
 .sb:hover .c { border-color:var(--pink); }
 .sb:focus-visible { outline:3px solid var(--ink); outline-offset:2px; border-radius:12px; }
+/* Phones: two tidy rows instead of a sideways scroll */
+@media (max-width:52rem) {
+  .stages ol { display:grid; grid-template-columns:repeat(7, minmax(0, 1fr)); row-gap:.9rem; }
+  .stages li::after { display:none; }
+  .sb .l { display:none; }
+  .sb .ls { display:block; font-size:.7rem; line-height:1.2; text-align:center; }
+  .sb .c { width:2rem; height:2rem; font-size:.8rem; }
+}
+.sb .ls { display:none; }
 .sb .all { width:.75rem; height:.75rem; border-radius:50%; background:currentColor; }
 
 /* Tiles */
@@ -223,6 +233,7 @@ a.sb { text-decoration:none; }
     ["approved", "Planning approved", "me", 0], ["calcs", "Calculations with engineer", "engineer", 14], ["bregs", "Building Regs submitted", "council", 35],
     ["complete", "Complete", "done", 0]
   ];
+  var SHORT = { "signed": "Signed", "survey-booked": "Survey booked", "survey-done": "Surveyed", "drawing": "Drawing", "client": "With client", "planning": "Planning in", "approved": "Approved", "calcs": "Engineer", "bregs": "Building Regs" };
   var WHO = { client: "client", council: "council", engineer: "engineer" };
   function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function stage(j) { for (var i = 0; i < ST.length; i++) if (ST[i][0] === j.stage) return { i: i, s: ST[i] }; return { i: 0, s: ST[0] }; }
@@ -327,15 +338,15 @@ a.sb { text-decoration:none; }
   }
   function bar() {
     var act = jobs.filter(function (j) { return j.status === "Active" && j.stage !== "complete"; });
-    var H = ['<li><button class="sb' + (act.length ? " has" : "") + '" type="button" data-s="" aria-pressed="' + (!only) + '"><span class="c">' + (only ? act.length : '<span class="all"></span>') + '</span><span class="l">All stages</span></button></li>'];
-    H.push('<li class="prestage"><a class="sb' + (leadCount ? " has" : "") + '" href="../pipeline/" title="Open your pipeline"><span class="c">' + (leadCount || "") + '</span><span class="l">Leads</span></a></li>');
+    var H = ['<li><button class="sb' + (act.length ? " has" : "") + '" type="button" data-s="" aria-pressed="' + (!only) + '"><span class="c">' + (only ? act.length : '<span class="all"></span>') + '</span><span class="l">All stages</span><span class="ls">All</span></button></li>'];
+    H.push('<li class="prestage"><a class="sb' + (leadCount ? " has" : "") + '" href="../pipeline/" title="Open your pipeline"><span class="c">' + (leadCount || "") + '</span><span class="l">Leads</span><span class="ls">Leads</span></a></li>');
     [["pre-visit", "Visit booked"], ["pre-quote", "Quote sent"]].forEach(function (s) {
       var n = pre.filter(function (p) { return "pre-" + p.st === s[0]; }).length;
-      H.push('<li class="prestage"><button class="sb' + (n ? " has" : "") + '" type="button" data-s="' + s[0] + '" aria-pressed="' + (only === s[0]) + '"><span class="c">' + (n || "") + '</span><span class="l">' + s[1] + '</span></button></li>');
+      H.push('<li class="prestage"><button class="sb' + (n ? " has" : "") + '" type="button" data-s="' + s[0] + '" aria-pressed="' + (only === s[0]) + '"><span class="c">' + (n || "") + '</span><span class="l">' + s[1] + '</span><span class="ls">' + (s[0] === "pre-visit" ? "Visit" : "Quote") + '</span></button></li>');
     });
     ST.slice(0, -1).forEach(function (s) {
       var here = act.filter(function (j) { return j.stage === s[0]; }), late = here.some(function (j) { var w = waitInfo(j); return w && w.due; });
-      H.push('<li><button class="sb' + (here.length ? " has" : "") + (late ? " late" : "") + '" type="button" data-s="' + s[0] + '" aria-pressed="' + (only === s[0]) + '"><span class="c">' + (here.length || "") + '</span><span class="l">' + esc(s[1]) + '</span></button></li>');
+      H.push('<li><button class="sb' + (here.length ? " has" : "") + (late ? " late" : "") + '" type="button" data-s="' + s[0] + '" aria-pressed="' + (only === s[0]) + '"><span class="c">' + (here.length || "") + '</span><span class="l">' + esc(s[1]) + '</span><span class="ls">' + esc(SHORT[s[0]] || s[1]) + '</span></button></li>');
     });
     $("stagebar").innerHTML = H.join("");
     [].forEach.call($("stagebar").querySelectorAll(".sb"), function (b) { b.onclick = function () { only = b.getAttribute("data-s"); if (only && filter === "done") filter = "all"; draw(); }; });
