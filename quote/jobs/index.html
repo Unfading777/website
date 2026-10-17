@@ -431,19 +431,30 @@ a.sb { text-decoration:none; }
     return councils[pc];
   }
   /* What the local validation list is likely to need, worked out from the visit's planning checks and route. */
+  /* Application type: set on the job, or worked out from the visit's planning route */
+  var APPTYPES = [["householder", "Householder planning"], ["prior", "Prior approval (larger home extension)"], ["ldc", "Lawful Development Certificate"], ["full", "Full planning (flats, new builds, change of use)"], ["lbc", "Householder with listed building consent"]];
+  function appType(j) {
+    if (j.apptype) return j.apptype;
+    var route = String((j.visit && j.visit.route) || j.route || "");
+    return /prior/i.test(route) ? "prior" : /lawful|ldc|certificate/i.test(route) ? "ldc" : "householder";
+  }
   function docsNeeded(j) {
-    var c = (j.visit && j.visit.checks) || {}, route = String((j.visit && j.visit.route) || j.route || ""), yes = function (k) { return /^(yes|nearby)/i.test(String(c[k] || "")); };
-    var fz = Number((/zone\s*(\d)/i.exec(String(c.flood || "")) || [])[1] || 1), D = [];
-    var lpa = /prior/i.test(route) ? "prior" : /lawful|ldc|certificate/i.test(route) ? "ldc" : "full";
+    var c = j.checks || (j.visit && j.visit.checks) || {}, yes = function (k) { return /^(yes|nearby)/i.test(String(c[k] || "")); };
+    var fz = Number((/zone\s*(\d)/i.exec(String(c.flood || "")) || [])[1] || 1), D = [], at = appType(j);
+    var lpa = at === "prior" ? "prior" : at === "ldc" ? "ldc" : "full";
     D.push(["letter", "Covering letter", "I create", ""]);
     D.push(["form", lpa === "prior" ? "Prior approval form and neighbour addresses" : lpa === "ldc" ? "Lawful Development Certificate form" : "Application form and ownership certificate", "Planda", ""]);
     D.push(["location", "Location plan", "Planda, free", ""]);
     D.push(["drawings", "Site plan, existing and proposed drawings", "Your drawings", ""]);
     if (lpa === "ldc") D.push(["ldc", "Permitted development statement", "I create", "Shows how it meets the rules"]);
-    if (lpa === "full") D.push(["bng", "Biodiversity net gain exemption statement", "I create", "Householder exemption"]);
+    if (at === "householder" || at === "lbc") D.push(["bng", "Biodiversity net gain exemption statement", "I create", "Householder exemption"]);
+    if (at === "full") D.push(["bngm", "Biodiversity net gain metric, or de minimis statement", "Specialist", "New builds aren\u2019t exempt"]);
+    if (at === "full") D.push(["das", "Design and Access statement", "I create", "Full application"]);
+    if (at === "full") D.push(["refuse", "Parking, cycle and bin storage plan", "Your drawings", "New homes"]);
+    if (at === "lbc") D.push(["lbcform", "Listed building consent form", "Planda", "Listed building"]);
     D.push(["cil", "CIL Form 1", "I create", "Council\u2019s own form, always needed"]);
-    if (yes("conservation") && lpa === "full") D.push(["das", "Design and Access statement", "I create", "Conservation area"]);
-    if (yes("conservation") || yes("listed")) D.push(["heritage", "Heritage statement", "I create", yes("listed") ? "Listed building nearby" : "Conservation area"]);
+    if (yes("conservation") && at !== "full" && lpa === "full") D.push(["das", "Design and Access statement", "I create", "Conservation area"]);
+    if (yes("conservation") || yes("listed") || at === "lbc") D.push(["heritage", "Heritage statement", "I create", yes("listed") ? "Listed building nearby" : "Conservation area"]);
     if (fz >= 2) D.push(["flood", "Flood risk assessment", "I create", "Flood zone " + fz]);
     if (yes("trees")) D.push(["trees", "Tree survey or arboricultural statement", "Specialist", "Protected trees"]);
     return D;
@@ -453,7 +464,10 @@ a.sb { text-decoration:none; }
     var cn = councilOf(j), short = { "Windsor and Maidenhead": "RBWM", "West Berkshire": "West Berks", "Buckinghamshire": "Bucks", "South Oxfordshire": "South Oxon", "Oxford": "Oxford City" }[cn] || cn;
     var lists = window.RA_LOCALLIST || {}, fromCouncil = cn && lists[cn] && lists[cn].householder && lists[cn].householder.length;
     return '<div class="docs"><h3>' + esc(short ? short + " validation checklist" : "Validation checklist") + ' <span class="small" style="font-weight:500">' + done + ' of ' + D.length + ' ready</span></h3>' +
-      '<p class="small" style="margin:-.4rem 0 .7rem">' + (fromCouncil ? "From " + esc(cn === "Windsor and Maidenhead" ? "the Royal Borough of Windsor and Maidenhead" : cn + " Council") + "\u2019s own validation list (" + esc(lists[cn].source || "") + "), matched to this job\u2019s planning checks." : "From the national requirements and this job\u2019s planning checks" + (cn ? ". " + esc(cn) + "\u2019s own list is being added." : ".")) + '</p><ul>' + D.map(function (d) {
+      '<div class="small" style="margin:-.3rem 0 .5rem;display:flex;flex-wrap:wrap;gap:.3rem 1rem;align-items:center"><span><b style="color:var(--ink)">' + esc((APPTYPES.filter(function (t) { return t[0] === appType(j); })[0] || ["", "Householder planning"])[1]) + '</b></span>' +
+        '<span>' + (j.checkedAt ? "Planning checks run " + esc(dateStr(j.checkedAt)) : j.visit && j.visit.checks ? "Planning checks from the home visit" : "Planning checks not run yet") + '</span>' +
+        '<button class="ghost" type="button" id="p-runcheck" style="padding:.3rem .8rem;font-size:.82rem">Run validation checklist</button></div>' +
+      '<p class="small" style="margin:0 0 .7rem">' + (fromCouncil ? "From " + esc(cn === "Windsor and Maidenhead" ? "the Royal Borough of Windsor and Maidenhead" : cn + " Council") + "\u2019s own validation list (" + esc(lists[cn].source || "") + "), matched to this job\u2019s planning checks." : "From the national requirements and this job\u2019s planning checks" + (cn ? ". " + esc(cn) + "\u2019s own list is being added." : ".")) + '</p><ul>' + D.map(function (d) {
       var f = files[d[0]];
       return '<li><label><input type="checkbox" data-doc="' + d[0] + '"' + (got[d[0]] ? " checked" : "") + '> <span>' + esc(d[1]) + (d[3] ? ' <span class="why">' + esc(d[3]) + '</span>' : "") + '</span></label>' +
         (f ? '<a class="who open" target="_blank" rel="noopener" href="' + esc(f.url) + '">Open PDF</a>' : '<span class="who">' + esc(d[2]) + '</span>') + '</li>';
@@ -461,6 +475,18 @@ a.sb { text-decoration:none; }
       '<span class="small" id="p-cmsg">Writes the ' + mine + ' marked \u201cI create\u201d (the CIL form on the council\u2019s own Form 1) and saves them as PDFs in the job folder.</span></div></div>';
   }
   /* Writes every "I create" document on the server and saves them as PDFs in Issued > Planning Issue > today's date */
+  /* Re-runs the national planning checks for the address, so the checklist reflects today's constraints */
+  function runChecks(j, btn) {
+    var v = j.visit || {}, pc = v.postcode || (/\b([A-Z]{1,2}\d[A-Z\d]?\s*\d[A-Z]{2})\b/i.exec(j.address || "") || [])[1] || "";
+    btn.disabled = true; btn.textContent = "Checking\u2026";
+    RA.api({ action: "visit-checks", pass: RA.pass(), lat: v.lat || j.lat || "", lng: v.lng || j.lng || "", postcode: pc }).then(function (r) {
+      if (!r || !r.ok) { btn.disabled = false; btn.textContent = "Run validation checklist"; flash("Couldn\u2019t run the checks" + (r && r.error ? " (" + r.error + ")" : "")); return; }
+      var keep = (v.checks || {}), merged = {};
+      Object.keys(keep).forEach(function (k) { if (k.charAt(0) !== "_") merged[k] = keep[k]; });
+      Object.keys(r.checks).forEach(function (k) { merged[k] = r.checks[k]; });
+      j.checks = merged; j.checkedAt = Date.now(); save(j); panel(); flash("Checklist up to date");
+    }).catch(function () { btn.disabled = false; btn.textContent = "Run validation checklist"; flash("Couldn\u2019t reach your Google Sheet"); });
+  }
   /* The council's own CIL Form 1: the blank form from Carl's Projects folder, filled in here and saved to the job */
   function loadScript(src) { return new Promise(function (ok, no) { var s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); }); }
   function fillCil(j) {
@@ -558,6 +584,7 @@ a.sb { text-decoration:none; }
       '<div class="two"><div><label class="f" for="p-mob">Mobile</label><input type="tel" id="p-mob" value="' + esc(j.mobile || v.mobile || "") + '"></div><div><label class="f" for="p-email">Email</label><input type="email" id="p-email" value="' + esc(j.email || v.email || "") + '"></div></div>' +
       '<div class="two"><div><label class="f" for="p-ref">Planning reference</label><input type="text" id="p-ref" value="' + esc(j.planningRef || "") + '"></div><div><label class="f" for="p-dec">Decision due</label><input type="date" id="p-dec" value="' + esc(j.decision || "") + '"></div></div>' +
       '<label class="f" for="p-bref">Building Regs reference</label><input type="text" id="p-bref" value="' + esc(j.bregsRef || "") + '">' +
+      '<label class="f" for="p-apptype">Application type</label><select id="p-apptype">' + APPTYPES.map(function (t) { return '<option value="' + t[0] + '"' + (appType(j) === t[0] ? " selected" : "") + '>' + esc(t[1]) + '</option>'; }).join("") + '</select>' +
       '<label class="f" for="p-visit">Home visit (for the photos)</label><select id="p-visit"><option value="">None</option>' + visits.map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === j.visitId ? " selected" : "") + '>' + esc([x.name, x.address].filter(String).join(", ")) + '</option>'; }).join("") + '</select>' +
       '<label class="f">Steps this job doesn\u2019t need</label><div id="p-skips">' + ST.slice(1, -1).map(function (s) { return '<label style="display:flex;gap:.5rem;align-items:center;margin:.25rem 0"><input type="checkbox" data-k="' + s[0] + '"' + (sk[s[0]] ? " checked" : "") + '> ' + esc(s[1]) + '</label>'; }).join("") + '</div>' +
       '<div class="actions"><button class="btn" type="button" id="p-done">Done</button></div></div>');
@@ -601,6 +628,8 @@ a.sb { text-decoration:none; }
     $("p-done").onclick = function () { panel(); };
     if ($("p-addmob")) $("p-addmob").onclick = function () { $("p-editbox").hidden = false; $("p-mob").focus(); $("p-mob").scrollIntoView({ block: "center" }); };
     if ($("p-create")) $("p-create").onclick = function () { createDocs(j, this); };
+    $("p-apptype").onchange = function () { j.apptype = this.value; save(j); var k = keepOpen(); panel(); k(); };
+    $("p-runcheck").onclick = function () { runChecks(j, this); };
     [].forEach.call(P.querySelectorAll(".strip button"), function (b) { b.onclick = function () { j.photo = b.getAttribute("data-u"); save(j); panel(); }; });
     [].forEach.call(P.querySelectorAll("[data-q]"), function (b) { b.onclick = function () { setStage(j, b.getAttribute("data-q")); }; });
     [].forEach.call(P.querySelectorAll("[data-doc]"), function (c) { c.onchange = function () { j.docs = j.docs || {}; j.docs[c.getAttribute("data-doc")] = c.checked ? 1 : 0; save(j); }; });
