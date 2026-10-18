@@ -190,6 +190,18 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
         <label class="f">Windows and doors being removed (m&sup2;) <small>Optional. Adds to the glazing allowance</small><input type="number" inputmode="decimal" step="0.1" data-k="glazLost"></label>
         <label class="f">Which side is attached<select data-k="attached"><option value="">Not attached</option><option>Left (from the garden)</option><option>Right (from the garden)</option><option>Both</option></select></label>
       </div>
+      <p class="q" style="margin-top:1.2rem">Next door&rsquo;s nearest back window</p>
+      <p class="hint">Draws the 45&deg; line on the plan in the report. Zoom into your photo of the back of the house and count bricks: from next door&rsquo;s corner nearest this house to the edge of their nearest ground-floor window or glazed door, then across the window. One brick with its joint is 225mm. Left and right as you stand in the garden facing the house. Leave a side blank if there&rsquo;s no window that matters.</p>
+      <div class="grid">
+        <label class="f">Left: bricks to their window<input type="number" inputmode="numeric" step="1" data-k="nwL"></label>
+        <label class="f">Left: window width in bricks<input type="number" inputmode="numeric" step="1" data-k="nwwL"></label>
+        <label class="f">Left: their back wall further out (m) <small>Minus if set back. Blank if in line</small><input type="number" inputmode="decimal" step="0.1" data-k="noL"></label>
+        <label class="f">Left: their house to the boundary (m) <small>Only if not attached</small><input type="number" inputmode="decimal" step="0.1" data-k="ngL"></label>
+        <label class="f">Right: bricks to their window<input type="number" inputmode="numeric" step="1" data-k="nwR"></label>
+        <label class="f">Right: window width in bricks<input type="number" inputmode="numeric" step="1" data-k="nwwR"></label>
+        <label class="f">Right: their back wall further out (m) <small>Minus if set back. Blank if in line</small><input type="number" inputmode="decimal" step="0.1" data-k="noR"></label>
+        <label class="f">Right: their house to the boundary (m) <small>Only if not attached</small><input type="number" inputmode="decimal" step="0.1" data-k="ngR"></label>
+      </div>
     </section>
 
     <section class="card" id="s-site">

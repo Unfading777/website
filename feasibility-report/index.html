@@ -95,7 +95,7 @@ blockquote { margin: 0 0 .8rem; padding-left: 1rem; border-left: 3px solid var(-
 .measures b { display: block; color: var(--ink); font-size: 1rem; }
 .plan svg { display: block; width: 100%; max-width: 34rem; height: auto; margin: 0 auto; }
 .plan p { text-align: center; }
-.plan p { font-size: .82rem; color: var(--grey); margin-top: .3rem; }
+.plan p { font-size: .82rem; color: var(--grey); margin-top: .3rem; text-wrap: pretty; }
 
 .tbl { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: .93rem; }
 .tbl .r { display: grid; grid-template-columns: var(--cols); border-top: 1px solid var(--line); }
@@ -255,7 +255,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
       photos: (v.photos || []).filter(function (p) { return p.report; }).slice(0, 4).map(function (p) { return { url: p.url || "", k: p.k, caption: p.caption || "" }; }),
       checks: (function () { var c = {}; Object.keys(v.checks || {}).forEach(function (k) { if (k.charAt(0) !== "_") c[k] = v.checks[k]; }); return c; })(),
       route: v.route || "", risk: v.risk || "", things: things,
-      faces: v.faces || "", glazLost: v.glazLost || "", lat: (v.checks && v.checks._lat) || v.lat || "", lng: (v.checks && v.checks._lng) || v.lng || "",
+      faces: v.faces || "", facesDeg: v.facesDeg == null ? "" : v.facesDeg, nwL: v.nwL || "", nwwL: v.nwwL || "", noL: v.noL || "", ngL: v.ngL || "", nwR: v.nwR || "", nwwR: v.nwwR || "", noR: v.noR || "", ngR: v.ngR || "", glazLost: v.glazLost || "", lat: (v.checks && v.checks._lat) || v.lat || "", lng: (v.checks && v.checks._lng) || v.lng || "",
       materials: v.materials || "", character: v.character || "", designNotes: v.designNotes || "",
       design: (function () { var o = {}; Object.keys(v.design || {}).forEach(function (k) { if (v.design[k] && v.design[k].a) o[k] = { a: v.design[k].a, note: v.design[k].note || "" }; }); return o; })(),
       data: (function () { var d = v.data || {}, e = d.epc && d.epc.band ? d.epc : null; return {
@@ -472,41 +472,106 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     if (P) out.push('<div class="box pink"><h3>' + esc(r.council) + ' planning policy</h3><p class="lead" style="margin-bottom:.6rem">' + P.intro + '</p>' + (P.rules && P.rules.length ? '<ul class="dash one">' + P.rules.map(function (x) { return '<li>' + x + '</li>'; }).join("") + '</ul>' : "") + '</div>');
     return out.join("");
   }
-  /* Plan of the house and extension, drawn to scale when the house measurements are known. */
+  /* Plan of the house and extension, drawn to scale when the house measurements are known.
+     Shows next door's nearest window with the 45-degree line, a compass and the midday sun. */
   function plan(r, l1, l2) {
-    var W = Number(r.width) || 7, D = Number(r.houseDepth) || 0, scaled = !!(Number(r.width) && D);
+    var num = function (k) { var n = parseFloat(r[k]); return isNaN(n) ? null : n; };
+    var W = num("width") || 7, D = num("houseDepth") || 0, scaled = !!(num("width") && D);
     if (!D) D = 6;
-    var E = has(r.types, /Rear|Wrap/) ? Number(r.extDepth) || 0 : 0, EW = Math.min(Number(r.extWidth) || W, W);
-    var SW = has(r.types, /Side|Wrap/) ? Number(r.sideWidth) || 0 : 0;
-    var attached = /Semi|terrace/.test(r.houseType), mid = /Mid terrace/.test(r.houseType), rightAtt = /Right/.test(r.attached);
-    var gapR = Number(rightAtt ? r.distL : r.distR) || 0;
-    var depthM = D + Math.max(l2, E) + 0.8, widthM = W + Math.max(SW, gapR, 1) + 0.5;
-    var s = Math.min(300 / widthM, 360 / depthM), x0 = attached ? 70 : 30, y0 = 10, hx = W * s, hy = D * s, rear = y0 + hy, H = Math.round(rear + Math.max(l2, E) * s + 22);
-    var Y = function (m) { return Math.round(rear + m * s); }, f = function (n) { return Math.round(n * 10) / 10; };
-    var g = [], right = x0 + hx;
-    if (attached) g.push('<rect x="4" y="' + y0 + '" width="' + (x0 - 4) + '" height="' + Math.round(hy) + '" fill="#EDEDF0" stroke="#9A9DA4"/><text x="' + ((x0 + 4) / 2) + '" y="' + Math.round(y0 + hy / 2 + 4) + '" text-anchor="middle" font-size="12" fill="#6A6875">Next door</text>');
-    if (mid) g.push('<rect x="' + right + '" y="' + y0 + '" width="60" height="' + Math.round(hy) + '" fill="#EDEDF0" stroke="#9A9DA4"/>');
-    g.push('<rect x="' + x0 + '" y="' + y0 + '" width="' + Math.round(hx) + '" height="' + Math.round(hy) + '" fill="#D5D7DB" stroke="#1F1E26" stroke-width="2"/><text x="' + Math.round(x0 + hx / 2) + '" y="' + Math.round(y0 + hy / 2) + '" text-anchor="middle" font-size="15" font-weight="700" fill="#1F1E26">Your house</text>' + (scaled ? '<text x="' + Math.round(x0 + hx / 2) + '" y="' + Math.round(y0 + hy / 2 + 18) + '" text-anchor="middle" font-size="12" fill="#3A3944">' + f(W) + 'm wide, ' + f(D) + 'm deep</text>' : ''));
-    if (E) {
-      var ex = rightAtt ? right - EW * s : x0;
-      g.push('<rect x="' + Math.round(ex) + '" y="' + Math.round(rear) + '" width="' + Math.round(EW * s) + '" height="' + (Y(E) - Math.round(rear)) + '" fill="#FFD6EA" stroke="#B8005F" stroke-width="2"/><text x="' + Math.round(ex + EW * s / 2) + '" y="' + Math.round(rear + Math.min(E * s / 2 + 5, 26)) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#8A0047">' + f(E) + 'm extension</text>');
-    }
-    if (SW && !mid) {
-      var sx = rightAtt ? x0 - SW * s : right, sd = has(r.types, /Wrap/) ? D + E : D;
-      g.push('<rect x="' + Math.round(sx) + '" y="' + y0 + '" width="' + Math.round(SW * s) + '" height="' + Math.round(sd * s) + '" fill="#FFD6EA" stroke="#B8005F" stroke-width="2"/><text x="' + Math.round(sx + SW * s / 2) + '" y="' + Math.round(y0 + 18) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#8A0047">' + f(SW) + 'm</text>');
-      if (!rightAtt) right = right + SW * s;
-    }
-    var bx = Math.round((rightAtt ? x0 : x0 + hx) + (gapR ? gapR * s : Math.max(SW * s, 18) + 10) * (rightAtt ? -1 : 1));
-    g.push('<line x1="' + x0 + '" y1="' + y0 + '" x2="' + x0 + '" y2="' + (H - 4) + '" stroke="#1F1E26" stroke-width="1.2"/>');
-    if (!rightAtt) g.push('<line x1="' + bx + '" y1="' + y0 + '" x2="' + bx + '" y2="' + (H - 4) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="2 4"/><text x="' + (bx + 5) + '" y="' + (y0 + 11) + '" font-size="12" fill="#6A6875">Boundary</text>');
-    var lx = Math.max(bx, right) + 14;
+    var E = has(r.types, /Rear|Wrap/) ? num("extDepth") || 0 : 0, EW = Math.min(num("extWidth") || W, W);
+    var SW = has(r.types, /Side|Wrap/) ? num("sideWidth") || 0 : 0;
+    var semi = /Semi|terrace/.test(r.houseType), mid = /Mid terrace/.test(r.houseType) || /Both/.test(r.attached), rightAtt = /Right/.test(r.attached);
+    var att = { L: semi && (!rightAtt || mid), R: semi && (rightAtt || mid) };
+    var gap = { L: att.L ? 0 : num("distL") || 0, R: att.R ? 0 : num("distR") || 0 };
+    var BR = 0.225; /* one brick and its joint */
+    /* our extensions, in metres from the left wall (x) and the front of the house (y) */
+    var exts = [];
+    if (E) { var ex0 = rightAtt && !mid ? W - EW : 0; exts.push([ex0, D, ex0 + EW, D + E]); }
+    var sideOn = mid ? "" : att.L && !att.R ? "R" : att.R && !att.L ? "L" : "R";
+    if (SW && sideOn) { var sd = has(r.types, /Wrap/) ? D + E : D; exts.push(sideOn === "R" ? [W, 0, W + SW, sd] : [-SW, 0, 0, sd]); }
+    /* next door, each side */
+    var nb = {}, lines = [];
+    ["L", "R"].forEach(function (S) {
+      var wb = num("nw" + S), wwb = num("nww" + S), hasWin = wb != null && wwb > 0;
+      if (!att[S] && !hasWin) return;
+      var ng = att[S] ? 0 : num("ng" + S) || 0, no = num("no" + S) || 0, sign = S === "L" ? -1 : 1;
+      var wall = S === "L" ? -(gap.L + ng) : W + gap.R + ng;
+      var m = hasWin ? wb * BR : 0, ww = hasWin ? wwb * BR : 0, width = Math.max(2.5, m + ww + 1);
+      var o = { S: S, sign: sign, wall: wall, far: wall + sign * width, back: D + no, win: hasWin ? [wall + sign * m, wall + sign * (m + ww)] : null };
+      if (hasWin) {
+        o.xw = wall + sign * (m + ww / 2);
+        o.breach = exts.some(function (q) { return q[3] > o.back + 0.01 && (S === "L" ? q[3] - q[0] > o.back - o.xw + 0.01 : q[3] + q[2] > o.back + o.xw + 0.01); });
+        lines.push(o);
+      }
+      nb[S] = o;
+    });
+    var minX = Math.min(0, -gap.L, nb.L ? nb.L.far : 0, sideOn === "L" ? -SW : 0) - 0.3;
+    var maxX = Math.max(W, W + gap.R, nb.R ? nb.R.far : W, sideOn === "R" ? W + SW : W) + 0.3;
+    var Ymax = D + Math.max(l2, E, nb.L ? nb.L.back - D : 0, nb.R ? nb.R.back - D : 0) + 0.8;
+    var s = Math.min(320 / (maxX - minX), 360 / Ymax), ox = 14, oy = 10;
+    var X = function (x) { return Math.round(ox + (x - minX) * s); }, Y = function (y) { return Math.round(oy + y * s); };
+    var f = function (n) { return Math.round(n * 10) / 10; }, Hh = Y(Ymax) + 10, g = [];
+    var rect = function (x1, y1, x2, y2, fill, stroke, sw) { return '<rect x="' + X(Math.min(x1, x2)) + '" y="' + Y(Math.min(y1, y2)) + '" width="' + Math.abs(X(x2) - X(x1)) + '" height="' + Math.abs(Y(y2) - Y(y1)) + '" fill="' + fill + '" stroke="' + stroke + '" stroke-width="' + (sw || 1) + '"/>'; };
+    /* neighbours */
+    ["L", "R"].forEach(function (S) {
+      var o = nb[S]; if (!o) return;
+      g.push(rect(o.wall, 0, o.far, o.back, "#EDEDF0", "#9A9DA4"));
+      var cx = (X(o.wall) + X(o.far)) / 2;
+      g.push('<text x="' + Math.round(cx) + '" y="' + Math.round(Y(Math.min(o.back, D) / 2) + 4) + '" text-anchor="middle" font-size="12" fill="#6A6875">Next door</text>');
+    });
+    /* our house and extensions */
+    var fs = Math.max(10, Math.min(15, Math.round(W * s / 8)));
+    g.push(rect(0, 0, W, D, "#D5D7DB", "#1F1E26", 2) + '<text x="' + X(W / 2) + '" y="' + Y(D / 2) + '" text-anchor="middle" font-size="' + fs + '" font-weight="700" fill="#1F1E26">Your house</text>' + (scaled ? '<text x="' + X(W / 2) + '" y="' + (Y(D / 2) + 18) + '" text-anchor="middle" font-size="' + Math.max(9, Math.min(12, Math.round(W * s / 10.5))) + '" fill="#3A3944">' + f(W) + 'm wide, ' + f(D) + 'm deep</text>' : ''));
+    exts.forEach(function (q, i) {
+      g.push(rect(q[0], q[1], q[2], q[3], "#FFD6EA", "#B8005F", 2));
+      if (i === 0 && E) g.push('<text x="' + Math.round((X(q[0]) + X(q[2])) / 2) + '" y="' + Math.round(Y(D) + Math.min(E * s / 2 + 5, 26)) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#8A0047">' + f(E) + 'm extension</text>');
+      else g.push('<text x="' + Math.round((X(q[0]) + X(q[2])) / 2) + '" y="' + (Y(q[1]) + 18) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#8A0047">' + f(SW) + 'm</text>');
+    });
+    /* party walls and boundaries */
+    ["L", "R"].forEach(function (S) {
+      var x = S === "L" ? -gap.L : W + gap.R;
+      if (att[S]) g.push('<line x1="' + X(x) + '" y1="' + Y(0) + '" x2="' + X(x) + '" y2="' + (Hh - 4) + '" stroke="#1F1E26" stroke-width="1.2"/>');
+      else if (gap[S]) g.push('<line x1="' + X(x) + '" y1="' + Y(0) + '" x2="' + X(x) + '" y2="' + (Hh - 4) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="2 4"/>' + (nb[S] ? '' : '<text x="' + (X(x) + (S === "L" ? -5 : 5)) + '" y="' + (Y(0) + 11) + '" font-size="12" fill="#6A6875" text-anchor="' + (S === "L" ? "end" : "start") + '">Boundary</text>'));
+    });
+    /* next door's window and the 45-degree line */
+    lines.forEach(function (o) {
+      var t = Ymax - o.back, x2 = o.xw - o.sign * t;
+      g.push('<line x1="' + X(o.xw) + '" y1="' + Y(o.back) + '" x2="' + X(x2) + '" y2="' + Y(Ymax) + '" stroke="#6A6875" stroke-width="1.6"/>');
+      g.push('<rect x="' + Math.min(X(o.win[0]), X(o.win[1])) + '" y="' + (Y(o.back) - 3) + '" width="' + Math.max(4, Math.abs(X(o.win[1]) - X(o.win[0]))) + '" height="6" fill="#fff" stroke="#1F1E26" stroke-width="1.5"/>');
+      var px = X(o.xw - o.sign * 1.3) + (o.sign < 0 ? -7 : 7), py = Y(o.back + 1.3) + 12;
+      g.push('<text x="' + px + '" y="' + py + '" font-size="12" font-weight="700" fill="#6A6875" text-anchor="' + (o.sign < 0 ? "end" : "start") + '">45\u00b0</text>');
+    });
+    /* permitted development lines */
+    var lx = X(maxX) + 10;
     if (has(r.types, /Rear|Wrap/)) {
-      g.push('<line x1="4" y1="' + Y(l1) + '" x2="' + lx + '" y2="' + Y(l1) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="7 5"/><text x="' + (lx + 6) + '" y="' + (Y(l1) - 3) + '" font-size="13" font-weight="700" fill="#1F1E26">' + l1 + 'm<tspan x="' + (lx + 6) + '" dy="15" font-weight="400" font-size="12">permitted development</tspan></text>');
-      g.push('<line x1="4" y1="' + Y(l2) + '" x2="' + lx + '" y2="' + Y(l2) + '" stroke="#B8005F" stroke-width="1.5" stroke-dasharray="7 5"/><text x="' + (lx + 6) + '" y="' + (Y(l2) - 3) + '" font-size="13" font-weight="700" fill="#B8005F">' + l2 + 'm<tspan x="' + (lx + 6) + '" dy="15" font-weight="400" font-size="12">limit with prior approval</tspan></text>');
+      g.push('<line x1="' + X(minX) + '" y1="' + Y(D + l1) + '" x2="' + lx + '" y2="' + Y(D + l1) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="7 5"/><text x="' + (lx + 6) + '" y="' + (Y(D + l1) - 3) + '" font-size="13" font-weight="700" fill="#1F1E26">' + l1 + 'm<tspan x="' + (lx + 6) + '" dy="15" font-weight="400" font-size="12">permitted development</tspan></text>');
+      g.push('<line x1="' + X(minX) + '" y1="' + Y(D + l2) + '" x2="' + lx + '" y2="' + Y(D + l2) + '" stroke="#B8005F" stroke-width="1.5" stroke-dasharray="7 5"/><text x="' + (lx + 6) + '" y="' + (Y(D + l2) - 3) + '" font-size="13" font-weight="700" fill="#B8005F">' + l2 + 'm<tspan x="' + (lx + 6) + '" dy="15" font-weight="400" font-size="12">limit with prior approval</tspan></text>');
     }
-    var vbw = Math.round(lx + 165);
-    return '<div class="plan"><h3>What you can build, and how</h3><svg viewBox="0 0 ' + vbw + ' ' + H + '" role="img" aria-label="Plan of your house and the proposed extension" style="font-family: \'DM Sans\', sans-serif">' + g.join("") + '</svg><p>' + (scaled ? "Drawn to scale from my measurements on site. Depths measured from the back of the original house." : "Not to scale. Depths measured from the back of the original house.") + '</p></div>';
+    var vbw = lx + 165;
+    /* compass and midday sun: the garden is at the bottom of the plan */
+    var NB = { "North": 0, "North-east": 45, "East": 90, "South-east": 135, "South": 180, "South-west": 225, "West": 270, "North-west": 315 };
+    var B = r.facesDeg !== "" && r.facesDeg != null && !isNaN(parseFloat(r.facesDeg)) ? parseFloat(r.facesDeg) : NB[r.faces];
+    var sunNote = "", vb = [0, 0, vbw, Hh];
+    if (B != null) {
+      var scr = function (bearing) { var a = (bearing - B - 180) * Math.PI / 180; return [Math.sin(a), -Math.cos(a)]; };
+      var cx = vbw - 40, cy = 40, n = scr(0);
+      g.push('<g><circle cx="' + cx + '" cy="' + cy + '" r="24" fill="#fff" stroke="#9A9DA4"/><line x1="' + Math.round(cx - n[0] * 16) + '" y1="' + Math.round(cy - n[1] * 16) + '" x2="' + Math.round(cx + n[0] * 16) + '" y2="' + Math.round(cy + n[1] * 16) + '" stroke="#9A9DA4" stroke-width="1.5"/><polygon points="' + Math.round(cx + n[0] * 20) + ',' + Math.round(cy + n[1] * 20) + ' ' + Math.round(cx - n[1] * 6) + ',' + Math.round(cy + n[0] * 6) + ' ' + Math.round(cx + n[1] * 6) + ',' + Math.round(cy - n[0] * 6) + '" fill="#1F1E26"/><text x="' + Math.round(cx + n[0] * 34) + '" y="' + Math.round(cy + n[1] * 34 + 5) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#1F1E26">N</text></g>');
+      /* midday sun: always due south, just outside the drawing */
+      var so = scr(180), hx = X(W / 2), hy = Y(D / 2), k = 1e9, pad = 34;
+      if (so[0] > 0.01) k = Math.min(k, (vbw - hx + pad) / so[0]); if (so[0] < -0.01) k = Math.min(k, (hx + pad) / -so[0]);
+      if (so[1] > 0.01) k = Math.min(k, (Hh - hy + pad) / so[1]); if (so[1] < -0.01) k = Math.min(k, (hy + pad) / -so[1]);
+      var sx = Math.round(hx + so[0] * k), sy = Math.round(hy + so[1] * k), rays = [];
+      for (var i = 0; i < 8; i++) { var a = i * Math.PI / 4; rays.push('<line x1="' + Math.round(sx + Math.cos(a) * 17) + '" y1="' + Math.round(sy + Math.sin(a) * 17) + '" x2="' + Math.round(sx + Math.cos(a) * 22) + '" y2="' + Math.round(sy + Math.sin(a) * 22) + '" stroke="#E0A800" stroke-width="2" stroke-linecap="round"/>'); }
+      var ty = so[1] < -0.3 ? sy - 30 : sy + 40;
+      g.push('<g>' + rays.join("") + '<circle cx="' + sx + '" cy="' + sy + '" r="13" fill="#FFD23F" stroke="#E0A800" stroke-width="1.5"/><text x="' + sx + '" y="' + ty + '" text-anchor="middle" font-size="12" font-weight="700" fill="#3A3944">Midday sun</text></g>');
+      vb = [Math.min(0, sx - 45), Math.min(0, sy - 45, ty - 14), Math.max(vbw, sx + 45), Math.max(Hh, sy + 45, ty + 6)];
+      var lat = parseFloat(r.lat) || 51.5, alt = function (dec) { return Math.round(90 - lat + dec); };
+      sunNote = " The sun is due south at midday all year. On 1&nbsp;August it&rsquo;s about " + alt(18) + "° high, in midwinter only " + alt(-23.4) + "°.";
+    }
+    var winNote = lines.length ? " The grey line is the 45° line from the middle of next door&rsquo;s nearest window, measured on site by counting bricks. " + (lines.some(function (o) { return o.breach; }) ? "The extension crosses it, so this side needs care in the design, such as a shorter depth or a lower roof at the boundary." : "The extension stays inside it, which is what the council looks for.") : "";
+    return '<div class="plan"><h3>What you can build, and how</h3><svg viewBox="' + vb[0] + ' ' + vb[1] + ' ' + (vb[2] - vb[0]) + ' ' + (vb[3] - vb[1]) + '" role="img" aria-label="Plan of your house and the proposed extension" style="font-family: \'DM Sans\', sans-serif">' + g.join("") + '</svg><p>' + (scaled ? "Drawn to scale from my measurements on site. Depths measured from the back of the original house." : "Not to scale. Depths measured from the back of the original house.") + winNote + sunNote + '</p></div>';
   }
+
 
   /* ---------- load ---------- */
   var qs = new URLSearchParams(location.search), tok = qs.get("r"), id = location.hash.replace("#", "");
@@ -553,7 +618,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
       title: "Single-storey rear extension", types: ["Rear extension"], words: "The kitchen feels dark and cut off from the garden. We want one big space where the kids can play while we cook.",
       wants: ["Open-plan kitchen", "Dining space", "Bi-folds or sliders", "Roof lantern"], wantsOther: "", size: "About 4m deep, full width", roof: "Flat roof",
       extDepth: "4", extWidth: "", sideWidth: "", houseDepth: "8.2", distL: "", distR: "1.2", houseType: "Semi-detached", age: "1970s\u201380s", width: "7.5", depth: "22",
-      earlier: "Small rear extension", earlierPlan: "Comes down for the new one", faces: "South-west", lat: 51.5228, lng: -0.7196, glazLost: "3.5", ground: "Level", attached: "Left (from the garden)",
+      earlier: "Small rear extension", earlierPlan: "Comes down for the new one", faces: "South-west", lat: 51.5228, lng: -0.7196, glazLost: "3.5", ground: "Level", attached: "Left (from the garden)", nwL: "15", nwwL: "8",
       site: [{ k: "boundary", note: "The wall to no. 6 sits on the boundary" }],
       photos: [{ url: "/img/sample-rear.jpg", caption: "The back of the house. The small existing extension comes down to make way for the new one." }, { url: "/img/sample-front.jpg", caption: "The front of the house, with the garage to the side." }],
       checks: { conservation: "None found", article4: "None found", listed: "None found", greenBelt: "None found", aonb: "None found", flood: "Zone 1", trees: "None found", pdRights: "Intact", history: "Only the small rear extension" },
