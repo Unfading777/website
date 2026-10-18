@@ -560,24 +560,19 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
       var sx = Math.round(hx + so[0] * k), sy = Math.round(hy + so[1] * k), rays = [];
       for (var i = 0; i < 8; i++) { var a = i * Math.PI / 4; rays.push('<line x1="' + Math.round(sx + Math.cos(a) * 17) + '" y1="' + Math.round(sy + Math.sin(a) * 17) + '" x2="' + Math.round(sx + Math.cos(a) * 22) + '" y2="' + Math.round(sy + Math.sin(a) * 22) + '" stroke="#E0A800" stroke-width="2" stroke-linecap="round"/>'); }
       var ty = so[1] < -0.3 ? sy - 30 : sy + 40;
-      /* sunlight falling on the house: a soft beam and dashed rays from the sun to the building */
-      var bx1 = X(Math.min.apply(null, [0].concat(exts.map(function (q) { return q[0]; })))), bx2 = X(Math.max.apply(null, [W].concat(exts.map(function (q) { return q[2]; }))));
-      var by1 = Y(0), by2 = Y(Math.max.apply(null, [D].concat(exts.map(function (q) { return q[3]; }))));
-      var dx = -so[0], dy = -so[1], qx = -dy, qy = dx, spread = 0.26 * Math.min(bx2 - bx1, by2 - by1), beamPts = [], dash = [];
-      var hit = function (x, y) { var t0 = -1e9, t1 = 1e9; [[x, dx, bx1, bx2], [y, dy, by1, by2]].forEach(function (a) { if (Math.abs(a[1]) < 1e-6) { if (a[0] < a[2] || a[0] > a[3]) t0 = 1e9; return; } var u = (a[2] - a[0]) / a[1], v = (a[3] - a[0]) / a[1]; t0 = Math.max(t0, Math.min(u, v)); t1 = Math.min(t1, Math.max(u, v)); }); return t0 <= t1 && t0 > 0 ? t0 : null; };
-      [-1, -0.5, 0, 0.5, 1].forEach(function (k) {
-        var x0 = sx + qx * spread * k + dx * 26, y0 = sy + qy * spread * k + dy * 26, t = hit(x0, y0);
-        if (t == null) return;
-        var ex = Math.round(x0 + dx * (t - 4)), ey = Math.round(y0 + dy * (t - 4));
-        dash.push('<line x1="' + Math.round(x0) + '" y1="' + Math.round(y0) + '" x2="' + ex + '" y2="' + ey + '" stroke="#E0A800" stroke-width="1.6" stroke-dasharray="6 6" stroke-linecap="round" opacity=".8"/>');
-        if (Math.abs(k) === 1) beamPts.push([x0 - dx * 12, y0 - dy * 12, ex, ey]);
+      /* a few short rays splayed from the sun towards the house, fading out */
+      var dx = hx - sx, dy = hy - sy, dist = Math.sqrt(dx * dx + dy * dy), base = Math.atan2(dy, dx), L = Math.min(95, dist * 0.42), fan = [], defs = [];
+      [-2, -1, 0, 1, 2].forEach(function (k, i) {
+        var a = base + k * 0.24, len = L * (k === 0 ? 1 : Math.abs(k) === 1 ? 0.85 : 0.65);
+        var x1 = Math.round(sx + Math.cos(a) * 28), y1 = Math.round(sy + Math.sin(a) * 28), x2 = Math.round(sx + Math.cos(a) * (28 + len)), y2 = Math.round(sy + Math.sin(a) * (28 + len));
+        defs.push('<linearGradient id="sunray' + i + '" gradientUnits="userSpaceOnUse" x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '"><stop offset="0" stop-color="#E0A800"/><stop offset="1" stop-color="#E0A800" stop-opacity="0"/></linearGradient>');
+        fan.push('<line x1="' + x1 + '" y1="' + y1 + '" x2="' + x2 + '" y2="' + y2 + '" stroke="url(#sunray' + i + ')" stroke-width="2" stroke-dasharray="6 5" stroke-linecap="round"/>');
       });
-      if (beamPts.length === 2) g.splice(pdAt, 0, '<polygon points="' + [[beamPts[0][0], beamPts[0][1]], [beamPts[0][2], beamPts[0][3]], [beamPts[1][2], beamPts[1][3]], [beamPts[1][0], beamPts[1][1]]].map(function (p) { return Math.round(p[0]) + ',' + Math.round(p[1]); }).join(" ") + '" fill="#FFD23F" opacity=".22"/>');
-      g.splice(pdAt, 0, dash.join(""));
+      g.splice(pdAt, 0, '<defs>' + defs.join("") + '</defs>' + fan.join(""));
       g.push('<g>' + rays.join("") + '<circle cx="' + sx + '" cy="' + sy + '" r="13" fill="#FFD23F" stroke="#E0A800" stroke-width="1.5"/><text x="' + sx + '" y="' + ty + '" text-anchor="middle" font-size="12" font-weight="700" fill="#3A3944">Midday sun</text></g>');
       vb = [Math.min(0, sx - 45), Math.min(0, sy - 45, ty - 14), Math.max(vbw, sx + 45), Math.max(Hh, sy + 45, ty + 6)];
       var lat = parseFloat(r.lat) || 51.5, alt = function (dec) { return Math.round(90 - lat + dec); };
-      sunNote = " The sun is due south at midday all year. On 1&nbsp;August it&rsquo;s about " + alt(18) + "° high, in midwinter only " + alt(-23.4) + "°.";
+      sunNote = " The sun is due south at midday all year. On 1&nbsp;August it&rsquo;s about " + alt(18) + "° high, in midwinter&nbsp;only&nbsp;" + alt(-23.4) + "°.";
     }
     var winNote = lines.length ? " The grey line is the 45° line from the middle of next door&rsquo;s nearest window, measured on site by counting bricks. " + (/Permitted|Prior|Lawful/.test(r.route) ? "The 45\u00b0 rule only applies to householder planning applications, not permitted development, so it doesn&rsquo;t limit this route. It&rsquo;s shown for reference." : lines.some(function (o) { return o.breach; }) ? "The extension crosses it, so this side needs care in the design, such as a shorter depth or a lower roof at the boundary." : "The extension stays inside it, which is what the council looks for.") : "";
     return '<div class="plan"><h3>What you can build, and how</h3><svg viewBox="' + vb[0] + ' ' + vb[1] + ' ' + (vb[2] - vb[0]) + ' ' + (vb[3] - vb[1]) + '" role="img" aria-label="Plan of your house and the proposed extension" style="font-family: \'DM Sans\', sans-serif">' + g.join("") + '</svg><p>' + (scaled ? "Drawn to scale from my measurements on site. Depths measured from the back of the original house." : "Not to scale. Depths measured from the back of the original house.") + winNote + sunNote + '</p></div>';
