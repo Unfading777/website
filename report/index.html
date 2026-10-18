@@ -382,11 +382,11 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     var a = extArea(r); if (!a) return "";
     var gross = r.data && r.data.epc && Number(r.data.epc.area), tiles = [];
     var internal = Math.round(a * 0.85);
-    tiles.push(['Space added', 'About ' + internal + ' m\u00b2', 'Inside the new walls, from your ' + (Math.round(a * 10) / 10) + ' m\u00b2 footprint']);
-    if (gross) tiles.push(['Your house after', 'About ' + Math.round(gross + internal) + ' m\u00b2', 'Up from ' + Math.round(gross) + ' m\u00b2, ' + Math.round(internal / gross * 100) + '% more space']);
+    tiles.push(['Space added', 'About ' + internal + 'm\u00b2', 'Inside the new walls, from your ' + (Math.round(a * 10) / 10) + 'm\u00b2 footprint']);
+    if (gross) tiles.push(['Your house after', 'About ' + Math.round(gross + internal) + 'm\u00b2', 'Up from ' + Math.round(gross) + 'm\u00b2, ' + Math.round(internal / gross * 100) + '% more space']);
     var glaz = Math.round((internal * 0.25 + (Number(r.glazLost) || 0)) * 10) / 10;
-    tiles.push(['Glazing allowance', glaz + ' m\u00b2', 'Windows, glazed doors and rooflights before an energy calculation is needed']);
-    return '<div><h3>Your extension in numbers</h3><div class="tiles' + (tiles.length === 2 ? ' t2' : '') + '">' + tiles.map(function (t) { return '<div class="tile"><span>' + t[0] + '</span><b>' + t[1] + '</b><small>' + t[2] + '</small></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">Building Regulations allow glazing up to a quarter of the new floor area' + (Number(r.glazLost) ? ', plus the ' + esc(r.glazLost) + ' m\u00b2 of windows and doors being removed' : '') + '. Wider glazing is fine; it just needs an energy calculation, which I include in the Building Regulations stage.</p></div>';
+    tiles.push(['Glazing allowance', glaz + 'm\u00b2', 'Windows, glazed doors and rooflights before an energy calculation is needed']);
+    return '<div><h3>Your extension in numbers</h3><div class="tiles' + (tiles.length === 2 ? ' t2' : '') + '">' + tiles.map(function (t) { return '<div class="tile"><span>' + t[0] + '</span><b>' + t[1] + '</b><small>' + t[2] + '</small></div>'; }).join("") + '</div><p class="small" style="margin-top:.5rem">Building Regulations allow glazing up to a quarter of the new floor area' + (Number(r.glazLost) ? ', plus the ' + esc(r.glazLost) + 'm\u00b2 of windows and doors being removed' : '') + '. Wider glazing is fine; it just needs an energy calculation, which I include in the Building Regulations stage.</p></div>';
   }
   function sunTimes(lat, lng, month, day) {
     var rad = Math.PI / 180, N = Math.floor((Date.UTC(2026, month - 1, day) - Date.UTC(2026, 0, 0)) / 864e5);
@@ -439,7 +439,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
   }
   function numbers(r) {
     var e = r.data && r.data.epc; if (!e) return "";
-    var rows = [["Energy rating", e.band ? e.band + (e.potential && e.potential !== e.band ? " (could reach " + e.potential + ")" : "") : ""], ["Built", ageBand(e.age)], ["Floor area", e.area ? e.area + " m\u00b2" : ""], ["Walls", e.walls], ["Roof", e.roof], ["Floor", e.floor], ["Windows", e.windows], ["Heating", e.heating]].filter(function (x) { return x[1]; });
+    var rows = [["Energy rating", e.band ? e.band + (e.potential && e.potential !== e.band ? " (could reach " + e.potential + ")" : "") : ""], ["Built", ageBand(e.age)], ["Floor area", e.area ? e.area + "m\u00b2" : ""], ["Walls", e.walls], ["Roof", e.roof], ["Floor", e.floor], ["Windows", e.windows], ["Heating", e.heating]].filter(function (x) { return x[1]; });
     if (!rows.length) return "";
     var BANDS = [["A", "92+", "#008054", 40], ["B", "81\u201391", "#19B459", 48], ["C", "69\u201380", "#8DCE46", 56], ["D", "55\u201368", "#FFD500", 64], ["E", "39\u201354", "#FCAA65", 72], ["F", "21\u201338", "#EF8023", 80], ["G", "1\u201320", "#E9153B", 88]];
     var cur = String(e.band || "").toUpperCase().charAt(0), pot = String(e.potential || "").toUpperCase().charAt(0);
