@@ -137,7 +137,8 @@ blockquote { margin: 0 0 .8rem; padding-left: 1rem; border-left: 3px solid var(-
 .book-cta { background: var(--tint-2); border: 2px solid var(--pink); border-radius: 18px; padding: 1.5rem 1.3rem; text-align: center; display: grid; justify-items: center; gap: .7rem; }
 .book-cta .kicker { display: inline-block; background: var(--pink); color: #fff; font-weight: 700; font-size: .85rem; padding: .35rem .95rem; border-radius: 999px; }
 .book-cta h3 { font-family: var(--display); font-size: 1.35rem; margin: 0; }
-.book-cta p { font-size: .95rem; color: var(--text); max-width: 34rem; margin: 0; }
+.book-cta p { font-size: .95rem; color: var(--text); max-width: 40rem; margin: 0; text-wrap: pretty; }
+.book-cta h3 { text-wrap: balance; }
 
 .cta { text-align: center; padding-block: 2.5rem 3.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
 .cta h2 { font-size: clamp(1.6rem, 5vw, 2.2rem); font-weight: 700; }
@@ -364,7 +365,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     H.push('<div><h3 style="font-size:1rem">Where this information comes from</h3><p class="small">planning.data.gov.uk · ' + esc(r.council ? r.council + " planning register" : "Council planning register") + ' · Historic England National Heritage List · Environment Agency flood maps · The Town and Country Planning (General Permitted Development) (England) Order 2015 · Party Wall etc. Act 1996</p></div>');
     H.push('<p class="lead" style="font-size:.93rem">This report is based on a 30-minute visit and the public records for your address on the date shown. It&rsquo;s a first look at what&rsquo;s possible, not a full planning appraisal, a survey or a builder&rsquo;s quote. Once you go ahead, I check everything in detail as part of the design.</p>');
     H.push('<p class="lead" style="font-size:.93rem">Any questions, just message me.<br><b>Carl Collins BSc (Hons)</b></p>');
-    if (r.sample) H.push('<div class="book-cta"><span class="kicker">Visit and report both free</span><h3>Get your own planning feasibility report, free with your home visit</h3><p>Book a free 30-minute visit and I&rsquo;ll write one for your home at no cost, followed by a no-obligation quote for the architectural services for your project. It&rsquo;s the best way for you to see how I work before you commit to anything.</p><a class="btn" href="/book/">Book your free visit</a></div>');
+    if (r.sample) H.push('<div class="book-cta"><span class="kicker">Visit and report both free</span><h3>Get your own planning feasibility report, free with your home visit</h3><p>Book a free 30-minute visit and I&rsquo;ll write one for your home at no cost, followed by a <span style="white-space:nowrap">no-obligation</span> quote for the architectural services for your project. It&rsquo;s the best way for you to see how I work before you commit to&nbsp;anything.</p><a class="btn" href="/book/">Book your free visit</a></div>');
     H.push('</div></article>');
     $("main").innerHTML = H.join("");
     document.title = "Planning feasibility report" + (r.address ? ", " + r.address.split(",")[0] : "") + " | Residential Architecture";
