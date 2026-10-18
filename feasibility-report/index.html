@@ -100,6 +100,7 @@ blockquote { margin: 0 0 .8rem; padding-left: 1rem; border-left: 3px solid var(-
 .tbl { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: .93rem; }
 .tbl .r { display: grid; grid-template-columns: var(--cols); border-top: 1px solid var(--line); }
 .tbl .r:first-child { border-top: 0; }
+.tbl .r > span, .lead, .small, .steps p { text-wrap: pretty; }
 .tbl .r:nth-child(even) { background: #FAFAFB; }
 .tbl .r.h { background: var(--deep); color: #fff; font-weight: 700; }
 .tbl .r > * { padding: .55rem .8rem; min-width: 0; }
@@ -340,7 +341,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     var other = [];
     if (site.boundary || /Semi|terrace/.test(r.houseType) || Number(r.distL) < 3 || Number(r.distR) < 3) other.push(["Party Wall Act", partyWall(r, site)]);
     other.push(["Building Regulations", "Needed whichever planning route you take. I recommend Full Plans approval."]);
-    if (site.drains) other.push(["Drainage", (typeof site.drains === "string" ? esc(site.drains) + ". " : "") + "A public sewer under or near the new work needs a build-over agreement with Thames Water. A CCTV survey answers it."]);
+    other.push(["Thames Water build&#8209;over agreement", site.drains ? (typeof site.drains === "string" ? esc(site.drains) + ". " : "") + "There&rsquo;s a public sewer under or near the new work, so Thames Water needs to approve a build-over agreement before work starts. A CCTV survey of the drain confirms its route and condition." : "Needed if a public sewer runs within 3m of the extension. I check the sewer records as part of the design, and if one is close, Thames Water approves a build-over agreement before work starts."]);
     if (site.trees) other.push(["Trees", (typeof site.trees === "string" ? esc(site.trees) + ". " : "") + "Trees close to the work can mean deeper foundations."]);
     if (site.levels) other.push(["Levels", (typeof site.levels === "string" ? esc(site.levels) + ". " : "") + "The change in level affects steps, drainage and foundations."]);
     if (!has(r.types, /^Porch$/) || r.types.length > 1) other.push(["Structure", "Steel beams and foundations, sized by the structural engineer."]);
