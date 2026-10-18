@@ -134,6 +134,10 @@ blockquote { margin: 0 0 .8rem; padding-left: 1rem; border-left: 3px solid var(-
 .quote { border: 2px solid var(--pink); border-radius: 14px; padding: 1rem 1.2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .quote b { font-family: var(--display); font-size: 1.15rem; display: block; }
 .quote p { font-size: .92rem; color: var(--text); }
+.book-cta { background: var(--tint-2); border: 2px solid var(--pink); border-radius: 18px; padding: 1.5rem 1.3rem; text-align: center; display: grid; justify-items: center; gap: .7rem; }
+.book-cta .kicker { display: inline-block; background: var(--pink); color: #fff; font-weight: 700; font-size: .85rem; padding: .35rem .95rem; border-radius: 999px; }
+.book-cta h3 { font-family: var(--display); font-size: 1.35rem; margin: 0; }
+.book-cta p { font-size: .95rem; color: var(--text); max-width: 34rem; margin: 0; }
 
 .cta { text-align: center; padding-block: 2.5rem 3.5rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
 .cta h2 { font-size: clamp(1.6rem, 5vw, 2.2rem); font-weight: 700; }
@@ -359,7 +363,9 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     if (quote) H.push('<div class="quote"><div><b>Your fixed-price quote is ready</b><p>Everything in this report, designed and submitted for one fixed price.</p></div><a class="btn" href="' + esc(quote) + '">View your quote</a></div>');
     H.push('<div><h3 style="font-size:1rem">Where this information comes from</h3><p class="small">planning.data.gov.uk · ' + esc(r.council ? r.council + " planning register" : "Council planning register") + ' · Historic England National Heritage List · Environment Agency flood maps · The Town and Country Planning (General Permitted Development) (England) Order 2015 · Party Wall etc. Act 1996</p></div>');
     H.push('<p class="lead" style="font-size:.93rem">This report is based on a 30-minute visit and the public records for your address on the date shown. It&rsquo;s a first look at what&rsquo;s possible, not a full planning appraisal, a survey or a builder&rsquo;s quote. Once you go ahead, I check everything in detail as part of the design.</p>');
-    H.push('<p class="lead" style="font-size:.93rem">Any questions, just message me.<br><b>Carl Collins BSc (Hons)</b></p></div></article>');
+    H.push('<p class="lead" style="font-size:.93rem">Any questions, just message me.<br><b>Carl Collins BSc (Hons)</b></p>');
+    if (r.sample) H.push('<div class="book-cta"><span class="kicker">Free for your home</span><h3>Get your own planning feasibility report</h3><p>Book a free 30-minute visit and I&rsquo;ll write one for your home, followed by a no-obligation quote. It&rsquo;s the best way for you to see how I work before you commit to anything.</p><a class="btn" href="/book/">Book your free visit</a></div>');
+    H.push('</div></article>');
     $("main").innerHTML = H.join("");
     document.title = "Planning feasibility report" + (r.address ? ", " + r.address.split(",")[0] : "") + " | Residential Architecture";
   }
@@ -550,7 +556,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
       site: [{ k: "boundary", note: "The wall to no. 6 sits on the boundary" }],
       photos: [{ url: "/img/sample-rear.jpg", caption: "The back of the house. The small existing extension comes down to make way for the new one." }, { url: "/img/sample-front.jpg", caption: "The front of the house, with the garage to the side." }],
       checks: { conservation: "None found", article4: "None found", listed: "None found", greenBelt: "None found", aonb: "None found", flood: "Zone 1", trees: "None found", pdRights: "Intact", history: "Only the small rear extension" },
-      route: "Prior approval", risk: "Low",
+      route: "Prior approval", risk: "Low", sample: true,
       things: ["Up to 3m deep is permitted development, so no planning application, but I'd still get a Lawful Development Certificate to prove it. Your 4m design uses prior approval, where the council writes to your neighbours and has 42 days to decide.", "The wall to no. 6 is on the boundary, so Party Wall notices will be needed. Serve them early.", "Wide glazing across the back will probably need an energy calculation at Building Regulations stage."],
       materials: "Red brick, concrete roof tiles", character: "Uniform: houses look alike", designNotes: "A flat roof with a low parapet keeps the extension well below the first-floor windows next door, and brick to match keeps it in character with the street.",
       design: { d45: { a: "Clear", note: "Single storey, so the line from next door's kitchen window is clear" }, privacy: { a: "Fine", note: "" }, scale: { a: "Fine", note: "" }, precedent: { a: "Yes", note: "Two similar extensions in the road" }, parking: { a: "Fine", note: "Driveway for two cars kept" } },
