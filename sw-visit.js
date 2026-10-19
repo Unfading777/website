@@ -1,6 +1,6 @@
 /* Keeps the home visit page and report preview working with no signal.
    Only touches the visit page, the report page and the shared quote script; everything else on the site is left alone. */
-var CACHE = "ra-visit-v4";
+var CACHE = "ra-visit-v5";
 var KEEP = ["/quote/visit/", "/report/", "/quote/q.js?v=41", "/img/visit-icon.png", "/report/policy.js?v=1"];
 
 self.addEventListener("install", function (e) {
