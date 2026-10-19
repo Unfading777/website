@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Home visit">
+<meta name="apple-mobile-web-app-title" content="Consultation">
 <meta name="theme-color" content="#1F1E26">
-<title>Home visit | Residential Architecture</title>
+<title>Consultation | Residential Architecture</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='6' y='6' width='20' height='20' rx='4' transform='rotate(45 16 16)' fill='%23E6007A'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="/img/visit-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -96,7 +96,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
 </head>
 <body>
 <header class="top">
-  <div class="wrap"><b><i aria-hidden="true"></i><span id="ttl">Home visit</span></b><span class="sync" id="sync">Not saved yet</span></div>
+  <div class="wrap"><b><i aria-hidden="true"></i><span id="ttl">Consultation</span></b><span class="sync" id="sync">Not saved yet</span></div>
   <nav class="tabs" id="tabs" hidden aria-label="Sections">
     <a href="#s-client">Client</a><a href="#s-project">Project</a><a href="#s-house">House</a><a href="#s-site">On site</a><a href="#s-photos">Photos</a><a href="#s-design">Design</a><a href="#s-planning">Planning</a><a href="#s-data">Construction</a><a href="#s-notes">Your notes</a>
   </nav>
@@ -115,11 +115,11 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
   <!-- Start -->
   <section id="start" hidden>
     <div class="card">
-      <h2>Start a visit</h2>
+      <h2>Start a consultation</h2>
       <p class="hint">Pick the client. Their details fill in for you.</p>
       <input type="search" id="find" placeholder="Search by name or postcode" aria-label="Search leads">
       <div class="list" id="leads"><p class="muted">Loading your leads&hellip;</p></div>
-      <p style="margin:1rem 0 0"><button class="btn ghost" type="button" id="blank">New visit, not in the list</button></p>
+      <p style="margin:1rem 0 0"><button class="btn ghost" type="button" id="blank">New consultation, not in the list</button></p>
     </div>
     <details class="card" id="epc-card">
       <summary style="font-weight:600;cursor:pointer">EPC access</summary>
@@ -128,7 +128,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       <p style="margin:.8rem 0 0"><button class="btn" type="button" id="epcgo">Save key</button> <span class="muted" id="epcok"></span></p>
     </details>
     <div class="card" id="drafts-card" hidden>
-      <h2>Carry on with a visit</h2>
+      <h2>Carry on with a consultation</h2>
       <p class="hint" id="waiting" hidden></p>
       <div class="list" id="drafts"></div>
     </div>
@@ -140,7 +140,8 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       <h2>Client</h2>
       <div class="grid">
         <label class="f">Client name <small>As it should appear on the report, e.g. Sarah and Tom Jones</small><input type="text" data-k="name"></label>
-        <label class="f">Visit date<input type="date" data-k="date"></label>
+        <label class="f">How we met<select data-k="how"><option>Video call</option><option>Home visit</option></select></label>
+        <label class="f">Date<input type="date" data-k="date"></label>
         <label class="f">Mobile<input type="tel" data-k="mobile"></label>
         <label class="f">Email<input type="email" data-k="email"></label>
         <label class="f full">Address<input type="text" data-k="address" placeholder="House number and street, town"></label>
@@ -292,7 +293,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
 
 <div class="bar" id="bar" hidden>
   <div class="wrap">
-    <button class="btn ghost" type="button" id="back">All visits</button>
+    <button class="btn ghost" type="button" id="back">All consultations</button>
     <span style="display:flex;gap:.6rem"><button class="btn ghost" type="button" id="done">Save</button><a class="btn" id="preview" href="/report/">Preview report</a></span>
   </div>
 </div>
@@ -442,7 +443,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       if (j && j.result) changed();
     }).catch(function () {});
   }
-  function title() { $("ttl").textContent = v && v.name ? v.name.split(" ")[0] + (v.address ? ", " + v.address.split(",")[0] : "") : "Home visit"; }
+  function title() { $("ttl").textContent = v && v.name ? v.name.split(" ")[0] + (v.address ? ", " + v.address.split(",")[0] : "") : "Consultation"; }
 
   /* ---------- planning checks ---------- */
   function drawChecks() {
@@ -620,7 +621,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
   function fromLead(p) {
     var cur = drafts().filter(function (x) { return x.leadKey === p.k; })[0];
     if (cur) return open(cur);
-    open({ id: newId(), leadKey: p.k, created: Date.now(), date: today(), name: p.n || "", email: p.e || "", mobile: p.m || "", postcode: p.pc || "", address: p.a || "", types: [], wants: [], site: {}, checks: {}, photos: [] });
+    open({ id: newId(), leadKey: p.k, created: Date.now(), how: "Video call", date: today(), name: p.n || "", email: p.e || "", mobile: p.m || "", postcode: p.pc || "", address: p.a || "", types: [], wants: [], site: {}, checks: {}, photos: [] });
   }
   function drafts() { try { return JSON.parse(localStorage.getItem("visit-index") || "[]").map(function (x) { try { return JSON.parse(localStorage.getItem(key(x.id))); } catch (e) { return null; } }).filter(Boolean); } catch (e) { return []; } }
   function showStart() {
@@ -646,7 +647,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     if (q) list = leads.filter(function (p) { return ((p.n || "") + " " + (p.pc || "") + " " + (p.a || "")).toLowerCase().indexOf(q) >= 0; });
     list.sort(function (a, b) { return Math.abs((a.vd || a.f || 0) - now) - Math.abs((b.vd || b.f || 0) - now); });
     box.innerHTML = "";
-    if (!list.length) { box.innerHTML = '<p class="muted">' + (leads.length ? "No match. Use New visit below." : "No leads loaded.") + "</p>"; return; }
+    if (!list.length) { box.innerHTML = '<p class="muted">' + (leads.length ? "No match. Use New consultation below." : "No leads loaded.") + "</p>"; return; }
     list.slice(0, 25).forEach(function (p) {
       var b = document.createElement("button"); b.type = "button"; b.className = "lead";
       b.innerHTML = "<span><b></b><br><small></small></span><span class=\"when\"></span>";
@@ -657,7 +658,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     });
   }
   $("find").oninput = drawLeads;
-  $("blank").onclick = function () { open({ id: newId(), created: Date.now(), date: today(), types: [], wants: [], site: {}, checks: {}, photos: [] }); };
+  $("blank").onclick = function () { open({ id: newId(), created: Date.now(), how: "Video call", date: today(), types: [], wants: [], site: {}, checks: {}, photos: [] }); };
   $("back").onclick = function () { push(v); showStart(); };
   $("done").onclick = function () { var b = this; b.disabled = true; push(v).then(function () { b.disabled = false; uploadPending(); b.textContent = "Saved"; setTimeout(function () { b.textContent = "Save"; }, 1600); }); };
 
@@ -673,7 +674,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     return RA.api({ action: "pipeline", pass: pass }).then(function (r) {
       if (!r || !r.ok) { if (r && r.error === "bad-pass") { pass = ""; try { localStorage.removeItem("ra-pass"); } catch (e) {} $("connect").hidden = false; $("start").hidden = true; } return; }
       leads = r.people || []; try { localStorage.setItem("visit-leads", JSON.stringify(leads)); } catch (e) {} if (!v) drawLeads(); syncAll();
-    }).catch(function () { if (!leads.length) $("leads").innerHTML = '<p class="muted">No connection, so your leads can&rsquo;t load. Use New visit below; it saves on this iPad.</p>'; });
+    }).catch(function () { if (!leads.length) $("leads").innerHTML = '<p class="muted">No connection, so your leads can&rsquo;t load. Use New consultation below; it saves on this iPad.</p>'; });
   }
   $("pwgo").onclick = function () {
     var pw = $("pw").value; $("pwerr").hidden = true;

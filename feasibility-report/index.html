@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sample planning feasibility report | Residential Architecture</title>
-<meta name="description" content="Every free home visit comes with a written planning feasibility report on your home: planning route, property checks, typical costs and next steps. See a sample.">
+<meta name="description" content="Every free video call comes with a written planning feasibility report on your home: planning route, property checks, typical costs and next steps. See a sample.">
 <link rel="canonical" href="https://residential-architecture.co.uk/feasibility-report/">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Your free planning feasibility report | Residential Architecture">
-<meta property="og:description" content="Every free home visit comes with a written planning feasibility report on your home. See a sample.">
+<meta property="og:description" content="Every free video call comes with a written planning feasibility report on your home. See a sample.">
 <meta property="og:url" content="https://residential-architecture.co.uk/feasibility-report/">
 <meta property="og:site_name" content="Residential Architecture">
 <meta property="og:image" content="https://residential-architecture.co.uk/img/report-preview-v2.jpg">
@@ -248,7 +248,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
   function toReport(v) {
     var things = ["t1", "t2", "t3", "t4"].map(function (k) { return String(v[k] || "").trim(); }).filter(Boolean);
     return {
-      v: 1, id: v.id, name: first(v.name), fullName: String(v.name || "").trim(), address: v.address || "", postcode: v.postcode || "", council: v.council || "", date: v.date || "",
+      v: 1, id: v.id, how: v.how || "", name: first(v.name), fullName: String(v.name || "").trim(), address: v.address || "", postcode: v.postcode || "", council: v.council || "", date: v.date || "",
       title: v.title || (v.types || []).join(" and ") || "Your project", types: v.types || [], words: v.words || "", wants: v.wants || [], wantsOther: v.wantsOther || "",
       size: v.size || "", roof: v.roof || "", extDepth: v.extDepth || "", extWidth: v.extWidth || "", sideWidth: v.sideWidth || "", houseDepth: v.houseDepth || "", distL: v.distL || "", distR: v.distR || "", houseType: v.houseType || "", age: v.age || "", width: v.width || "", depth: v.depth || "",
       earlier: v.earlier || "", earlierPlan: v.earlierPlan || "", ground: v.ground || "", attached: v.attached || "",
@@ -271,13 +271,13 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
   function render(r, quote) {
     var detached = /Detached|Bungalow/.test(r.houseType), lim1 = detached ? 4 : 3, lim2 = detached ? 8 : 6;
     var route = r.route, pd = /Permitted/.test(route), pa = /Prior/.test(route), hh = /Householder/.test(route), ldc = /Lawful/.test(route);
-    var H = [];
+    var H = [], call = !!r.how && r.how !== "Home visit";
     /* cover */
     H.push('<article class="sheet"><div class="cover"><div class="row"><div class="who"><span class="logo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg></span><div><b>Residential Architecture</b><small>Carl Collins BSc (Hons)</small></div></div></div>');
     H.push('<div><span class="kick">Planning feasibility report</span><h2>' + esc(r.title) + '</h2><p class="addr">' + esc([r.address, r.postcode].filter(Boolean).join(", ")) + '</p></div>');
-    H.push('<div class="meta">' + (r.fullName ? '<div>Prepared for<b>' + esc(r.fullName) + '</b></div>' : '<div>Based on<b>My visit and the public records for your home</b></div>') + '<div>Local authority<b>' + esc(r.council || "To confirm") + '</b></div><div>Visit date<b>' + esc(day(r.date)) + '</b></div></div></div>');
+    H.push('<div class="meta">' + (r.fullName ? '<div>Prepared for<b>' + esc(r.fullName) + '</b></div>' : '<div>Based on<b>' + (call ? 'Our video call' : 'My visit') + ' and the public records for your home</b></div>') + '<div>Local authority<b>' + esc(r.council || "To confirm") + '</b></div><div>' + (call ? 'Call date' : 'Visit date') + '<b>' + esc(day(r.date)) + '</b></div></div></div>');
     /* summary */
-    var hello = (r.name ? "Thank you for showing me round, " + esc(r.name) + ". " : "Thank you for showing me round. ") + "Here&rsquo;s what I found from my visit and the public records for your home.";
+    var hello = call ? (r.name ? "Thank you for your time on our call, " + esc(r.name) + ". " : "Thank you for your time on our call. ") + "Here&rsquo;s what I found from our video call and the public records for your home." : (r.name ? "Thank you for showing me round, " + esc(r.name) + ". " : "Thank you for showing me round. ") + "Here&rsquo;s what I found from my visit and the public records for your home.";
     H.push('<div class="pad"><div class="sec-head"><h2>The answer on one page</h2></div><p class="lead">' + hello + '</p>');
     var tiles = [];
     if (route && !/Not sure/.test(route)) {
@@ -304,7 +304,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
       sec++;
       H.push('<article class="sheet"><div class="pad"><div class="sec-head"><span>Section ' + sec + '</span><h2>Your house</h2></div>');
       H.push(map(r));
-      if (r.photos.length) H.push('<div class="photos' + (r.photos.length === 1 ? " n1" : "") + '">' + r.photos.map(function (p, i) { return '<figure><img class="ph" data-k="' + esc(p.k) + '" ' + (p.url ? 'src="' + esc(p.url) + '"' : "") + ' alt="' + esc(p.caption || "Photo from the visit") + '" loading="lazy"><figcaption>' + esc(p.caption) + '</figcaption></figure>'; }).join("") + '</div>');
+      if (r.photos.length) H.push('<div class="photos' + (r.photos.length === 1 ? " n1" : "") + '">' + r.photos.map(function (p, i) { return '<figure><img class="ph" data-k="' + esc(p.k) + '" ' + (p.url ? 'src="' + esc(p.url) + '"' : "") + ' alt="' + esc(p.caption || "Photo of your home") + '" loading="lazy"><figcaption>' + esc(p.caption) + '</figcaption></figure>'; }).join("") + '</div>');
       if (meas.length) H.push('<div class="measures">' + meas.map(function (m) { return '<div>' + m[0] + '<b>' + esc(m[1]) + '</b></div>'; }).join("") + '</div>');
       if (showPlan) H.push(plan(r, lim1, lim2));
       H.push(extNumbers(r)); H.push(sun(r));
@@ -364,9 +364,9 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     H.push('<div class="guar"><h3>Fixed price. Planning guarantee.</h3><ul class="dash"><li>One fixed price, agreed up front</li><li>Unlimited revisions up to submission</li><li>If planning is refused, I revise the design and resubmit at no extra cost</li><li>Every project in 3D with photo-real images</li></ul></div>');
     if (quote) H.push('<div class="quote"><div><b>Your fixed-price quote is ready</b><p>Everything in this report, designed and submitted for one fixed price.</p></div><a class="btn" href="' + esc(quote) + '">View your quote</a></div>');
     H.push('<div><h3 style="font-size:1rem">Where this information comes from</h3><p class="small">planning.data.gov.uk · ' + esc(r.council ? r.council + " planning register" : "Council planning register") + ' · Historic England National Heritage List · Environment Agency flood maps · The Town and Country Planning (General Permitted Development) (England) Order 2015 · Party Wall etc. Act 1996</p></div>');
-    H.push('<p class="lead" style="font-size:.93rem">This report is based on a 30-minute visit and the public records for your address on the date shown. It&rsquo;s a first look at what&rsquo;s possible, not a full planning appraisal, a survey or a builder&rsquo;s quote. Once you go ahead, I check everything in detail as part of the design.</p>');
+    H.push('<p class="lead" style="font-size:.93rem">This report is based on a 30-minute ' + (call ? 'video call' : 'visit') + ' and the public records for your address on the date shown. It&rsquo;s a first look at what&rsquo;s possible, not a full planning appraisal, a survey or a builder&rsquo;s quote. Once you go ahead, ' + (call ? 'I measure your home in person and check' : 'I check') + ' everything in detail as part of the&nbsp;design.</p>');
     H.push('<p class="lead" style="font-size:.93rem">Any questions, just message me.<br><b>Carl Collins BSc (Hons)</b></p>');
-    if (r.sample) H.push('<div class="book-cta"><span class="kicker">Visit and report both free</span><h3>Get your own planning feasibility report, free with your home visit</h3><p>Book a free 30-minute visit and I&rsquo;ll write one for your home at no cost, followed by a <span style="white-space:nowrap">no-obligation</span> quote to provide architectural services for your project. It&rsquo;s the best way for you to see how I work before you commit to&nbsp;anything.</p><a class="btn" href="/book/">Book your free visit</a></div>');
+    if (r.sample) H.push('<div class="book-cta"><span class="kicker">Video call and report both free</span><h3>Get your own planning feasibility report, free after a video call</h3><p>Book a free 30-minute video call, evenings included, and I&rsquo;ll write one for your home at no cost, yours to keep, followed by a <span style="white-space:nowrap">no-obligation</span> quote to provide architectural services for your project. It&rsquo;s the best way for you to see how I work before you commit to&nbsp;anything.</p><a class="btn" href="/book/">Book your free video call</a></div>');
     H.push('</div></article>');
     $("main").innerHTML = H.join("");
     document.title = "Planning feasibility report" + (r.address ? ", " + r.address.split(",")[0] : "") + " | Residential Architecture";
@@ -633,7 +633,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
       site: [{ k: "boundary", note: "The wall to no. 6 sits on the boundary" }],
       photos: [{ url: "/img/sample-rear.jpg", caption: "The back of the house. The small existing extension comes down to make way for the new one." }, { url: "/img/sample-front.jpg", caption: "The front of the house, with the garage to the side." }],
       checks: { conservation: "None found", article4: "None found", listed: "None found", greenBelt: "None found", aonb: "None found", flood: "Zone 1", trees: "None found", pdRights: "Intact", history: "Only the small rear extension" },
-      route: "Prior approval", risk: "Low", sample: true,
+      route: "Prior approval", risk: "Low", sample: true, how: "Video call",
       things: ["Up to 3m deep is permitted development, so no planning application, but I'd still get a Lawful Development Certificate to prove it. Your 4m design uses prior approval, where the council writes to your neighbours and has 42 days to decide.", "The wall to no. 6 is on the boundary, so Party Wall notices will be needed. Serve them early.", "Wide glazing across the back will probably need an energy calculation at Building Regulations stage."],
       materials: "Red brick, concrete roof tiles", character: "Uniform: houses look alike", designNotes: "A flat roof with a low parapet keeps the extension well below the first-floor windows next door, and brick to match keeps it in character with the street.",
       design: { d45: { a: "Clear", note: "Single storey, so the line from next door's kitchen window is clear" }, privacy: { a: "Fine", note: "" }, scale: { a: "Fine", note: "" }, precedent: { a: "Yes", note: "Two similar extensions in the road" }, parking: { a: "Fine", note: "Driveway for two cars kept" } },
