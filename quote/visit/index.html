@@ -92,13 +92,20 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
 .bar .wrap { display: flex; gap: .7rem; justify-content: space-between; align-items: center; padding: 0; }
 .mic { display: inline-flex; gap: .35rem; align-items: center; color: var(--grey); font-size: .85rem; font-weight: 400; }
 [hidden] { display: none !important; }
+body.oncall .only-visit { display: none !important; }
+body:not(.oncall) .only-call { display: none !important; }
+.guide { margin: 0; padding-left: 1.3rem; }
+.guide li { margin: 0 0 .9rem; }
+.guide li b { display: block; }
+.guide .say { display: block; background: var(--soft, #F4F4F6); border-radius: 10px; padding: .55rem .8rem; margin: .35rem 0; font-style: italic; }
+.links { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0 0 1rem; }
 </style>
 </head>
 <body>
 <header class="top">
   <div class="wrap"><b><i aria-hidden="true"></i><span id="ttl">Consultation</span></b><span class="sync" id="sync">Not saved yet</span></div>
   <nav class="tabs" id="tabs" hidden aria-label="Sections">
-    <a href="#s-client">Client</a><a href="#s-project">Project</a><a href="#s-house">House</a><a href="#s-site">On site</a><a href="#s-photos">Photos</a><a href="#s-design">Design</a><a href="#s-planning">Planning</a><a href="#s-data">Construction</a><a href="#s-notes">Your notes</a>
+    <a href="#s-client">Client</a><a class="only-call" href="#s-prep">Before</a><a class="only-call" href="#s-guide">Call guide</a><a href="#s-project">Project</a><a href="#s-house">House</a><a href="#s-site"><span class="only-visit">On site</span><span class="only-call">Site</span></a><a href="#s-photos">Photos</a><a href="#s-design">Design</a><a href="#s-planning">Planning</a><a href="#s-data">Construction</a><a href="#s-notes">Your notes</a>
   </nav>
 </header>
 
@@ -150,6 +157,30 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
       </div>
     </section>
 
+    <section class="card only-call" id="s-prep">
+      <h2>Before the call</h2>
+      <p class="hint">Ten minutes before: find the floor plan, look at the house on the map, then run the planning checks and get the data further down. You start the call already knowing the house.</p>
+      <div class="links"><a class="btn ghost small" id="findplan" target="_blank" rel="noopener">Find the floor plan</a><a class="btn ghost small" id="openmap" target="_blank" rel="noopener">Open in Google Maps</a><a class="btn small" id="askphotos" target="_blank" rel="noopener">Ask for photos on WhatsApp</a></div>
+      <div class="grid">
+        <label class="f full">Listing with the floor plan <small>Rightmove, Zoopla or OnTheMarket, including old sold listings</small><input type="text" inputmode="url" data-k="listing" placeholder="Paste the link"></label>
+        <label class="f">Floor plan<select data-k="plan"><option value="">Choose</option><option>From the listing</option><option>Client sending a sketch or measurements</option><option>None yet, confirm at the measured survey</option></select></label>
+        <label class="f">Photos from the client<select data-k="photosAsked"><option value="">Not asked yet</option><option>Asked</option><option>Received</option></select></label>
+      </div>
+    </section>
+
+    <section class="card only-call" id="s-guide">
+      <h2>Call guide</h2>
+      <p class="hint">About 30 minutes. Fill in the sections below as you go.</p>
+      <ol class="guide">
+        <li><b>Welcome (1 minute)</b><span class="say">&ldquo;Thanks for making the time. I&rsquo;ll ask what you&rsquo;d like to do, have a look at the house with you, then tell you honestly what&rsquo;s realistic. Afterwards I&rsquo;ll send you a written planning feasibility report on your home, yours to keep.&rdquo;</span></li>
+        <li><b>What they want (8 minutes)</b>Fill in Project. Let them talk, and type their own words into &ldquo;In their words&rdquo;. Ask about the size they have in mind and any budget.</li>
+        <li><b>Show me the house (8 minutes)</b><span class="say">&ldquo;Could you walk me round on your phone? Start in the room that would change, then go out to the back.&rdquo;</span>Ask: any earlier extensions, drains or manholes at the back, trees, side access, slopes or steps. Fill in House and Site. Outside, ask them to point the camera at next door&rsquo;s nearest back window on each side and count the bricks with you.</li>
+        <li><b>Measurements (3 minutes)</b>Check the floor plan with them: house width and depth, garden depth, the gap to each boundary. Anything unsure, note it for the measured survey.</li>
+        <li><b>What I think (5 minutes)</b>The likely route, the risk, the two or three things that matter most for their house. Be straight with them.</li>
+        <li><b>Close (2 minutes)</b><span class="say">&ldquo;I&rsquo;ll send your planning feasibility report by tomorrow evening, then your fixed-price quote. If you go ahead, I come to your home and measure everything in person before anything is drawn. Could you WhatsApp me a few photos of the back of the house today? Anything else you&rsquo;d like me to look at?&rdquo;</span></li>
+      </ol>
+    </section>
+
     <section class="card" id="s-project">
       <h2>Project</h2>
       <p class="q">What are they planning?</p>
@@ -187,12 +218,12 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
         <label class="f">Earlier extensions<select data-k="earlier"><option value="">Choose</option><option>None</option><option>Small rear extension</option><option>Rear extension</option><option>Side extension</option><option>Loft conversion</option><option>Conservatory</option><option>Several</option></select></label>
         <label class="f">What happens to it<select data-k="earlierPlan"><option value="">Not applicable</option><option>Stays as it is</option><option>Comes down for the new one</option><option>Gets extended</option></select></label>
         <label class="f">Ground<select data-k="ground"><option value="">Choose</option><option>Level</option><option>Slopes up to the garden</option><option>Slopes down to the garden</option><option>Steps down from the house</option></select></label>
-        <label class="f">Back of the house faces <small>Stand at the back door looking down the garden</small><span style="display:flex;gap:.5rem"><select data-k="faces" style="flex:1"><option value="">Choose</option><option>North</option><option>North-east</option><option>East</option><option>South-east</option><option>South</option><option>South-west</option><option>West</option><option>North-west</option></select><button class="btn ghost small" type="button" id="compass">Use compass</button></span></label>
+        <label class="f">Back of the house faces <small class="only-visit">Stand at the back door looking down the garden</small><small class="only-call">From the aerial view: the direction the garden runs away from the house</small><span style="display:flex;gap:.5rem"><select data-k="faces" style="flex:1"><option value="">Choose</option><option>North</option><option>North-east</option><option>East</option><option>South-east</option><option>South</option><option>South-west</option><option>West</option><option>North-west</option></select><button class="btn ghost small only-visit" type="button" id="compass">Use compass</button></span></label>
         <label class="f">Windows and doors being removed (m&sup2;) <small>Optional. Adds to the glazing allowance</small><input type="number" inputmode="decimal" step="0.1" data-k="glazLost"></label>
         <label class="f">Which side is attached<select data-k="attached"><option value="">Not attached</option><option>Left (from the garden)</option><option>Right (from the garden)</option><option>Both</option></select></label>
       </div>
       <p class="q" style="margin-top:1.2rem">Next door&rsquo;s nearest back window</p>
-      <p class="hint">Draws the 45&deg; line on the plan in the report. Zoom into your photo of the back of the house and count bricks: from next door&rsquo;s corner nearest this house to the edge of their nearest ground-floor window or glazed door, then across the window. One brick with its joint is 225mm. Left and right as you stand in the garden facing the house. Leave a side blank if there&rsquo;s no window that matters.</p>
+      <p class="hint">Draws the 45&deg; line on the plan in the report. <span class="only-call">On the call, ask them to point the camera at it and count with you, or count on the photo they send.</span> <span class="only-visit">Zoom into your photo of the back of the house and count bricks:</span><span class="only-call">Count bricks</span> from next door&rsquo;s corner nearest this house to the edge of their nearest ground-floor window or glazed door, then across the window. One brick with its joint is 225mm. Left and right as you stand in the garden facing the house. Leave a side blank if there&rsquo;s no window that matters.</p>
       <div class="grid">
         <label class="f">Left: bricks to their window<input type="number" inputmode="numeric" step="1" data-k="nwL"></label>
         <label class="f">Left: window width in bricks<input type="number" inputmode="numeric" step="1" data-k="nwwL"></label>
@@ -206,15 +237,15 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     </section>
 
     <section class="card" id="s-site">
-      <h2>On site</h2>
-      <p class="hint">Yes means it needs attention. Add a word or two if it does.</p>
+      <h2><span class="only-visit">On site</span><span class="only-call">Site</span></h2>
+      <p class="hint">Yes means it needs attention. Add a word or two if it does.<span class="only-call"> Ask them, then check on their photos and the aerial view.</span></p>
       <div id="siteq"></div>
     </section>
 
     <section class="card" id="s-photos">
       <h2>Photos</h2>
-      <p class="hint">Take them straight from here. Give each a short caption and tick the ones for the report. Avoid people, house numbers and number plates in the ones you tick. You can add the estate agent&rsquo;s floor plan with your measurements on it too; leave Report unticked so it stays private.</p>
-      <label class="btn" style="width:fit-content"><input type="file" id="camera" accept="image/*" capture="environment" multiple hidden>Take or add photos</label>
+      <p class="hint"><span class="only-call">Add the photos the client sends you: save them from WhatsApp first, then add them here. Use the listing&rsquo;s photos only for your own reference, not the report.</span><span class="only-visit">Take them straight from here.</span> Give each a short caption and tick the ones for the report. Avoid people, house numbers and number plates in the ones you tick. You can add the estate agent&rsquo;s floor plan with your measurements on it too; leave Report unticked so it stays private.</p>
+      <label class="btn" style="width:fit-content"><input type="file" id="camera" accept="image/*" capture="environment" multiple hidden><span class="only-visit">Take or add photos</span><span class="only-call">Add photos</span></label>
       <div class="photos" id="photos"></div>
     </section>
 
@@ -231,7 +262,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
 
     <section class="card" id="s-planning">
       <h2>Planning checks</h2>
-      <p class="hint">Uses your location here at the house, or the postcode if you&rsquo;re elsewhere. It reads the national planning data, so always confirm on the council&rsquo;s own maps before the report goes out.</p>
+      <p class="hint"><span class="only-visit">Uses your location here at the house, or the postcode if you&rsquo;re elsewhere.</span><span class="only-call">Uses the postcode. Run it before the call.</span> It reads the national planning data, so always confirm on the council&rsquo;s own maps before the report goes out.</p>
       <p style="margin:0 0 .6rem"><button class="btn" type="button" id="runchecks">Run the checks</button> <span class="muted" id="checkwhen"></span></p>
       <p class="err" id="checkerr" hidden></p>
       <div class="checks" id="checks"></div>
@@ -379,7 +410,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
   function bind() {
     document.querySelectorAll("#visit [data-k]").forEach(function (el) {
       var k = el.getAttribute("data-k"); el.value = v[k] == null ? "" : v[k];
-      el.oninput = el.onchange = function () { v[k] = el.value; if (k === "name" || k === "address") title(); if (k === "postcode") council(); changed(); };
+      el.oninput = el.onchange = function () { v[k] = el.value; if (k === "name" || k === "address" || k === "postcode" || k === "mobile") { title(); links(); } if (k === "how") mode(); if (k === "postcode") council(); changed(); };
     });
     document.querySelectorAll("#visit [data-multi]").forEach(function (box) {
       var k = box.getAttribute("data-multi"); v[k] = v[k] || [];
@@ -490,7 +521,7 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
     if (navigator.geolocation && confirmLocal()) navigator.geolocation.getCurrentPosition(function (p) { go(p.coords.latitude, p.coords.longitude); }, function () { go(0, 0); }, { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 });
     else go(0, 0);
   };
-  function confirmLocal() { var t = v.date ? new Date(v.date + "T12:00:00") : new Date(); return Math.abs(Date.now() - t.getTime()) < 36 * 3600000; } /* only use GPS on the day of the visit */
+  function confirmLocal() { if (onCall()) return false; var t = v.date ? new Date(v.date + "T12:00:00") : new Date(); return Math.abs(Date.now() - t.getTime()) < 36 * 3600000; } /* only use GPS on the day of the visit */
 
   /* ---------- your home in numbers: EPC (via the script), sold prices and area averages (straight from HM Land Registry) ---------- */
   function money0(n) { return "\u00a3" + Math.round(Number(n) || 0).toLocaleString("en-GB"); }
@@ -615,8 +646,24 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: var(--p
   function open(data) {
     v = data; $("start").hidden = true; $("connect").hidden = true; $("visit").hidden = false; $("tabs").hidden = false; $("bar").hidden = false;
     $("preview").href = "/report/?preview=1#" + v.id;
-    bind(); council(); window.scrollTo(0, 0); local(); status(pass ? "Saved to your sheet" : "Saved on this iPad", pass ? "ok" : "wait"); uploadPending();
+    bind(); mode(); links(); council(); window.scrollTo(0, 0); local(); status(pass ? "Saved to your sheet" : "Saved on this iPad", pass ? "ok" : "wait"); uploadPending();
     try { history.replaceState(null, "", "#" + v.id); } catch (e) {}
+  }
+  /* ---------- video call or home visit ---------- */
+  function onCall() { return !!v && v.how !== "Home visit"; }
+  function mode() {
+    document.body.classList.toggle("oncall", onCall());
+    var cam = $("camera"); if (onCall()) cam.removeAttribute("capture"); else cam.setAttribute("capture", "environment");
+  }
+  function links() {
+    if (!v) return;
+    var where = [v.address, v.postcode].filter(Boolean).join(" ");
+    $("findplan").href = "https://www.google.com/search?q=" + encodeURIComponent(where + " floor plan rightmove OR zoopla OR onthemarket");
+    $("openmap").href = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(where);
+    var first = String(v.name || "").trim().split(/\s+/)[0] || "there", mob = String(v.mobile || "").replace(/\D/g, "").replace(/^0/, "44");
+    var msg = "Hi " + first + ", it's Carl from Residential Architecture. Before or after our video call, could you WhatsApp me a few photos? They help me write your planning feasibility report.\n\n1. The back of the house, taken from the end of the garden\n2. Where you'd like the extension to go\n3. Next door's nearest back window on each side\n4. The front of the house\n\nIf you have the estate agent's floor plan, that helps too. Thank you, Carl";
+    $("askphotos").href = (mob ? "https://wa.me/" + mob : "https://wa.me/") + "?text=" + encodeURIComponent(msg);
+    $("askphotos").onclick = function () { if (!v.photosAsked) { v.photosAsked = "Asked"; var el = document.querySelector('[data-k="photosAsked"]'); if (el) el.value = "Asked"; changed(); } };
   }
   function fromLead(p) {
     var cur = drafts().filter(function (x) { return x.leadKey === p.k; })[0];
