@@ -76,7 +76,7 @@ var RA = (function () {
     try {
       var parts = str.split("."), q = JSON.parse(b64d(parts[0].replace(/[^A-Za-z0-9_-]/g, "")));
       if (!q || sums(q).indexOf(q.k) < 0) return null;
-      q._own = !!q.d; q._w = readWindows(parts.slice(1)); if (q._w.length && !q.d) q.d = 25;
+      q._own = !!q.d; q._w = readWindows(parts.slice(1)); q._r7 = parts.slice(1).indexOf("r7") >= 0; if ((q._w.length || q._r7) && !q.d) q.d = 25;
       q._words = parts.slice(1).filter(function (x) { return /^[A-Za-z][A-Za-z0-9]{2,23}$/.test(x) && !/^o[0-9a-z]+-/.test(x); }).map(function (x) { return x.toUpperCase(); });
       return q;
     } catch (e) { return null; }
@@ -94,6 +94,13 @@ var RA = (function () {
       else if (t >= 6 * DAY + 12 * HOUR && t <= 7 * DAY + 20 * HOUR) best = { ends: q.s + 7 * DAY + 20 * HOUR, short: true }; /* reopened a week later */
     }
     w.forEach(function (x) { if (now >= x[0] && now <= x[1] && (!best || x[1] > best.ends)) best = { ends: x[1], short: x[1] - x[0] <= 26 * HOUR }; });
+    /* The week-later "Today only" email adds ".r7" to the quote link: 24 hours from the first time it's opened, whatever day the email went. */
+    if (q._r7 && now - q.s >= 2 * DAY) {
+      var k = "ra-r7-" + (q.r || "") + "-" + q.s, first = 0;
+      try { first = Number(localStorage.getItem(k)) || 0; if (!first) { first = now; localStorage.setItem(k, String(now)); } } catch (e) { first = now; }
+      var e7 = first + 24.25 * HOUR;
+      if (now <= e7 && (!best || e7 > best.ends)) best = { ends: e7, short: true };
+    }
     return best;
   }
   function offerEnds(q, now) { var o = offer(q, now); return o ? o.ends : 0; }
