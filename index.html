@@ -366,6 +366,12 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
 .booker iframe { width: 100%; height: 720px; border: 0; display: block; }
 @media (max-width: 40rem) { .booker iframe { height: 1050px; } }
 
+.councils { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.councils li { border: 1px solid var(--line); border-top: 4px solid var(--pink); border-radius: 14px; padding: 1.1rem 1.2rem; display: flex; flex-direction: column; gap: .35rem; background: var(--card); }
+.councils strong { font-family: var(--display); font-weight: 600; font-size: 1.08rem; line-height: 1.25; }
+.councils span { color: var(--grey); font-size: .95rem; }
+@media (max-width: 60rem) { .councils { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 40rem) { .councils { grid-template-columns: minmax(0, 1fr); } }
 /* Draft bar: remove before launch */
 .draftbar{background:#16151B;color:#fff;font-size:.85rem}
 .draftbar .wrap{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding-block:10px}
@@ -403,11 +409,12 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
     <div class="wrap hero-grid">
       <div class="hero-text">
         <h1 class="rise">Extensions, loft conversions and garage conversions. <em>It starts with a free home visit.</em></h1>
-        <p class="areas rise r2">In Maidenhead, Reading and the towns between. I only cover where I can get to easily.</p>
+        <p class="areas rise r2">Your local designer in Maidenhead, Reading and the towns between. I come to your house, look at it properly and put it all in writing.</p>
         <ul class="pills rise r2">
           <li>Free 30-minute visit, in person</li>
           <li>Fixed-price quote for your project</li>
           <li>Your design in 3D before it&rsquo;s built</li>
+          <li>A written report on your house after the visit</li>
           <li>Unlimited revisions within the brief</li>
         </ul>
         <div class="hero-cta rise r2">
@@ -504,7 +511,7 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
           <h2>Every project starts at your house</h2>
           <p>That’s why every project starts with a free 30-minute visit to your home from me, in person. I&rsquo;m the designer who will draw your project.</p>
           <p>I look at your boundaries, levels, drainage and neighbouring properties, talk through the planning constraints on your site, and tell you what is realistic before you commit to anything.</p>
-          <p>Then you get one fixed price for the drawings, agreed before any work starts. No obligation.</p>
+          <p>A couple of days later I send you a written home visit report: what I found at the house, the planning route, a rough cost range and the next steps, with a fixed price for the drawings. It&rsquo;s yours to keep, whether or not you go ahead.</p>
           <a class="btn" href="https://calendly.com/residential-architecture/free-home-visit" target="_blank" rel="noopener"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="3"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Book a free home visit</a>
         </div>
         <ul class="checks">
@@ -533,6 +540,21 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
     </div>
   </div>
 
+  <div class="wrap sec" id="councils">
+    <div class="stack">
+      <h2>I know your council</h2>
+      <p class="grey">Planning is decided council by council, and each one has its own way of looking at extensions. These are the councils I work with week in, week out.</p>
+    </div>
+    <ul class="councils">
+      <li><strong>Royal Borough of Windsor and Maidenhead</strong><span>Maidenhead, Windsor, Cookham, Bray, Ascot</span></li>
+      <li><strong>Reading Borough Council</strong><span>Reading, Caversham</span></li>
+      <li><strong>Wokingham Borough Council</strong><span>Wokingham, Woodley, Earley, Twyford, Wargrave</span></li>
+      <li><strong>Buckinghamshire Council</strong><span>Marlow, Bourne End, Taplow, Burnham</span></li>
+      <li><strong>Bracknell Forest Council</strong><span>Bracknell</span></li>
+      <li><strong>South Oxfordshire District Council</strong><span>Henley-on-Thames</span></li>
+    </ul>
+  </div>
+
   <div class="band" id="included">
     <div class="wrap sec">
       <h2>What you get</h2>
@@ -540,6 +562,10 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
         <div class="card feature">
           <h3>One designer, from visit to drawings</h3>
           <p>The person who visits your house is the person who designs it, models it in 3D and submits it. You deal with me from start to finish.</p>
+        </div>
+        <div class="card">
+          <h3>A home visit report on your house</h3>
+          <p>Written by me after the visit, with photos from the day: boundaries, levels, drains, the neighbours&rsquo; windows, the planning route, rough costs and next steps.</p>
         </div>
         <div class="card">
           <h3>A fixed price with unlimited revisions</h3>
@@ -566,7 +592,7 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
       </div>
       <ol class="steps">
         <li><strong>Free home visit</strong><span>Thirty minutes at your home to look at the site and talk through what you want.</span></li>
-        <li><strong>Fixed-price quote</strong><span>One price for the drawings, agreed before any work starts.</span></li>
+        <li><strong>Visit report and fixed&#8209;price quote</strong><span>Your written home visit report, and one price for the drawings, agreed before any work starts.</span></li>
         <li><strong>Survey and written brief</strong><span>I come back to measure your home in full and agree a written brief with you, so the design starts from exact dimensions.</span></li>
         <li><strong>First draft in 1&nbsp;week</strong><span>Detailed floor plans and elevations, with a 3D model and rendered images of your design.</span></li>
         <li><strong>Revisions</strong><span>As many rounds as it takes before the planning submission.</span></li>
@@ -670,7 +696,7 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
           <div><dt>Projects</dt><dd>Almost 2,000 residential extensions and loft conversions in the last 15 years</dd></div>
           <div><dt>Background</dt><dd>Former Resi Senior Designer &amp; Project Lead</dd></div>
           <div><dt>Education</dt><dd>First Class Honours degree in Architecture</dd></div>
-          <div><dt>Planning</dt><dd>Royal Borough of Windsor and Maidenhead, Reading, Wokingham, Bracknell Forest and South Oxfordshire (Henley) councils</dd></div>
+          <div><dt>Planning</dt><dd>Windsor and Maidenhead, Reading, Wokingham, Buckinghamshire, Bracknell Forest and South Oxfordshire councils</dd></div>
         </dl>
       </div>
     </div>
@@ -683,6 +709,10 @@ footer .wrap { padding-block: 1.5rem 2.5rem; font-size: var(--step--1); color: v
         <details open>
           <summary>Is the home visit really free?</summary>
           <p>Yes. It is 30 minutes at your home with me, and there is no obligation to go ahead afterwards.</p>
+        </details>
+        <details>
+          <summary>What&rsquo;s in the home visit report?</summary>
+          <p>It&rsquo;s written by me after I&rsquo;ve been to your house, with photos from the visit. It covers what I found on site (boundaries, levels, drains and the neighbours&rsquo; windows), whether permitted development or a planning application is the right route, a rough cost range and the next steps. It comes with your fixed-price quote and it&rsquo;s yours to keep.</p>
         </details>
         <details>
           <summary>Do I still need a visit if my project is permitted development?</summary>
