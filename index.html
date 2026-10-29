@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB" data-palette="green">
+<html lang="en-GB" data-palette="purple">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -21,7 +21,7 @@
   --wrap:1120px; --r:10px;
   color-scheme:light;
 }
-html[data-palette="purple"]{--accent:#5A2B86;--accent-hover:#47206C;--tint:#EEE6F6;--deep:#1D1527;--deep-muted:#B8AECA;--soft:#F5F4F7;--line:#E4E1EA;--muted:#5F5B66;--paper:#FBFAFC}
+html[data-palette="purple"]{--accent:#6B2EF0;--accent-hover:#5620D4;--tint:#EFE8FF;--deep:#170F2E;--deep-muted:#B9ADDB;--soft:#F6F4FC;--line:#E5E1F2;--muted:#5D5970;--paper:#FBFAFF}
 html[data-palette="teal"]{--accent:#0E6A6B;--accent-hover:#0A5556;--tint:#DCEFEE;--deep:#0F2021;--deep-muted:#A6BDBC;--soft:#F2F5F5;--line:#DFE5E5;--muted:#58625F;--paper:#FAFCFC}
 
 *{box-sizing:border-box}
@@ -180,8 +180,8 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   <div class="wrap">
     <span><b>DRAFT</b> &nbsp;Not live. For Carl to review only.</span>
     <div class="swatches" role="group" aria-label="Colour option">
-      <button class="swatch" type="button" id="sw-green" data-p="green" aria-pressed="true"><i style="background:#1F6B4A"></i>Green</button>
-      <button class="swatch" type="button" id="sw-purple" data-p="purple" aria-pressed="false"><i style="background:#5A2B86"></i>Purple</button>
+      <button class="swatch" type="button" id="sw-green" data-p="green" aria-pressed="false"><i style="background:#1F6B4A"></i>Green</button>
+      <button class="swatch" type="button" id="sw-purple" data-p="purple" aria-pressed="true"><i style="background:#6B2EF0"></i>Purple</button>
       <button class="swatch" type="button" id="sw-teal" data-p="teal" aria-pressed="false"><i style="background:#0E6A6B"></i>Teal</button>
     </div>
   </div>
@@ -403,7 +403,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   var root=document.documentElement, btns=document.querySelectorAll('.swatch');
   function set(p){root.setAttribute('data-palette',p);btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.p===p?'true':'false')});try{localStorage.setItem('ra-palette',p)}catch(e){}}
   btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.p)})});
-  try{var s=localStorage.getItem('ra-palette');if(s)set(s)}catch(e){}
+  set('purple');try{var s=localStorage.getItem('ra-palette');if(s)set(s)}catch(e){}
 })();
 </script>
 </body>
