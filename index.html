@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-GB" data-palette="purple">
+<html lang="en-GB" data-palette="violet">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -21,8 +21,16 @@
   --wrap:1120px; --r:10px;
   color-scheme:light;
 }
-html[data-palette="purple"]{--accent:#6B2EF0;--accent-hover:#5620D4;--tint:#EFE8FF;--deep:#170F2E;--deep-muted:#B9ADDB;--soft:#F6F4FC;--line:#E5E1F2;--muted:#5D5970;--paper:#FBFAFF}
-html[data-palette="teal"]{--accent:#0E6A6B;--accent-hover:#0A5556;--tint:#DCEFEE;--deep:#0F2021;--deep-muted:#A6BDBC;--soft:#F2F5F5;--line:#DFE5E5;--muted:#58625F;--paper:#FAFCFC}
+html[data-palette="violet"]{--accent:#6B2EF0;--accent-hover:#5826C5;--tint:#F0EAFE;--deep:#18102F;--deep-muted:#D0BCFA;--soft:#EEEBF6;--line:#D8D2E8;--muted:#58516E;--paper:#FCFBFF}
+html[data-palette="royal"]{--accent:#7E22CE;--accent-hover:#671CA9;--tint:#F2E9FA;--deep:#1B0E2B;--deep-muted:#D6B8EF;--soft:#EFEAF4;--line:#DAD1E4;--muted:#5A506A;--paper:#FCFBFE}
+html[data-palette="indigo"]{--accent:#4338CA;--accent-hover:#372EA6;--tint:#ECEBFA;--deep:#13112A;--deep-muted:#C3BFEE;--soft:#ECECF4;--line:#D4D3E4;--muted:#535269;--paper:#FBFBFE}
+html[data-palette="blue"]{--accent:#0062F5;--accent-hover:#0050C9;--tint:#E6EFFE;--deep:#091730;--deep-muted:#ADCDFC;--soft:#E9EEF6;--line:#CDD7E8;--muted:#4B576E;--paper:#FAFCFF}
+html[data-palette="cyan"]{--accent:#0884A6;--accent-hover:#076C88;--tint:#E6F3F6;--deep:#0B1C25;--deep-muted:#B0D8E3;--soft:#E9EFF2;--line:#CEDAE0;--muted:#4C5C65;--paper:#FAFDFD}
+html[data-palette="teal"]{--accent:#0E7C86;--accent-hover:#0B666E;--tint:#E7F2F3;--deep:#0B1B21;--deep-muted:#B2D5D8;--soft:#E9EFF0;--line:#CFDADD;--muted:#4C5B61;--paper:#FAFCFD}
+html[data-palette="emerald"]{--accent:#05875F;--accent-hover:#046F4E;--tint:#E6F3EF;--deep:#0A1C1B;--deep-muted:#AFD9CC;--soft:#E9F0EE;--line:#CEDBD9;--muted:#4B5C5C;--paper:#FAFDFC}
+html[data-palette="forest"]{--accent:#1F6B4A;--accent-hover:#19583D;--tint:#E9F0ED;--deep:#0E1818;--deep-muted:#B7D0C5;--soft:#EAEEED;--line:#D0D8D7;--muted:#4F595A;--paper:#FBFCFB}
+html[data-palette="orange"]{--accent:#D9530A;--accent-hover:#B24408;--tint:#FBEEE6;--deep:#28150F;--deep-muted:#F3C8B1;--soft:#F4EDEA;--line:#E3D6D1;--muted:#655652;--paper:#FEFCFA}
+html[data-palette="red"]{--accent:#D42A2F;--accent-hover:#AE2227;--tint:#FBEAEA;--deep:#270F14;--deep-muted:#F1BBBC;--soft:#F3EBEC;--line:#E2D1D5;--muted:#645157;--paper:#FEFBFB}
 
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--body);-webkit-font-smoothing:antialiased}
@@ -48,8 +56,10 @@ section{padding-block:clamp(56px,8vw,96px)}
 /* draft bar (remove before launch) */
 .draftbar{background:var(--ink);color:#fff;font-size:.85rem}
 .draftbar .wrap{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding-block:10px}
+.draftbar .swatches{flex:1 1 520px;justify-content:flex-end}
+@media (max-width:700px){.draftbar .swatches{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:4px;min-width:0;max-width:100%}.swatch{flex:none}}
 .draftbar b{color:#FFD86B;letter-spacing:.06em}
-.swatches{display:flex;gap:8px;align-items:center}
+.swatches{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .swatch{font:500 .82rem var(--body);color:#fff;background:transparent;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:6px 12px 6px 8px;display:inline-flex;gap:6px;align-items:center;cursor:pointer}
 .swatch i{width:14px;height:14px;border-radius:50%;display:inline-block}
 .swatch[aria-pressed="true"]{background:#fff;color:var(--ink)}
@@ -180,9 +190,16 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   <div class="wrap">
     <span><b>DRAFT</b> &nbsp;Not live. For Carl to review only.</span>
     <div class="swatches" role="group" aria-label="Colour option">
-      <button class="swatch" type="button" id="sw-green" data-p="green" aria-pressed="false"><i style="background:#1F6B4A"></i>Green</button>
-      <button class="swatch" type="button" id="sw-purple" data-p="purple" aria-pressed="true"><i style="background:#6B2EF0"></i>Purple</button>
-      <button class="swatch" type="button" id="sw-teal" data-p="teal" aria-pressed="false"><i style="background:#0E6A6B"></i>Teal</button>
+      <button class="swatch" type="button" id="sw-violet" data-p="violet" aria-pressed="true"><i style="background:#6B2EF0"></i>Violet</button>
+      <button class="swatch" type="button" id="sw-royal" data-p="royal" aria-pressed="false"><i style="background:#7E22CE"></i>Royal purple</button>
+      <button class="swatch" type="button" id="sw-indigo" data-p="indigo" aria-pressed="false"><i style="background:#4338CA"></i>Indigo</button>
+      <button class="swatch" type="button" id="sw-blue" data-p="blue" aria-pressed="false"><i style="background:#0062F5"></i>Electric blue</button>
+      <button class="swatch" type="button" id="sw-cyan" data-p="cyan" aria-pressed="false"><i style="background:#0884A6"></i>Ocean</button>
+      <button class="swatch" type="button" id="sw-teal" data-p="teal" aria-pressed="false"><i style="background:#0E7C86"></i>Teal</button>
+      <button class="swatch" type="button" id="sw-emerald" data-p="emerald" aria-pressed="false"><i style="background:#05875F"></i>Emerald</button>
+      <button class="swatch" type="button" id="sw-forest" data-p="forest" aria-pressed="false"><i style="background:#1F6B4A"></i>Forest</button>
+      <button class="swatch" type="button" id="sw-orange" data-p="orange" aria-pressed="false"><i style="background:#D9530A"></i>Orange</button>
+      <button class="swatch" type="button" id="sw-red" data-p="red" aria-pressed="false"><i style="background:#D42A2F"></i>Red</button>
     </div>
   </div>
 </div>
@@ -403,7 +420,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   var root=document.documentElement, btns=document.querySelectorAll('.swatch');
   function set(p){root.setAttribute('data-palette',p);btns.forEach(function(b){b.setAttribute('aria-pressed',b.dataset.p===p?'true':'false')});try{localStorage.setItem('ra-palette',p)}catch(e){}}
   btns.forEach(function(b){b.addEventListener('click',function(){set(b.dataset.p)})});
-  set('purple');try{var s=localStorage.getItem('ra-palette');if(s)set(s)}catch(e){}
+  set('violet');try{var s=localStorage.getItem('ra-palette');if(s&&document.getElementById('sw-'+s))set(s)}catch(e){}
 })();
 </script>
 </body>
