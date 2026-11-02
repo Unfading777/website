@@ -17,7 +17,7 @@
 <style>
 :root {
   --bg: #F4F4F6; --card: #FFFFFF; --ink: #1F1E26; --text: #3A3944; --grey: #6A6875; --line: #E4E3EA;
-  --pink: #7C1BFF; --pink-ink: #6A0FE6; --pink-hover: #6A12E0; --tint: #F0E6FF; --tint-2: #F8F3FF; --deep: #1B1A22; --ok: #12805C;
+  --pink: #00B6CC; --pink-ink: #0094A8; --pink-hover: #00A3B7; --tint: #DDF6FA; --tint-2: #EEFAFC; --deep: #1B1A22; --ok: #12805C;
   --display: "Outfit", "Trebuchet MS", "Segoe UI", sans-serif;
   --body: "DM Sans", "Segoe UI", Helvetica, Arial, sans-serif;
   color-scheme: light;
@@ -127,7 +127,7 @@ blockquote { margin: 0 0 .8rem; padding-left: 1rem; border-left: 3px solid var(-
 .guar { background: var(--deep); color: #fff; border-radius: 14px; padding: 1.2rem 1.3rem; display: flex; flex-direction: column; gap: .7rem; }
 .guar h3 { margin: 0; font-size: 1.25rem; font-weight: 800; }
 .guar .dash { color: #E3E2E8; }
-.guar .dash li::before { color: #C9A6FF; }
+.guar .dash li::before { color: #7FE3F0; }
 .quote { border: 2px solid var(--pink); border-radius: 14px; padding: 1rem 1.2rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
 .quote b { font-family: var(--display); font-size: 1.15rem; display: block; }
 .quote p { font-size: .92rem; color: var(--text); }
@@ -523,9 +523,9 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     var fs = Math.max(10, Math.min(15, Math.round(W * s / 8)));
     g.push(rect(0, 0, W, D, "#D5D7DB", "#1F1E26", 2) + '<text x="' + X(W / 2) + '" y="' + Y(D / 2) + '" text-anchor="middle" font-size="' + fs + '" font-weight="700" fill="#1F1E26">Your house</text>' + (scaled ? '<text x="' + X(W / 2) + '" y="' + (Y(D / 2) + 18) + '" text-anchor="middle" font-size="' + Math.max(9, Math.min(12, Math.round(W * s / 10.5))) + '" fill="#3A3944">' + f(W) + 'm wide, ' + f(D) + 'm deep</text>' : ''));
     exts.forEach(function (q, i) {
-      g.push(rect(q[0], q[1], q[2], q[3], "#ECDDFF", "#6A0FE6", 2));
-      if (i === 0 && E) g.push('<text x="' + Math.round((X(q[0]) + X(q[2])) / 2) + '" y="' + Math.round(Y(D) + Math.min(E * s / 2 + 5, 26)) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#4E0BB0">' + f(E) + 'm extension</text>');
-      else g.push('<text x="' + Math.round((X(q[0]) + X(q[2])) / 2) + '" y="' + (Y(q[1]) + 18) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#4E0BB0">' + f(SW) + 'm</text>');
+      g.push(rect(q[0], q[1], q[2], q[3], "#D6F4F8", "#0094A8", 2));
+      if (i === 0 && E) g.push('<text x="' + Math.round((X(q[0]) + X(q[2])) / 2) + '" y="' + Math.round(Y(D) + Math.min(E * s / 2 + 5, 26)) + '" text-anchor="middle" font-size="14" font-weight="700" fill="#006A78">' + f(E) + 'm extension</text>');
+      else g.push('<text x="' + Math.round((X(q[0]) + X(q[2])) / 2) + '" y="' + (Y(q[1]) + 18) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#006A78">' + f(SW) + 'm</text>');
     });
     /* party walls and boundaries */
     ["L", "R"].forEach(function (S) {
@@ -546,7 +546,7 @@ img.ph { aspect-ratio: 4 / 3; width: 100%; height: auto; object-fit: cover; disp
     var pdAt = g.length;
     if (has(r.types, /Rear|Wrap/)) {
       g.push('<line x1="' + X(minX) + '" y1="' + Y(D + l1) + '" x2="' + lx + '" y2="' + Y(D + l1) + '" stroke="#1F1E26" stroke-width="1.5" stroke-dasharray="7 5"/><text x="' + (lx + 6) + '" y="' + (Y(D + l1) - 3) + '" font-size="13" font-weight="700" fill="#1F1E26" stroke="#fff" stroke-width="4" paint-order="stroke">' + l1 + 'm<tspan x="' + (lx + 6) + '" dy="15" font-weight="400" font-size="12">permitted development</tspan></text>');
-      g.push('<line x1="' + X(minX) + '" y1="' + Y(D + l2) + '" x2="' + lx + '" y2="' + Y(D + l2) + '" stroke="#6A0FE6" stroke-width="1.5" stroke-dasharray="7 5"/><text x="' + (lx + 6) + '" y="' + (Y(D + l2) - 3) + '" font-size="13" font-weight="700" fill="#6A0FE6" stroke="#fff" stroke-width="4" paint-order="stroke">' + l2 + 'm<tspan x="' + (lx + 6) + '" dy="15" font-weight="400" font-size="12">limit with prior approval</tspan></text>');
+      g.push('<line x1="' + X(minX) + '" y1="' + Y(D + l2) + '" x2="' + lx + '" y2="' + Y(D + l2) + '" stroke="#0094A8" stroke-width="1.5" stroke-dasharray="7 5"/><text x="' + (lx + 6) + '" y="' + (Y(D + l2) - 3) + '" font-size="13" font-weight="700" fill="#0094A8" stroke="#fff" stroke-width="4" paint-order="stroke">' + l2 + 'm<tspan x="' + (lx + 6) + '" dy="15" font-weight="400" font-size="12">limit with prior approval</tspan></text>');
     }
     var vbw = lx + 165;
     /* compass and midday sun: the garden is at the bottom of the plan */
